@@ -5,6 +5,7 @@ from django.conf.urls import patterns, include, url
 # admin.autodiscover()
 
 urlpatterns = patterns('',
+    url(r'^dcp_sandbox/', include('dcp_sandbox.urls')),
     # Examples:
     # url(r'^$', 'dcp_site.views.home', name='home'),
     # url(r'^dcp_site/', include('dcp_site.foo.urls')),

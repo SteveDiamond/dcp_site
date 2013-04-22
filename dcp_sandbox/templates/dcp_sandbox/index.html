@@ -1,0 +1,37 @@
+<head>
+  <title>DCP Sandbox</title>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+  <!-- Bootstrap -->
+  <link href="/static/dcp_sandbox/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+  <script src="/static/dcp_sandbox/jquery-1.9.1.min.js"></script>
+  <script src="/static/dcp_sandbox/bootstrap/js/bootstrap.min.js"></script>
+
+  <!-- D3.js -->
+  <script type="text/javascript" src="/static/dcp_sandbox/d3.v3/d3.v3.js"></script>
+  <!-- script type="text/javascript" src="http://mbostock.github.com/d3/d3.layout.js?1.27.2"></script-->
+
+  <!-- sandbox specific -->
+  <link href="/static/dcp_sandbox/css/sandbox.css" rel="stylesheet">
+  <script src="/static/dcp_sandbox/js/sandbox.js"></script>
+</head>
+<body>
+  
+  <div class="container-fluid">
+    <div class="row-fluid">
+      <div class="span4">
+        <!--Sidebar content-->
+        <h4 class="info">Write an objective or constraint</h4>
+        <textarea id="scratchpad">
+variable x y z
+parameter positive a b c
+        </textarea>
+        <button type="button">Parse Expression</button>
+      </div>
+      <div class="span8">
+        <h2 class="info">Parse Tree</h2>
+        <!--Body content-->
+        <div id="chart"></div>
+      </div>
+    </div>
+  </div>
+</body>
