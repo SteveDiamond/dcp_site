@@ -1,4 +1,5 @@
 $().ready(function() {
+  // http://bl.ocks.org/mbostock/1093025
   var w = 960,
       h = 800,
       i = 0,
