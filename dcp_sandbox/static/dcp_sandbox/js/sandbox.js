@@ -1,4 +1,24 @@
-$().ready(function() {
+$().ready(function(){
+  //drawTree()
+
+  // http://stackoverflow.com/questions/7335780/how-to-post-a-django-form-with-ajax-jquery
+  $('#expression').submit(function() { // catch the form's submit event
+      $.ajax({ // create an AJAX call...
+          data: $(this).serialize(), // get the form data
+          type: $(this).attr('method'), // GET or POST
+          url: $(this).attr('action'), // the file to call
+          success: function(response) { // on success..
+              $('#chart').html(''); // Clear old tree
+              drawTree('#chart', response); // update the DIV
+          }
+      });
+      return false;
+  });
+});
+
+
+
+function drawTree(container, json_str) {
   // http://bl.ocks.org/mbostock/1093025
   var w = 960,
       h = 800,
@@ -14,17 +34,22 @@ $().ready(function() {
   var diagonal = d3.svg.diagonal()
       .projection(function(d) { return [d.y, d.x]; });
 
-  var vis = d3.select("#chart").append("svg:svg")
+  var vis = d3.select(container).append("svg:svg")
       .attr("width", w)
       .attr("height", h)
     .append("svg:g")
       .attr("transform", "translate(20,30)");
+  
+  var json = JSON.parse(json_str);
+  json.x0 = 0;
+  json.y0 = 0;
+  update(root = json);
 
-  d3.json("/static/dcp_sandbox/js/flare.json", function(json) {
-    json.x0 = 0;
-    json.y0 = 0;
-    update(root = json);
-  });
+  // d3.json("/static/dcp_sandbox/js/flare.json", function(json) {
+  //   json.x0 = 0;
+  //   json.y0 = 0;
+  //   update(root = json);
+  // });
 
   function update(source) {
 
@@ -56,7 +81,7 @@ $().ready(function() {
     nodeEnter.append("svg:text")
         .attr("dy", 3.5)
         .attr("dx", 5.5)
-        .text(function(d) { return d.name; });
+        .text(function(d) { return d.short_name; });
     
     // Transition nodes to their new position.
     nodeEnter.transition()
@@ -130,4 +155,4 @@ $().ready(function() {
   function color(d) {
     return d._children ? "#3182bd" : d.children ? "#c6dbef" : "#fd8d3c";
   }
-});
+}

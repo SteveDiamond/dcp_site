@@ -21,11 +21,14 @@
       <div class="span4">
         <!--Sidebar content-->
         <h4 class="info">Write an objective or constraint</h4>
-        <textarea id="scratchpad">
+        <form action="/dcp_sandbox/parse" method="post" id="expression">
+          {% csrf_token %}
+        <textarea id="scratchpad" name="text">
 variable x y z
 parameter positive a b c
-        </textarea>
-        <button type="button">Parse Expression</button>
+</textarea>
+        <input type="submit" value="Parse Expression" />
+        </form>
       </div>
       <div class="span8">
         <h2 class="info">Parse Tree</h2>
