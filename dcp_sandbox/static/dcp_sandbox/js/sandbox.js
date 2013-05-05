@@ -9,6 +9,9 @@ $().ready(function(){
           success: function(response) { // on success..
               $('#chart').html(''); // Clear old tree
               drawTree('#chart', response); // update the DIV
+              $('rect').qtip({
+                position: { my: 'top center', at: 'bottom center'}
+              }) // Add tooltips with error messages
           }
       });
       return false;
@@ -74,6 +77,7 @@ function drawTree(container, json_str) {
         .attr("y", -barHeight / 2)
         .attr("height", barHeight)
         .attr("width", barWidth)
+        .attr("title", errorMessage)
         .style("fill", color)
         .on("click", click);
     
@@ -155,7 +159,7 @@ function drawTree(container, json_str) {
 
   // String representation for a node
   function nodeToStr(d) {
-    result = "Function: " + d.short_name // TODO Variable, Parameter, Operator
+    result = d.class + ": " + d.short_name // TODO Variable, Parameter, Operator
     // Add arguments for non-leaf nodes
     children = d.children || d._children;
     if (children) {
@@ -169,30 +173,57 @@ function drawTree(container, json_str) {
         if (i < children.length - 1) result += ", ";
       }
     }
-
-    result += "; Curvature: " + d.curvature + "; Sign: " + d.sign
+    // Constraints don't have curvature or sign
+    if (d.curvature) result += "; Curvature: " + d.curvature;
+    if (d.sign) result += "; Sign: " + d.sign;
     return result;
   }
 
   // Dark blue hidden with children, light blue for no hidden children,
   // red for DCP violation that causes non-convexity, black for inherited non-convexity
   function color(d) {
-    if (nonConvex(d)) {
+    if (invalid(d)) {
       return errorOrigin(d) ? "red" : "black";
     } else {
       return d._children ? "#3182bd" : d.children ? "#c6dbef" : "#fd8d3c";
     }
   }
 
-  function nonConvex(d) {
-    return d.curvature == "non-convex"
+  // Is the node a non-convex expression or an invalid constraint?
+  function invalid(d) {
+    numErrors = d.errors.unsorted_errors.length;
+    for (var k in d.errors.indexed_errors) numErrors++;
+    return d.curvature == "non-convex" || numErrors > 0;
   }
 
+  // Is the node invalid with only valid children?
   function errorOrigin(d) {
     children = d.children || d._children;
     for (var i=0; i < children.length; i++){
-      if (nonConvex(children[i])) return false;
+      if (invalid(children[i])) return false;
     }
     return true;
+  }
+
+  // Error message for the node. Either "DCP compliant" or "DCP Violations:"
+  // followed by a list of violations.
+  function errorMessage(d) {
+    children = d.children || d._children;
+    numErrors = d.errors.unsorted_errors.length;
+    for (var k in d.errors.indexed_errors) numErrors++;
+    result = "";
+    if (numErrors == 0) {
+      result = "DCP Compliant";
+    } else {
+      result = "DCP Violations:";
+      for (var i=0; i < d.errors.unsorted_errors.length; i++) {
+        result += "<br/>" + d.errors.unsorted_errors[i];
+      }
+      for (var index in d.errors.indexed_errors) {
+        result += "<br/>Argument " + index + ": " + children[index].name;
+        result += "<br/>" + d.errors.indexed_errors[index];
+      }
+    }
+    return result;
   }
 }
