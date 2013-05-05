@@ -80,8 +80,9 @@ function drawTree(container, json_str) {
     nodeEnter.append("svg:text")
         .attr("dy", 3.5)
         .attr("dx", 5.5)
+        .style("font-size", 12)
         .text(function(d) { 
-          return d.short_name + " Curvature: " + d.curvature + ", Sign: " + d.sign; 
+          return nodeToStr(d); 
         });
     
     // Transition nodes to their new position.
@@ -152,6 +153,27 @@ function drawTree(container, json_str) {
     update(d);
   }
 
+  // String representation for a node
+  function nodeToStr(d) {
+    result = "Function: " + d.short_name // TODO Variable, Parameter, Operator
+    // Add arguments for non-leaf nodes
+    children = d.children || d._children;
+    if (children) {
+      result += "; Arguments: "
+      for (var i=0; i < children.length; i++){
+        result += children[i].name;
+        // Add monotonicity if appropriate
+        if (d.monotonicity) {
+          result += " " + d.monotonicity[i];
+        }
+        if (i < children.length - 1) result += ", ";
+      }
+    }
+
+    result += "; Curvature: " + d.curvature + "; Sign: " + d.sign
+    return result;
+  }
+
   // Dark blue hidden with children, light blue for no hidden children,
   // red for DCP violation that causes non-convexity, black for inherited non-convexity
   function color(d) {
@@ -167,8 +189,9 @@ function drawTree(container, json_str) {
   }
 
   function errorOrigin(d) {
-    for (var i=0; i < d.children.length; i++){
-      if (nonConvex(d.children[i])) return false;
+    children = d.children || d._children;
+    for (var i=0; i < children.length; i++){
+      if (nonConvex(children[i])) return false;
     }
     return true;
   }
