@@ -1,6 +1,5 @@
 $().ready(function(){
   //drawTree()
-
   // http://stackoverflow.com/questions/7335780/how-to-post-a-django-form-with-ajax-jquery
   $('#expression').submit(function() { // catch the form's submit event
       $.ajax({ // create an AJAX call...
@@ -81,7 +80,9 @@ function drawTree(container, json_str) {
     nodeEnter.append("svg:text")
         .attr("dy", 3.5)
         .attr("dx", 5.5)
-        .text(function(d) { return d.short_name; });
+        .text(function(d) { 
+          return d.short_name + " Curvature: " + d.curvature + ", Sign: " + d.sign; 
+        });
     
     // Transition nodes to their new position.
     nodeEnter.transition()
@@ -151,8 +152,24 @@ function drawTree(container, json_str) {
     update(d);
   }
 
-  // TODO change this
+  // Dark blue hidden with children, light blue for no hidden children,
+  // red for DCP violation that causes non-convexity, black for inherited non-convexity
   function color(d) {
-    return d._children ? "#3182bd" : d.children ? "#c6dbef" : "#fd8d3c";
+    if (nonConvex(d)) {
+      return errorOrigin(d) ? "red" : "black";
+    } else {
+      return d._children ? "#3182bd" : d.children ? "#c6dbef" : "#fd8d3c";
+    }
+  }
+
+  function nonConvex(d) {
+    return d.curvature == "non-convex"
+  }
+
+  function errorOrigin(d) {
+    for (var i=0; i < d.children.length; i++){
+      if (nonConvex(d.children[i])) return false;
+    }
+    return true;
   }
 }
