@@ -9,9 +9,6 @@ $().ready(function(){
           success: function(response) { // on success..
               $('#chart').html(''); // Clear old tree
               drawTree('#chart', response); // update the DIV
-              $('rect').qtip({
-                position: { my: 'top center', at: 'bottom center'}
-              }) // Add tooltips with error messages
           }
       });
       return false;
@@ -143,6 +140,11 @@ function drawTree(container, json_str) {
       d.x0 = d.x;
       d.y0 = d.y;
     });
+
+    // Add tooltips with error messages
+    $('rect').qtip({
+      position: { my: 'top center', at: 'bottom center'}
+    })
   }
 
   // Toggle children on click.
