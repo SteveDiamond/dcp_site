@@ -6,11 +6,21 @@ from dcp_parser.parser import Parser
 from dcp_parser.json.statement_encoder import StatementEncoder
 import unicodedata
 
+# Pre-declared variables and parameters
+preamble = """
+            variable x y z
+            variable positive u v w
+            parameter a b c
+            parameter positive d e f
+           """
+
 def index(request):
     return render(request, 'dcp_sandbox/index.html')
 
 def parse(request):
     parser = Parser()
+    parser.parse(preamble)
+
     unicode_text = request.POST['text']
     # Convert to standard Python string (ASCII)
     text = unicodedata.normalize('NFKD', unicode_text).encode('ascii','ignore')

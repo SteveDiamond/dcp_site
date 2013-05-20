@@ -25,3 +25,7 @@ path.link {
 .info {
   text-align: center;
 }
+
+.dropdown-menu > li > p {
+             text-align:center;
+}
