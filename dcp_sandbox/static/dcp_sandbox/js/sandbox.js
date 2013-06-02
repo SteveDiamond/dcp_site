@@ -33,11 +33,14 @@
                     // Map distance from root to list of nodes in left to right order.
                     var levels = [];
                     generateLevels(root, levels, 0);
-                    // Returns [P,RNode,RWidth] where Px = 0, RNodex >= RWidthw + SEPARTION*1
-                    var relationMatrices = getRelations(root, numNodes, levels); 
+                    // Returns [P,RNode,RWidth, RSib] where Px = 0, RNodex >= RWidthw + SEPARTION*1
+                    // Sib used for optimization objective.
+                    var relationMatrices = getRelations(root, numNodes, levels);
+                    var P = relationMatrices[0], RNode = relationMatrices[1],
+                    RWidth = relationMatrices[2], Sib = relationMatrices[3];
                     // Solves LP to get box centers with minimum tree width.
                     // Then draws tree.
-                    getCenters(relationMatrices, widths, numNodes, root, levels);
+                    getCenters(P, RNode, RWidth, Sib, widths, numNodes, root, levels);
                 }
             });
             return false;
@@ -106,10 +109,11 @@
         // Create P
         var P = [];
         generateP(root, numNodes, P);
-        var RNode = [];
-        var RWidth = [];
+        var RNode = [], RWidth = [];
         generateR(levels, numNodes, RNode, RWidth);
-        return [P,RNode,RWidth];
+        var Sib = [];
+        generateSib(root, numNodes, Sib);
+        return [P,RNode,RWidth,Sib];
     }
 
     /**
@@ -176,19 +180,34 @@
     }
 
     /**
+     * Sets rows of Sib so that child i.tag = -1, child i+1.tag = 1.
+     * Like RNode but only for siblings.
+     */
+    function generateSib(root, numNodes, Sib) {
+        if(!root.children) return;
+        for (var i=0; i < root.children.length - 1; i++) {
+            var arr = makeArrayOf(0, numNodes);
+            arr[root.children[i].tag] = -1;
+            arr[root.children[i+1].tag] = 1;
+            Sib.push(arr);
+        }
+        // Recurse on children
+        for (var i=0; i < root.children.length; i++) {
+            generateSib(root.children[i], numNodes, Sib);
+        }
+    }
+
+    /**
      * Solves the following LP to get box centers while minimizing tree width:
-     * minimize max
+     * minimize max + 1*Sib*centers
      * subject to:
      *  centers + 0.5*widths <= max*1
      *  centers - 0.5*widths >= 0
      *  RNode*centers >= RWidth*widths + HORIZ_SEP*1
      *  Px = 0
      */
-    function getCenters(relationMatrices, widths, numNodes, root, levels) {
+    function getCenters(P, RNode, RWidth, Sib, widths, numNodes, root, levels) {
         // x = [centers; max]
-        var P = relationMatrices[0];
-        var RNode = relationMatrices[1];
-        var RWidth = relationMatrices[2];
         // Put into form: minimize c*x subject to A*x <= b, C*x = d.
         // Inequality constraints
         var b = numeric.dot(RWidth, widths);
@@ -229,8 +248,17 @@
         }
         var d = makeArrayOf(0, C.length);
 
-        var c = makeArrayOf(0, numNodes+1);
-        c[numNodes] = 1;
+        // Optimization objective
+        // Add space for max
+        for (var i=0; i < Sib.length; i++) {
+            Sib[i].push(0);
+        }
+        // Combine optimization objectives
+        var tmp = makeArrayOf(0, numNodes+1);
+        tmp[numNodes] = 1;
+        Sib.push(tmp);
+        var ones = makeArrayOf(1, Sib.length);
+        var c = numeric.dot(ones, Sib);
         // Solve the LP server side
         // http://stackoverflow.com/questions/4342926/how-can-i-send-json-data-to-server
         var data = {'c':c, 'A':A, 'b':b, 'C':C, 'd':d, 'rowMajor':true};
