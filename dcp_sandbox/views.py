@@ -6,9 +6,11 @@ from dcp_parser.parser import Parser
 from dcp_parser.json.statement_encoder import StatementEncoder
 import unicodedata
 
-import json 
+import json
 from cvxopt import matrix, solvers
 
+import logging
+log = logging.getLogger(__name__)
 
 # Pre-declared variables and parameters
 preamble = ['variable x y z', 'variable positive u v w',
@@ -26,7 +28,13 @@ def parse(request):
     text = unicodedata.normalize('NFKD', unicode_text).encode('ascii','ignore')
 
     for line in str.split(text, '\r\n'):
-        parser.parse(line)
+        try:
+            parser.parse(line)
+        except Exception, e:
+            # TODO record this error and signal the user
+            print "parser error"
+            log.debug('Parser error')
+            log.error(e)
 
     json_str = ""
     if len(parser.statements) > 0:
@@ -50,7 +58,12 @@ def solveLP(request):
             if rowMajor:
                 A = A.T
                 C = C.T
-            result = solvers.lp(c, A, b, C, d)
-            x = [i for i in result['x']]
+            try:
+                result = solvers.lp(c, A, b, C, d)
+                x = [i for i in result['x']]
+            except Exception, e:
+                x = []
+                log.debug('Solver error')
+                log.error(e)
             return HttpResponse(json.dumps(x))
     return HttpResponse("OK")

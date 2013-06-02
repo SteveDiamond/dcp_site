@@ -1,23 +1,21 @@
 <head>
   <title>DCP Sandbox</title>
   <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-  <!-- Bootstrap -->
-  <link href="/static/dcp_sandbox/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
-  <script src="/static/dcp_sandbox/jquery-1.9.1.min.js"></script>
-  <script src="/static/dcp_sandbox/jquery.cookie.js"></script>
-  <script src="/static/dcp_sandbox/bootstrap/js/bootstrap.min.js"></script>
-  <!-- qTip2 -->
-  <script src="/static/dcp_sandbox/qTip2/jquery.qtip.min.js"></script>
-  <link href="/static/dcp_sandbox/qTip2/jquery.qtip.min.css" rel="stylesheet">
+  {% load staticfiles %}
+  <!-- Bootstrap and jQuery + plugins -->
+  <link href="{% static "dcp_sandbox/bootstrap/css/bootstrap.min.css" %}" rel="stylesheet" media="screen">
+  <script src="{% static "dcp_sandbox/jquery-1.9.1.min.js" %}"></script>
+  <script src="{% static "dcp_sandbox/jquery.cookie.js" %}"></script>
+  <script src="{% static "dcp_sandbox/bootstrap/js/bootstrap.min.js" %}"></script>
 
   <!-- D3.js -->
-  <script type="text/javascript" src="/static/dcp_sandbox/d3.v3/d3.v3.js"></script>
+  <script type="text/javascript" src="{% static "dcp_sandbox/d3.v3/d3.v3.js" %}"></script>
   <!-- Numeric Javascript -->
-  <script type="text/javascript" src="/static/dcp_sandbox/numeric-1.2.6.min.js"></script>
+  <script type="text/javascript" src="{% static "dcp_sandbox/numeric-1.2.6.min.js" %}"></script>
 
   <!-- sandbox specific -->
-  <link href="/static/dcp_sandbox/css/sandbox.css" rel="stylesheet">
-  <script src="/static/dcp_sandbox/js/sandbox.js"></script>
+  <link href="{% static "dcp_sandbox/css/sandbox.css" %}" rel="stylesheet">
+  <script src="{% static "dcp_sandbox/js/sandbox.js" %}"></script>
 </head>
 <body>
   <div class="navbar navbar-inverse" >
