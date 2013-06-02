@@ -35,17 +35,21 @@ def parse(request):
     return HttpResponse(json_str)
 
 # Solves the LP minimize c*x subject to A*x <= b, C*x == d.
+# All vectors passed in as arrays.
 def solveLP(request):
     if request.is_ajax():
         if request.method == 'POST':
             rec = json.loads(request.body)
             c = matrix(rec['c'], tc='d')
             A = matrix(rec['A'], tc='d')
-            A = A.T # Convert from row-major to column-major
             b = matrix(rec['b'], tc='d')
             C = matrix(rec['C'], tc='d')
-            C = C.T
             d = matrix(rec['d'], tc='d')
+            # Convert from row-major to column major order if necessary
+            rowMajor = rec['rowMajor']
+            if rowMajor:
+                A = A.T
+                C = C.T
             result = solvers.lp(c, A, b, C, d)
             x = [i for i in result['x']]
             return HttpResponse(json.dumps(x))

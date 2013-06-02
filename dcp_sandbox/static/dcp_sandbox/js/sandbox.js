@@ -233,7 +233,7 @@
         c[numNodes] = 1;
         // Solve the LP server side
         // http://stackoverflow.com/questions/4342926/how-can-i-send-json-data-to-server
-        var data = {'c':c, 'A':A, 'b':b, 'C':C, 'd':d};
+        var data = {'c':c, 'A':A, 'b':b, 'C':C, 'd':d, 'rowMajor':true};
         $.ajax({ // create an AJAX call that handles CSRF
             crossDomain: false,
             beforeSend: function(xhr, settings) {
