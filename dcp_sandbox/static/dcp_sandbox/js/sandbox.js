@@ -5,16 +5,18 @@
     // Minimum separation of boxes from edges
     var EDGE_SEP = 10;
     // Constants for computing the box width
-    var PIXELS_PER_CHAR = 6; 
     var BOX_CONSTANT = 40;
     var SHORT_NAME_CONSTANT = 10;
+    var FONT = "12px sans-serif";
     // Constants for block height and space in between
     var BOX_HEIGHT = 20;
     var VERT_SEP = 20;
     // Separation between the first block and the top of the svg element.
-    var INIT_VERT_SEP = 20;
+    var EDGE_VERT_SEP = 20;
     // Constant for text height
     var CHAR_HEIGHT = 12;
+    // Tree location
+    var TREE_DIV = "#chart";
 
     $().ready(function(){
         // http://stackoverflow.com/questions/7335780/how-to-post-a-django-form-with-ajax-jquery
@@ -34,11 +36,8 @@
                     // Returns [P,RNode,RWidth] where Px = 0, RNodex >= RWidthw + SEPARTION*1
                     var relationMatrices = getRelations(root, numNodes, levels); 
                     // Solves LP to get box centers with minimum tree width.
-                    var results = getCenters(relationMatrices, widths, root, numNodes);
-                    var centers = results[0];
-                    var treeWidth = results[1];
-                    $('#chart').html(''); // Clear old tree
-                    drawTree('#chart', root, numNodes, levels, widths, centers, treeWidth); // update the DIV
+                    // Then draws tree.
+                    getCenters(relationMatrices, widths, numNodes, root, levels);
                 }
             });
             return false;
@@ -70,7 +69,7 @@
      * Determines the box widths based on the number of characters in the name.
      */
     function getWidths(root, widths) {
-        var width = root.name.length * PIXELS_PER_CHAR;
+        var width = root.name.width(FONT);
         if (root.isShortNameNode) {
             width += SHORT_NAME_CONSTANT;
         } else {
@@ -81,6 +80,21 @@
         for (var i=0; i < root.children.length; i++) {
             getWidths(root.children[i], widths);
         }
+    }
+
+    //http://stackoverflow.com/questions/118241/calculate-text-width-with-javascript
+    /**
+     * Add width function to String to get true String width.
+     */
+    String.prototype.width = function(font) {
+      var f = font || '12px arial',
+          o = $('<div>' + this + '</div>')
+                .css({'position': 'absolute', 'float': 'left', 'white-space': 'nowrap', 'visibility': 'hidden', 'font': f})
+                .appendTo($('body')),
+          w = o.width();
+      o.remove();
+
+      return w;
     }
 
     /**
@@ -106,7 +120,7 @@
         if(!root.children) return;
         var length = root.children.length;
         for (var i=0; i < length/2; i++) {
-          if (i == length-1-i) {
+          if (true || i == length-1-i) {
             var arr = makeArrayOf(0, numNodes);
             arr[root.tag] = -1;
             // Works for paired and unpaired.
@@ -170,7 +184,7 @@
      *  RNode*centers >= RWidth*widths + HORIZ_SEP*1
      *  Px = 0
      */
-    function getCenters(relationMatrices, widths, root, numNodes) {
+    function getCenters(relationMatrices, widths, numNodes, root, levels) {
         // x = [centers; max]
         var P = relationMatrices[0];
         var RNode = relationMatrices[1];
@@ -217,31 +231,28 @@
 
         var c = makeArrayOf(0, numNodes+1);
         c[numNodes] = 1;
-        // Solve the LP
+        // Solve the LP server side
         // http://stackoverflow.com/questions/4342926/how-can-i-send-json-data-to-server
-        var data = {'relationMatrices':relationMatrices, 
-                    'widths':widths, 
-                    'rootTag':root.tag,
-                    'numNodes'
-                   };
-        $.ajax({ // create an AJAX call...
-                crossDomain: false, // obviates need for sameOrigin test
-                beforeSend: function(xhr, settings) {
-                    xhr.setRequestHeader("X-CSRFToken", $.cookie('csrftoken'));
-                },
-                url: 'solveLP',
-                type: 'POST',
-                contentType:'application/json',
-                data: JSON.stringify(data),
-                dataType:'json',
-                success: function(response) { // on success..
-                }
-              });
-        var result = numeric.solveLP(c, A, b, C, d);
-        var x = result.solution;
-        var centers = x.slice(0,numNodes);
-        var max = x[numNodes];
-        return [centers,max];
+        var data = {'c':c, 'A':A, 'b':b, 'C':C, 'd':d};
+        $.ajax({ // create an AJAX call that handles CSRF
+            crossDomain: false,
+            beforeSend: function(xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", $.cookie('csrftoken'));
+            },
+            url: 'solveLP',
+            type: 'POST',
+            contentType:'application/json',
+            data: JSON.stringify(data),
+            dataType:'json',
+            success: function(response) {
+                var x = response;
+                var centers = x.slice(0,numNodes);
+                var treeWidth = x[numNodes];
+                $(TREE_DIV).html(''); // Clear old tree
+                drawTree(TREE_DIV, root, numNodes, levels, widths, centers, treeWidth); // update the DIV
+            }
+        });
+        return false;
     }
 
     /**
@@ -261,211 +272,59 @@
      * Draws the parse tree.
      */
     function drawTree(location, root, numNodes, levels, widths, centers, treeWidth) {
-        // http://bl.ocks.org/mbostock/1093025
+        // Inspired by http://bl.ocks.org/mbostock/1093025
         var numLevels = levels.length;
-        var treeHeight = numLevels*BOX_HEIGHT + (numLevels-1)*VERT_SEP + INIT_VERT_SEP;
+        var treeHeight = numLevels*BOX_HEIGHT + (numLevels-1)*VERT_SEP + 2*EDGE_VERT_SEP;
 
         var svg = d3.select(location).append("svg:svg")
             .attr("width", treeWidth)
             .attr("height", treeHeight);
 
         for (var i=0; i < numLevels; i++) {
-            var nodeEnter = svg.selectAll("rect"+i)
+            // Draw nodes
+            var nodeEnter = svg.selectAll("level"+i)
                .data(levels[i])
                .enter()
                .append("svg:g")
                .attr("class", "node")
                .attr("transform", function(d) { return "translate(" + (centers[d.tag] - 0.5*widths[d.tag]) +
-                                                        "," + levelY(i) + ")"; })
+                                                        "," + getLevelY(i) + ")"; })
 
             nodeEnter.append("svg:rect")
                .attr("width", function(d) { return widths[d.tag]; })
                .attr("height", BOX_HEIGHT);
 
             nodeEnter.append("svg:text")
-              .attr("dy", BOX_HEIGHT/2 + CHAR_HEIGHT/4)
-              .attr("dx", function (d) { if (d.isShortNameNode) {
-                                              return SHORT_NAME_CONSTANT/2;
-                                          } else {
-                                              return BOX_CONSTANT/2;
-                                          } 
-                                        })
-              .text(function(d) { return d.name; });
+                .attr("dy", BOX_HEIGHT/2 + CHAR_HEIGHT/4)
+                .attr("dx", function (d) { if (d.isShortNameNode) {
+                                                return SHORT_NAME_CONSTANT/2;
+                                            } else {
+                                                return BOX_CONSTANT/2;
+                                            } 
+                                          })
+                .text(function(d) { return d.name; });
+            // Draw links
+            for (var node=0; node < levels[i].length; node++) {
+                var cur = levels[i][node];
+                if (cur.children) {
+                    svg.selectAll("level"+i+",node"+node)
+                       .data(cur.children)
+                       .enter()
+                       .append("svg:line")
+                       .attr("class", "link")
+                       .attr("x1", centers[cur.tag])
+                       .attr("y1", getLevelY(i) + BOX_HEIGHT)
+                       .attr("x2", function(d) { return centers[d.tag]; })
+                       .attr("y2", getLevelY(i+1))
+                }
+            }
         }
     }
 
     /**
      * Gets the y-coordinate of nodes at the given level.
      */
-    function levelY(level) {
-        return level*(BOX_HEIGHT + VERT_SEP) + INIT_VERT_SEP;
+    function getLevelY(level) {
+        return level*(BOX_HEIGHT + VERT_SEP) + EDGE_VERT_SEP;
     }
 }(jQuery, numeric));
-
-  /*http://stackoverflow.com/questions/6802085/jquery-ui-styled-text-input-box
-  $('input:text, input:password')
-  .button()
-  .css({
-          'font' : 'inherit',
-         'color' : 'inherit',
-    'text-align' : 'left',
-       'outline' : 'none',
-        'cursor' : 'text'
-  });*/
-/*
-  setTimeout(function() {
-
-            svg.selectAll("line")
-               .data(links)
-               .enter().append("line")
-               .attr("class", "link")
-               .attr("x1", function(d) { return d.source.x; })
-               .attr("y1", function(d) { return d.source.y; })
-               .attr("x2", function(d) { return d.target.x; })
-               .attr("y2", function(d) { return d.target.y; });
-
-            svg.append("svg:g")
-               .selectAll("circle")
-               .data(nodes)
-               .enter().append("svg:circle")
-               .attr("class", "node")
-               .attr("cx", function(d) { return d.x; })
-               .attr("cy", function(d) { return d.y; })
-               .attr("r", 4);
-
-            svg.append("svg:g")
-               .selectAll("text")
-               .data(nodes)
-               .enter().append("svg:text")
-               .attr("class", "label")
-               .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
-               .attr("text-anchor", "middle")
-               .attr("y", ".3em")
-               .text(function(d) { return d.value; });
-
-        }, 10);
-
-  function update() {
-    var nodes = flatten(root),
-        links = d3.layout.tree().links(nodes);
-    //addLevelLinks(nodes, links);
-
-    // Restart the force layout.
-    force
-        .nodes(nodes)
-        .links(links)
-        .start();
-
-    // Update the links…
-    link = vis.selectAll("line.link")
-        .data(links, function(d) { return d.target.id; });
-
-    // Enter any new links.
-    link.enter().insert("svg:line", ".node")
-        .attr("class", "link")
-        .attr("x1", function(d) { return d.source.x; })
-        .attr("y1", function(d) { return d.source.level * 50; })
-        .attr("x2", function(d) { return d.target.x; })
-        .attr("y2", function(d) { return d.target.level * 50; });
-
-    // Exit any old links.
-    link.exit().remove();
-
-    // Update the nodes…
-    node = vis.selectAll("circle.node")
-        .data(nodes, function(d) { return d.id; })
-        .style("fill", color);
-
-    // Enter any new nodes.
-    node.enter().append("svg:circle")
-        .attr("class", "node")
-        .attr("cx", function(d) { return d.x; })
-        .attr("cy", function(d) { return d.level *50})//return d.y; })
-        .attr("r", function(d) { return Math.sqrt(d.size) / 10 || 4.5; })
-        .style("fill", color)
-        .on("click", click)
-        .call(force.drag);
-
-    // Exit any old nodes.
-    node.exit().remove();
-  }
-
-  function tick() {
-    link.attr("x1", function(d) { return d.source.x; })
-        .attr("y1", function(d) { return d.source.level * 50; })
-        .attr("x2", function(d) { return d.target.x; })
-        .attr("y2", function(d) { return d.target.level * 50; });
-
-    node.attr("cx", function(d) { return d.x; })
-        .attr("cy", function(d) { return d.level *50});
-  }
-
-  // Color leaf nodes orange, and packages white or blue.
-  function color(d) {
-    return d._children ? "#3182bd" : d.children ? "#c6dbef" : "#fd8d3c";
-  }
-
-  // Toggle children on click.
-  function click(d) {
-    if (d.children) {
-      d._children = d.children;
-      d.children = null;
-    } else {
-      d.children = d._children;
-      d._children = null;
-    }
-    update();
-  }
-
-  // Returns a list of all nodes under the root.
-  function flatten(root) {
-    var nodes = [], i = 0;
-
-    function recurse(node) {
-      if (node.children) node.children.forEach(recurse);
-      if (!node.id) node.id = ++i;
-      nodes.push(node);
-    }
-
-    recurse(root);
-    return nodes;
-  }
-
-  // Add links between nodes at the same level
-  function addLevelLinks(nodes, links) {
-    for (var i=0; i < nodes.length; i++) {
-      for (var j=i+1; j < nodes.length; j++) {
-        if (nodes[i].level == nodes[j].level && nodes[i].id < nodes[j].id) {
-          links.push({source : nodes[i], target: nodes[j]})
-        }
-      }
-    }
-  }
-
-    // Records the distance from the root for all descendents.
-  function assignLevels(root, level) {
-    root.level = level;
-    if(root.children) {
-      for (var i=0; i < root.children.length; i++) {
-        assignLevels(root.children[i],level+1)
-      }
-    }
-  };
-
-  // Add siblings
-  function addSiblings(root) {
-    if(!root.children) return;
-    for (var i=0; i < root.children.length; i++) {
-      for (var j=i+1; j < root.children.length; j++) {
-        if(!root.children[i].siblings) root.children[i].siblings = [];
-        root.children[i].siblings.push(root.children[j]);
-        if(!root.children[j].siblings) root.children[j].siblings = [];
-        root.children[j].siblings.push(root.children[i]);
-      }
-    }
-
-    for (var i=0; i < root.children.length; i++) {
-      addSiblings(root.children[i]);
-    }
-  }
-}*/

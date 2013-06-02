@@ -6,6 +6,7 @@ from dcp_parser.parser import Parser
 from dcp_parser.json.statement_encoder import StatementEncoder
 import unicodedata
 
+import json 
 from cvxopt import matrix, solvers
 
 
@@ -33,8 +34,19 @@ def parse(request):
         json_str = StatementEncoder().encode(expression)
     return HttpResponse(json_str)
 
+# Solves the LP minimize c*x subject to A*x <= b, C*x == d.
 def solveLP(request):
     if request.is_ajax():
         if request.method == 'POST':
-            print 'Raw Data: "%s"' % request.raw_post_data  
+            rec = json.loads(request.body)
+            c = matrix(rec['c'], tc='d')
+            A = matrix(rec['A'], tc='d')
+            A = A.T # Convert from row-major to column-major
+            b = matrix(rec['b'], tc='d')
+            C = matrix(rec['C'], tc='d')
+            C = C.T
+            d = matrix(rec['d'], tc='d')
+            result = solvers.lp(c, A, b, C, d)
+            x = [i for i in result['x']]
+            return HttpResponse(json.dumps(x))
     return HttpResponse("OK")
