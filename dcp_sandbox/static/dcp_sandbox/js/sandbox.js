@@ -201,10 +201,10 @@
      * Solves the following LP to get box centers while minimizing tree width:
      * minimize max + 1*Sib*centers
      * subject to:
-     *  centers + 0.5*widths <= max*1
-     *  centers - 0.5*widths >= 0
+     *  centers + 0.5*widths <= max*1 - EDGE_SEP
+     *  centers - 0.5*widths >= EDGE_SEP
      *  RNode*centers >= RWidth*widths + HORIZ_SEP*1
-     *  Px = 0
+     *  P*centers = 0
      */
     function getCenters(P, RNode, RWidth, Sib, widths, numNodes, root, levels) {
         // x = [centers; max]
