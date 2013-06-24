@@ -365,11 +365,9 @@
     }
 
     function drawSymbols(svg, nodes, widths) {
-        var expBoxes = nodes.filter(function(d) { return !d.isShortNameNode; });
-        var opBoxes = nodes.filter(function(d) { return d.isShortNameNode; });
-
+        var expressions = nodes.filter(function(d) { return !d.isShortNameNode && d.curvature; });
         // Curvature
-        expBoxes.append("svg:image")
+        expressions.append("svg:image")
                 .attr("x", SYMBOL_MARGIN)
                 .attr("y", SYMBOL_MARGIN)
                 .attr("width", BOX_CONSTANT/2 - 2*SYMBOL_MARGIN)
@@ -377,12 +375,23 @@
                 .attr("xlink:href", function(d) { return IMAGE_PREFIX + d.curvature + ".svg"; })
 
         // Sign
-        expBoxes.append("svg:image")
+        expressions.append("svg:image")
                 .attr("x", function(d) { return widths[d.tag] + SYMBOL_MARGIN - BOX_CONSTANT/2; })
                 .attr("y", SYMBOL_MARGIN)
                 .attr("width", BOX_CONSTANT/2 - 2*SYMBOL_MARGIN)
                 .attr("height", BOX_HEIGHT - 2*SYMBOL_MARGIN)
                 .attr("xlink:href", function(d) { return IMAGE_PREFIX + d.sign + ".svg"; })
+
+        // Invalid constraints
+        var constraints = nodes.filter(function(d) {
+            return !d.isShortNameNode && !d.curvature && d.errors.unsorted_errors.length > 0;
+        });
+        constraints.append("svg:image")
+                .attr("x", SYMBOL_MARGIN)
+                .attr("y", SYMBOL_MARGIN)
+                .attr("width", BOX_CONSTANT/2 - 2*SYMBOL_MARGIN)
+                .attr("height", BOX_HEIGHT - 2*SYMBOL_MARGIN)
+                .attr("xlink:href", function(d) { return IMAGE_PREFIX + "invalid_constraint" + ".svg"; })
     }
 
     /**
