@@ -13,10 +13,14 @@
     var VERT_SEP = 20;
     // Separation between the first block and the top of the svg element.
     var EDGE_VERT_SEP = 20;
+    // Margin around curvature and sign symbols
+    var SYMBOL_MARGIN = BOX_CONSTANT/12;
     // Constant for text height
     var CHAR_HEIGHT = 12;
     // Tree location
     var TREE_DIV = "#chart";
+    // Location of images
+    var IMAGE_PREFIX = "/static/dcp_sandbox/images/"
 
     $().ready(function(){
         // http://stackoverflow.com/questions/7335780/how-to-post-a-django-form-with-ajax-jquery
@@ -331,22 +335,54 @@
                                             } 
                                           })
                 .text(function(d) { return d.name; });
+            
             // Draw links
-            for (var node=0; node < levels[i].length; node++) {
-                var cur = levels[i][node];
-                if (cur.children) {
-                    svg.selectAll("level"+i+",node"+node)
-                       .data(cur.children)
-                       .enter()
-                       .append("svg:line")
-                       .attr("class", "link")
-                       .attr("x1", centers[cur.tag])
-                       .attr("y1", getLevelY(i) + BOX_HEIGHT)
-                       .attr("x2", function(d) { return centers[d.tag]; })
-                       .attr("y2", getLevelY(i+1))
-                }
+            drawLinks(svg, i, levels, centers);
+
+            // Draw curvature and sign symbols
+            drawSymbols(svg, nodeEnter, widths);
+        }
+    }
+
+    /**
+     * Draws the links between nodes.
+     */
+    function drawLinks(svg, level, levels, centers) {
+        for (var node=0; node < levels[level].length; node++) {
+            var cur = levels[level][node];
+            if (cur.children) {
+                svg.selectAll("level"+level+",node"+node)
+                   .data(cur.children)
+                   .enter()
+                   .append("svg:line")
+                   .attr("class", "link")
+                   .attr("x1", centers[cur.tag])
+                   .attr("y1", getLevelY(level) + BOX_HEIGHT)
+                   .attr("x2", function(d) { return centers[d.tag]; })
+                   .attr("y2", getLevelY(level+1))
             }
         }
+    }
+
+    function drawSymbols(svg, nodes, widths) {
+        var expBoxes = nodes.filter(function(d) { return !d.isShortNameNode; });
+        var opBoxes = nodes.filter(function(d) { return d.isShortNameNode; });
+
+        // Curvature
+        expBoxes.append("svg:image")
+                .attr("x", SYMBOL_MARGIN)
+                .attr("y", SYMBOL_MARGIN)
+                .attr("width", BOX_CONSTANT/2 - 2*SYMBOL_MARGIN)
+                .attr("height", BOX_HEIGHT - 2*SYMBOL_MARGIN)
+                .attr("xlink:href", function(d) { return IMAGE_PREFIX + d.curvature + ".svg"; })
+
+        // Sign
+        expBoxes.append("svg:image")
+                .attr("x", function(d) { return widths[d.tag] + SYMBOL_MARGIN - BOX_CONSTANT/2; })
+                .attr("y", SYMBOL_MARGIN)
+                .attr("width", BOX_CONSTANT/2 - 2*SYMBOL_MARGIN)
+                .attr("height", BOX_HEIGHT - 2*SYMBOL_MARGIN)
+                .attr("xlink:href", function(d) { return IMAGE_PREFIX + d.sign + ".svg"; })
     }
 
     /**
