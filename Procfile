@@ -1,0 +1,1 @@
+web: gunicorn dcp_site.wsgi
