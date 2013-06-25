@@ -24,6 +24,7 @@ TreeDisplay.drawTree = function(location, root, numNodes, levels, widths, center
            .enter()
            .append("svg:g")
            .attr("class", "node")
+           .attr("id", function(d) { return d.tag; })
            .attr("transform", function(d) { return "translate(" + (centers[d.tag] - 0.5*widths[d.tag]) +
                                                     "," + TreeDisplay.getLevelY(i) + ")"; })
 
@@ -31,15 +32,7 @@ TreeDisplay.drawTree = function(location, root, numNodes, levels, widths, center
            .attr("width", function(d) { return widths[d.tag]; })
            .attr("height", TreeConstants.BOX_HEIGHT);
 
-        nodeEnter.append("svg:text")//"foreignObject")//TODO
-            /*.attr("x", getTextMargin)
-            .attr("width", function(d) { return widths[d.tag] - 2*getTextMargin(d); } )
-            .attr("height", TreeConstants.BOX_HEIGHT)
-            .append("xhtml:body")
-            .append("form")
-            .append("input")
-            .attr("type", "text")
-            .attr("value", function(d) { return d.name; });*/
+        nodeEnter.append("svg:text")
             .attr("dy", TreeConstants.BOX_HEIGHT/2 + TreeConstants.CHAR_HEIGHT/4)
             .attr("dx", TreeDisplay.getTextMargin)
             .text(function(d) { return d.name; });
@@ -59,18 +52,28 @@ TreeDisplay.drawTree = function(location, root, numNodes, levels, widths, center
  * Updates the overall expression to reflect local changes.
  */
 TreeDisplay.createInputBox = function() {
+    var id = this.parentElement.id;
     var textElement = this.parentElement.getElementsByTagName('text')[0];
-    var boundingRect = textElement.getBoundingClientRect();
+    var boundingRect = this.getBoundingClientRect();
     $('body').append('<div id="input_div" style="height:' + boundingRect.height + 
             '; width:' + boundingRect.width +
+            '; height:' + boundingRect.height +
             '; top:' + boundingRect.top +
             '; left:' + boundingRect.left +
             '; bottom:' + boundingRect.bottom +
             '; right:' + boundingRect.right + 
-            '; position:absolute"> <input id="input_box" type="text"> </div>')
-    $('#input_box').val(textElement.textContent);
+            '; position:absolute;">' +
+            '<input id="input_box" type="text" style="width:' + boundingRect.width +
+            '; height:' + TreeConstants.BOX_HEIGHT +
+            '"> </div>')
+    var text = textElement.textContent
+    textElement.textContent = ''
+    $('#input_box').val(text);
     $('#input_box').focus();
-    $('#input_box').blur(function() { $('#input_div').remove(); });
+    $('#input_box').blur(function() { 
+      textElement.textContent = text; //$('#input_box').val();
+      $('#input_div').remove(); 
+    });
 }
 
 /**

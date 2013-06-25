@@ -28,3 +28,12 @@ line.link {
 .dropdown-menu > li > p {
     text-align:center;
 }
+
+#input_box {
+    background-color: transparent;
+    font: 12px sans-serif;
+    color: black;
+    outline: none;
+    text-align: center;
+    padding: 0;
+}
