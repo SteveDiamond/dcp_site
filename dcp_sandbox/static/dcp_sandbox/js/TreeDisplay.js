@@ -156,21 +156,22 @@ TreeDisplay.drawLinks = function(svg, level, levels, centers) {
 
 TreeDisplay.drawSymbols = function(svg, nodes, widths) {
     var expressions = nodes.filter(function(d) { return !d.isShortNameNode && d.curvature; });
+    var minDimension = Math.min(TreeConstants.BOX_CONSTANT/2, TreeConstants.BOX_HEIGHT);
     // Curvature
     expressions.append("svg:image")
             .attr("x", TreeConstants.SYMBOL_MARGIN)
             .attr("y", TreeConstants.SYMBOL_MARGIN)
             .attr("width", TreeConstants.BOX_CONSTANT/2 - 2*TreeConstants.SYMBOL_MARGIN)
             .attr("height", TreeConstants.BOX_HEIGHT - 2*TreeConstants.SYMBOL_MARGIN)
-            .attr("xlink:href", function(d) { return TreeConstants.IMAGE_PREFIX + d.curvature + ".svg"; })
+            .attr("xlink:href", function(d) { return TreeConstants.IMAGE_PREFIX + d.curvature + ".png"; })
 
     // Sign
     expressions.append("svg:image")
             .attr("x", function(d) { return widths[d.tag] + TreeConstants.SYMBOL_MARGIN - TreeConstants.BOX_CONSTANT/2; })
-            .attr("y", TreeConstants.SYMBOL_MARGIN)
-            .attr("width", TreeConstants.BOX_CONSTANT/2 - 2*TreeConstants.SYMBOL_MARGIN)
-            .attr("height", TreeConstants.BOX_HEIGHT - 2*TreeConstants.SYMBOL_MARGIN)
-            .attr("xlink:href", function(d) { return TreeConstants.IMAGE_PREFIX + d.sign + ".svg"; })
+            .attr("y", TreeConstants.SYMBOL_MARGIN + (TreeConstants.BOX_HEIGHT-minDimension)/2)
+            .attr("width", minDimension - 2*TreeConstants.SYMBOL_MARGIN)
+            .attr("height", minDimension - 2*TreeConstants.SYMBOL_MARGIN)
+            .attr("xlink:href", function(d) { return TreeConstants.IMAGE_PREFIX + d.sign + ".png"; })
 
     // Invalid constraints
     var constraints = nodes.filter(function(d) {
@@ -181,7 +182,7 @@ TreeDisplay.drawSymbols = function(svg, nodes, widths) {
             .attr("y", TreeConstants.SYMBOL_MARGIN)
             .attr("width", TreeConstants.BOX_CONSTANT/2 - 2*TreeConstants.SYMBOL_MARGIN)
             .attr("height", TreeConstants.BOX_HEIGHT - 2*TreeConstants.SYMBOL_MARGIN)
-            .attr("xlink:href", function(d) { return TreeConstants.IMAGE_PREFIX + "invalid_constraint" + ".svg"; })
+            .attr("xlink:href", function(d) { return TreeConstants.IMAGE_PREFIX + "invalid_constraint" + ".png"; })
 }
 
 /**

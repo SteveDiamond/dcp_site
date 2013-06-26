@@ -32,3 +32,5 @@ TreeConstants.ELLIPSIS = "...";
 // Initial prompt
 TreeConstants.PROMPT = "Click and type in an objective or constraint.";
 TreeConstants.PROMPT_CONSTANT = 200;
+// Demo objective
+TreeConstants.DEMO = "log(square(z)) - log_sum_exp(2*x*z, -square(y)) + (norm(x,3) + log(y))";
