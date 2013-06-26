@@ -9,9 +9,9 @@
   <script src="{% static "dcp_sandbox/bootstrap/js/bootstrap.min.js" %}"></script>
 
   <!-- D3.js -->
-  <script type="text/javascript" src="{% static "dcp_sandbox/d3.v3/d3.v3.js" %}"></script>
+  <script type="text/javascript" src="{% static "dcp_sandbox/d3.v3/d3.v3.min.js" %}"></script>
   <!-- Numeric Javascript -->
-  <script type="text/javascript" src="{% static "dcp_sandbox/numeric-1.2.6.js" %}"></script>
+  <script type="text/javascript" src="{% static "dcp_sandbox/numeric-1.2.6.min.js" %}"></script>
 
   <!-- sandbox specific -->
   <link href="{% static "dcp_sandbox/css/sandbox.css" %}" rel="stylesheet">
@@ -62,7 +62,7 @@ log(square(z)) - log_sum_exp(2*x*z, -square(y)) + (norm(x,3) + log(y))
         <input type="submit" value="Parse Expression" />
         </form>
       </div>
-      <div class="span8">
+      <div class="span12">
         <h2 class="info">Parse Tree</h2>
         <!--Body content-->
         <div id="chart"></div>

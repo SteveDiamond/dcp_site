@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseServerError
 from django.core.urlresolvers import reverse
 
 from dcp_parser.parser import Parser
@@ -31,10 +31,7 @@ def parse(request):
         try:
             parser.parse(line)
         except Exception, e:
-            # TODO record this error and signal the user
-            print "parser error"
-            log.debug('Parser error')
-            log.error(e)
+            return HttpResponseServerError(json.dumps("Parse error"))
 
     json_str = ""
     if len(parser.statements) > 0:
@@ -67,3 +64,8 @@ def solveLP(request):
                 log.error(e)
             return HttpResponse(json.dumps(x))
     return HttpResponse("OK")
+
+
+# TODO should be visible?
+def test(request):
+    return render(request, 'dcp_sandbox/test.html')

@@ -38,7 +38,8 @@ TreeConstructor.parseObjective = function(objective) {
             // Solves LP to get box centers with minimum tree width.
             // Then draws tree.
             TreeDisplay.getLayout(data, root, numNodes, levels, widths);
-        }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {}
     });
 }
 
@@ -160,10 +161,37 @@ TreeConstructor.loadObjectiveRecursive = function(node, tagToNode) {
         }
     }
     var nextNode = tagToNode[operator.parentTag];
-    // Surrounding parentheses TODO inaccurate, count parens after the first
-    if (nextNode.name[0] == "(") {
+    // Surrounding parentheses
+    var surroundingParens = TreeConstructor.getSurroundingParens(nextNode.name);
+    for (var i=0; i < surroundingParens; i++) {
         newExpression = "(" + newExpression + ")";
     }
     nextNode.name = newExpression;
     return TreeConstructor.loadObjectiveRecursive(nextNode, tagToNode);
+}
+
+/**
+ * Returns the number of parentheses surrounding the expression.
+ */
+TreeConstructor.getSurroundingParens = function(name) {
+    // Stores the index of the matching close paren
+    // for each open paren.
+    var parenMatches = TreeLayout.makeArrayOf(-1, name.length);
+    // Stack of open parens to be matched
+    var parenStack = []; 
+    var balance = 0;
+    for (var i=0; i < name.length; i++) {
+        if (name[i] == "(") {
+            parenStack.push(i);
+        } else if (name[i] == ")") {
+            var openParen = parenStack.pop();
+            parenMatches[openParen] = i;
+        }
+    }
+    var surroundingParens = 0;
+    for (var i=0; i < parenMatches.length; i++) {
+        if (parenMatches[i] != name.length - 1 - i) break;
+        surroundingParens++;
+    }
+    return surroundingParens;
 }

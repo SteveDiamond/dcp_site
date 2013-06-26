@@ -97,12 +97,26 @@ TreeDisplay.createInputBox = function() {
     textElement.textContent = ''
     $('#input_box').val(text);
     $('#input_box').focus();
+
+    // Trigger reset if click away or hit enter
     $('#input_box').blur(function() {
-        var objective = TreeConstructor.loadObjective(id, $('#input_box').val());
-        textElement.textContent = text;
-        $('#input_div').remove();
-        TreeConstructor.parseObjective(objective); 
+        TreeDisplay.resetTree(id, textElement, text);
     });
+
+    $('#input_box').keypress(function(e) {
+        var code = (e.keyCode ? e.keyCode : e.which);
+        if (code == 13) TreeDisplay.resetTree(id, textElement, text);
+    });
+}
+
+/**
+ * Resets the tree based on the newly entered text in #input_box.
+ */
+TreeDisplay.resetTree = function(id, textElement, text) {
+    var objective = TreeConstructor.loadObjective(id, $('#input_box').val());
+    textElement.textContent = text;
+    $('#input_div').remove();
+    TreeConstructor.parseObjective(objective); 
 }
 
 /**
