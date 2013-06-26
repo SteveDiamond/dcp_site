@@ -1,8 +1,45 @@
 /**
- * Manipulates the tree object.
+ * Initializes tree construction and manipulates the tree object.
  */
 function TreeConstructor() {
 
+}
+
+/**
+ * Parses the given objective/constraint and creates a parse tree visualization.
+ */
+TreeConstructor.parseObjective = function(objective) {
+    $.ajax({ // create an AJAX call...
+        crossDomain: false,
+                    beforeSend: function(xhr, settings) {
+                        xhr.setRequestHeader("X-CSRFToken", $.cookie('csrftoken'));
+                    },
+        url: 'parse',
+        type: 'POST',
+        data: {text: objective},
+        success: function(response) {
+            var root = JSON.parse(response); // Load parse tree
+            var numNodes = TreeConstructor.augmentTree(root, 0); // Add short_name nodes and number nodes.
+            // Save node info as attribute of TreeConstructor
+            TreeConstructor.storeNodeMap(root);
+            // Map distance from root to list of nodes in left to right order.
+            var levels = [];
+            TreeConstructor.generateLevels(root, levels, 0);
+            // Get node box widths
+            var widths = [];
+            TreeLayout.getWidths(root, widths);
+            // Returns [P,RNode,RWidth, RSib] where Px = 0, RNodex >= RWidthw + SEPARTION*1
+            // Sib used for optimization objective.
+            var relationMatrices = TreeLayout.getRelations(root, numNodes, levels);
+            var P = relationMatrices[0], RNode = relationMatrices[1],
+            RWidth = relationMatrices[2], Sib = relationMatrices[3];
+            // Formats layout problem as LP
+            var data = TreeLayout.getCenters(P, RNode, RWidth, Sib, widths, numNodes, root, levels);
+            // Solves LP to get box centers with minimum tree width.
+            // Then draws tree.
+            TreeDisplay.getLayout(data, root, numNodes, levels, widths);
+        }
+    });
 }
 
 /**
@@ -40,4 +77,93 @@ TreeConstructor.generateLevels = function(root, levels, curLevel) {
     for (var i=0; i < root.children.length; i++) {
         TreeConstructor.generateLevels(root.children[i], levels, curLevel+1);
     }
+}
+
+/**
+ * Stores a map of node tag to minimized node object as an attribute of TreeConstructor.
+ * The stored node contains the name, isShortNameNode, parent tag, and children's tags.
+ */
+TreeConstructor.storeNodeMap = function(root) {
+    var tagToNode = {};
+    TreeConstructor.storeNodeMapRecursive(root, undefined, tagToNode);
+    TreeConstructor[TreeConstants.TAG_TO_NODE] = tagToNode;
+}
+
+/**
+ * Recursive helper.
+ */
+TreeConstructor.storeNodeMapRecursive = function(node, parentTag, tagToNode) {
+    var nodeInfo = {'name': node.name, 
+                    'isShortNameNode': node.isShortNameNode,
+                    'parentTag': parentTag,
+                   };
+    if (node.children) {
+        var childTags = [];
+        for (var i=0; i < node.children.length; i++) {
+            childTags.push(node.children[i].tag);
+        }
+        nodeInfo.childTags = childTags;
+        // Recurse on children
+        for (var i=0; i < node.children.length; i++) {
+            TreeConstructor.storeNodeMapRecursive(node.children[i], node.tag, tagToNode);
+        }
+    }
+    tagToNode[node.tag] = nodeInfo;
+}
+
+/**
+ * Returns the text of the overall objective/constraint after
+ * the user has clicked and modified the text at the node with
+ * the given id.
+ * Uses the tagToNode map stored as an attribute of TreeConstructor.
+ */
+TreeConstructor.loadObjective = function(id, text) {
+    var tagToNode = TreeConstructor[TreeConstants.TAG_TO_NODE];
+    var node = tagToNode[id];
+    node.name = text;
+    if (node.isShortNameNode) {
+        node = tagToNode[node.childTags[0]];
+    }
+    return TreeConstructor.loadObjectiveRecursive(node, tagToNode);
+}
+
+/**
+ * Recursive helper. Text is the text for the current expression.
+ */
+TreeConstructor.loadObjectiveRecursive = function(node, tagToNode) {
+    if (node.parentTag == undefined) return node.name;
+    var operator = tagToNode[node.parentTag];
+    var position = operator.childTags.indexOf(node.tag);
+    var newExpression = "";
+    // Arithmetic operator
+    if (TreeConstants.OPERATORS.indexOf(operator.name) != -1) {
+        if (operator.childTags.length == 1) {
+            newExpression = operator.name + node.name;
+        } else { // Two arguments
+            var lhExp = tagToNode[operator.childTags[0]];
+            var rhExp = tagToNode[operator.childTags[1]];
+            newExpression = lhExp.name + operator.name + rhExp.name; 
+        }
+    } else { // Atom
+        // Create argument list
+        var args = tagToNode[operator.childTags[0]].name;
+        for (var i=1; i < operator.childTags.length; i++) {
+            args = args + "," + tagToNode[operator.childTags[i]].name;
+        }
+        // Standard atoms
+        var ellipsisIndex = operator.name.indexOf(TreeConstants.ELLIPSIS);
+        if (ellipsisIndex == -1) {
+            newExpression = operator.name + "(" + args + ")"
+        } else { // Parameterized atoms
+            newExpression = operator.name.substr(0, ellipsisIndex) + 
+                            args + operator.name.substr(ellipsisIndex + TreeConstants.ELLIPSIS.length);
+        }
+    }
+    var nextNode = tagToNode[operator.parentTag];
+    // Surrounding parentheses TODO inaccurate, count parens after the first
+    if (nextNode.name[0] == "(") {
+        newExpression = "(" + newExpression + ")";
+    }
+    nextNode.name = newExpression;
+    return TreeConstructor.loadObjectiveRecursive(nextNode, tagToNode);
 }

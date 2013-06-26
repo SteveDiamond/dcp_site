@@ -6,6 +6,33 @@ function TreeDisplay() {
 }
 
 /**
+ * Solve the LP server side to determine the layout.
+ * Then draw the tree on callback.
+ * http://stackoverflow.com/questions/4342926/how-can-i-send-json-data-to-server
+ */
+TreeDisplay.getLayout = function(data, root, numNodes, levels, widths) {
+    $.ajax({ // create an AJAX call that handles CSRF
+        crossDomain: false,
+        beforeSend: function(xhr, settings) {
+            xhr.setRequestHeader("X-CSRFToken", $.cookie('csrftoken'));
+        },
+        url: 'solveLP',
+        type: 'POST',
+        contentType:'application/json',
+        data: JSON.stringify(data),
+        dataType:'json',
+        success: function(response) {
+            var x = response;
+            var centers = x.slice(0,numNodes);
+            var treeWidth = x[numNodes];
+            $(TreeConstants.TREE_DIV).html(''); // Clear old tree
+            TreeDisplay.drawTree(TreeConstants.TREE_DIV, root, numNodes, levels, widths, centers, treeWidth); // update the DIV
+        }
+    });
+    return false;
+}
+
+/**
  * Draws the parse tree.
  */
 TreeDisplay.drawTree = function(location, root, numNodes, levels, widths, centers, treeWidth) {
@@ -70,9 +97,11 @@ TreeDisplay.createInputBox = function() {
     textElement.textContent = ''
     $('#input_box').val(text);
     $('#input_box').focus();
-    $('#input_box').blur(function() { 
-      textElement.textContent = text; //$('#input_box').val();
-      $('#input_div').remove(); 
+    $('#input_box').blur(function() {
+        var objective = TreeConstructor.loadObjective(id, $('#input_box').val());
+        textElement.textContent = text;
+        $('#input_div').remove();
+        TreeConstructor.parseObjective(objective); 
     });
 }
 

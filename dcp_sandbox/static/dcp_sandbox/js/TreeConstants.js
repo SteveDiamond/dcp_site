@@ -25,4 +25,9 @@ TreeConstants.CHAR_HEIGHT = 12;
 // Tree location
 TreeConstants.TREE_DIV = "#chart";
 // Location of images
-TreeConstants.IMAGE_PREFIX = "/static/dcp_sandbox/images/"
+TreeConstants.IMAGE_PREFIX = "/static/dcp_sandbox/images/";
+// Key for tagToNode map in cookie
+TreeConstants.TAG_TO_NODE = "tagToNode";
+// Constants for reconstructing objective/constraint
+TreeConstants.OPERATORS = ["+","-","*","/"];
+TreeConstants.ELLIPSIS = "...";
