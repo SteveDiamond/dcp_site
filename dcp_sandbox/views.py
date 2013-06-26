@@ -26,12 +26,17 @@ def parse(request):
     unicode_text = request.POST['text']
     # Convert to standard Python string (ASCII)
     text = unicodedata.normalize('NFKD', unicode_text).encode('ascii','ignore')
+    # Reject empty text
+    if len(text) == 0:
+        return HttpResponseServerError(json.dumps("Empty input"))
 
     for line in str.split(text, '\r\n'):
         try:
             parser.parse(line)
         except Exception, e:
-            return HttpResponseServerError(json.dumps("Parse error"))
+            log.debug('Parser error')
+            log.error(e)
+            return HttpResponseServerError(json.dumps("Parser error"))
 
     json_str = ""
     if len(parser.statements) > 0:
@@ -56,12 +61,16 @@ def solveLP(request):
                 A = A.T
                 C = C.T
             try:
-                result = solvers.lp(c, A, b, C, d)
+                if min(C.size) == 0: # No equality constraint
+                    result = solvers.lp(c, A, b)
+                else:
+                    result = solvers.lp(c, A, b, C, d)
                 x = [i for i in result['x']]
             except Exception, e:
                 x = []
                 log.debug('Solver error')
                 log.error(e)
+                return HttpResponseServerError(json.dumps(x))
             return HttpResponse(json.dumps(x))
     return HttpResponse("OK")
 

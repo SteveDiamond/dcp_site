@@ -12,6 +12,8 @@ TreeLayout.getWidths = function(root, widths) {
     var width = root.name.width(TreeConstants.FONT);
     if (root.isShortNameNode) {
         width += TreeConstants.SHORT_NAME_CONSTANT;
+    } else if (root.isPrompt) {
+        width += TreeConstants.PROMPT_CONSTANT;
     } else {
         width += TreeConstants.BOX_CONSTANT;
     }
@@ -35,6 +37,20 @@ String.prototype.width = function(font) {
   o.remove();
 
   return w;
+}
+
+/**
+ * Add height function to String to get true String height.
+ */
+String.prototype.height = function(font) {
+  var f = font || '12px arial',
+      o = $('<div>' + this + '</div>')
+            .css({'position': 'absolute', 'float': 'left', 'white-space': 'nowrap', 'visibility': 'hidden', 'font': f})
+            .appendTo($('body')),
+      h = o.height();
+  o.remove();
+
+  return h;
 }
 
 /**

@@ -42,27 +42,27 @@ TreeDisplay.drawTree = function(location, root, numNodes, levels, widths, center
 
     var svg = d3.select(location).append("svg:svg")
         .attr("width", treeWidth)
-        .attr("height", treeHeight);
+        .attr("height", treeHeight)
 
     for (var i=0; i < numLevels; i++) {
         // Draw nodes
         var nodeEnter = svg.selectAll("level"+i)
-           .data(levels[i])
-           .enter()
-           .append("svg:g")
-           .attr("class", "node")
-           .attr("id", function(d) { return d.tag; })
-           .attr("transform", function(d) { return "translate(" + (centers[d.tag] - 0.5*widths[d.tag]) +
+            .data(levels[i])
+            .enter()
+            .append("svg:g")
+            .attr("class", "node")
+            .attr("id", function(d) { return d.tag; })
+            .attr("transform", function(d) { return "translate(" + (centers[d.tag] - 0.5*widths[d.tag]) +
                                                     "," + TreeDisplay.getLevelY(i) + ")"; })
 
         nodeEnter.append("svg:rect")
-           .attr("width", function(d) { return widths[d.tag]; })
-           .attr("height", TreeConstants.BOX_HEIGHT);
+            .attr("width", function(d) { return widths[d.tag]; })
+            .attr("height", TreeConstants.BOX_HEIGHT)
 
         nodeEnter.append("svg:text")
-            .attr("dy", TreeConstants.BOX_HEIGHT/2 + TreeConstants.CHAR_HEIGHT/4)
+            .attr("dy", TreeConstants.BOX_HEIGHT/2)
             .attr("dx", TreeDisplay.getTextMargin)
-            .text(function(d) { return d.name; });
+            .text(function(d) { return d.name; })
         
         // Draw links
         TreeDisplay.drawLinks(svg, i, levels, centers);
@@ -71,7 +71,7 @@ TreeDisplay.drawTree = function(location, root, numNodes, levels, widths, center
         TreeDisplay.drawSymbols(svg, nodeEnter, widths);
     }
 
-    svg.selectAll("rect").on("click", TreeDisplay.createInputBox);
+    svg.selectAll("text").on("click", TreeDisplay.createInputBox);
 }
 
 /**
@@ -80,8 +80,9 @@ TreeDisplay.drawTree = function(location, root, numNodes, levels, widths, center
  */
 TreeDisplay.createInputBox = function() {
     var id = this.parentElement.id;
-    var textElement = this.parentElement.getElementsByTagName('text')[0];
-    var boundingRect = this.getBoundingClientRect();
+    var textElement = this;
+    var rectElement = this.parentElement.getElementsByTagName('rect')[0];
+    var boundingRect = rectElement.getBoundingClientRect();
     $('body').append('<div id="input_div" style="height:' + boundingRect.height + 
             '; width:' + boundingRect.width +
             '; height:' + boundingRect.height +
@@ -95,7 +96,8 @@ TreeDisplay.createInputBox = function() {
             '"> </div>')
     var text = textElement.textContent
     textElement.textContent = ''
-    $('#input_box').val(text);
+    // Erase prompt when clicked.
+    if (!TreeConstructor.promptActive) $('#input_box').val(text);
     $('#input_box').focus();
 
     // Trigger reset if click away or hit enter
@@ -125,6 +127,8 @@ TreeDisplay.resetTree = function(id, textElement, text) {
 TreeDisplay.getTextMargin = function(node) {
     if (node.isShortNameNode) {
         return TreeConstants.SHORT_NAME_CONSTANT/2;
+    } else if (node.isPrompt) {
+        return TreeConstants.PROMPT_CONSTANT/2;
     } else {
         return TreeConstants.BOX_CONSTANT/2;
     }      
@@ -170,7 +174,7 @@ TreeDisplay.drawSymbols = function(svg, nodes, widths) {
 
     // Invalid constraints
     var constraints = nodes.filter(function(d) {
-        return !d.isShortNameNode && !d.curvature && d.errors.unsorted_errors.length > 0;
+        return !d.isShortNameNode && !d.curvature && d.errors && d.errors.unsorted_errors.length > 0;
     });
     constraints.append("svg:image")
             .attr("x", TreeConstants.SYMBOL_MARGIN)

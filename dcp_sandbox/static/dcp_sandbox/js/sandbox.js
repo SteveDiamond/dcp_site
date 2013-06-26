@@ -4,10 +4,11 @@
  */
 (function($, numeric) {
     $().ready(function(){
-        // http://stackoverflow.com/questions/7335780/how-to-post-a-django-form-with-ajax-jquery
-        $('#expression').submit(function() { // catch the form's submit event
-            TreeConstructor.parseObjective($("#scratchpad").val());
-            return false;
-        });
+        var dummyTree = {
+                         name: TreeConstants.PROMPT,
+                         isPrompt: true,
+                        };
+        TreeConstructor.processParseTree(dummyTree);
     });
 }(jQuery, numeric));
+//"log(square(z)) - log_sum_exp(2*x*z, -square(y)) + (norm(x,3) + log(y))"

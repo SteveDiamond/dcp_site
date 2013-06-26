@@ -5,6 +5,9 @@ function TreeConstructor() {
 
 }
 
+// True until the user enters a valid objective/constraint.
+TreeConstructor.promptActive = true;
+
 /**
  * Parses the given objective/constraint and creates a parse tree visualization.
  */
@@ -19,28 +22,43 @@ TreeConstructor.parseObjective = function(objective) {
         data: {text: objective},
         success: function(response) {
             var root = JSON.parse(response); // Load parse tree
-            var numNodes = TreeConstructor.augmentTree(root, 0); // Add short_name nodes and number nodes.
-            // Save node info as attribute of TreeConstructor
-            TreeConstructor.storeNodeMap(root);
-            // Map distance from root to list of nodes in left to right order.
-            var levels = [];
-            TreeConstructor.generateLevels(root, levels, 0);
-            // Get node box widths
-            var widths = [];
-            TreeLayout.getWidths(root, widths);
-            // Returns [P,RNode,RWidth, RSib] where Px = 0, RNodex >= RWidthw + SEPARTION*1
-            // Sib used for optimization objective.
-            var relationMatrices = TreeLayout.getRelations(root, numNodes, levels);
-            var P = relationMatrices[0], RNode = relationMatrices[1],
-            RWidth = relationMatrices[2], Sib = relationMatrices[3];
-            // Formats layout problem as LP
-            var data = TreeLayout.getCenters(P, RNode, RWidth, Sib, widths, numNodes, root, levels);
-            // Solves LP to get box centers with minimum tree width.
-            // Then draws tree.
-            TreeDisplay.getLayout(data, root, numNodes, levels, widths);
+            TreeConstructor.deactivatePrompt();
+            TreeConstructor.processParseTree(root);
         },
         error: function(jqXHR, textStatus, errorThrown) {}
     });
+}
+
+/**
+ * Processes the tree from the parser into a visualization.
+ */
+TreeConstructor.deactivatePrompt = function() {
+    TreeConstructor.promptActive = false;
+}
+
+/**
+ * Processes the tree from the parser into a visualization.
+ */
+TreeConstructor.processParseTree = function(root) {
+    var numNodes = TreeConstructor.augmentTree(root, 0); // Add short_name nodes and number nodes.
+    // Save node info as attribute of TreeConstructor
+    TreeConstructor.storeNodeMap(root);
+    // Map distance from root to list of nodes in left to right order.
+    var levels = [];
+    TreeConstructor.generateLevels(root, levels, 0);
+    // Get node box widths
+    var widths = [];
+    TreeLayout.getWidths(root, widths);
+    // Returns [P,RNode,RWidth, RSib] where Px = 0, RNodex >= RWidthw + SEPARTION*1
+    // Sib used for optimization objective.
+    var relationMatrices = TreeLayout.getRelations(root, numNodes, levels);
+    var P = relationMatrices[0], RNode = relationMatrices[1],
+    RWidth = relationMatrices[2], Sib = relationMatrices[3];
+    // Formats layout problem as LP
+    var data = TreeLayout.getCenters(P, RNode, RWidth, Sib, widths, numNodes, root, levels);
+    // Solves LP to get box centers with minimum tree width.
+    // Then draws tree.
+    TreeDisplay.getLayout(data, root, numNodes, levels, widths);
 }
 
 /**
@@ -119,7 +137,7 @@ TreeConstructor.storeNodeMapRecursive = function(node, parentTag, tagToNode) {
  * Uses the tagToNode map stored as an attribute of TreeConstructor.
  */
 TreeConstructor.loadObjective = function(id, text) {
-    var tagToNode = TreeConstructor[TreeConstants.TAG_TO_NODE];
+    var tagToNode = $.extend(true, {}, TreeConstructor[TreeConstants.TAG_TO_NODE]);
     var node = tagToNode[id];
     node.name = text;
     if (node.isShortNameNode) {
