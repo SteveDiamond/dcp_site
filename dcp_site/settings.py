@@ -14,8 +14,7 @@ SITE_ROOT = os.getcwd()
 
 DATABASES = {
     'default': {
-        # TODO reactivate when get MySQL on afs
-        #'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'dcp_site',                      # Or path to database file if using sqlite3.
         # The following settings are not used with sqlite3:
         'USER': 'dcp',
@@ -65,7 +64,7 @@ MEDIA_URL = ''
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/var/www/example.com/static/"
-STATIC_ROOT = '/afs/ir/group/dcp/WWW/'
+#STATIC_ROOT = '/afs/ir/group/dcp/WWW/'
 
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"

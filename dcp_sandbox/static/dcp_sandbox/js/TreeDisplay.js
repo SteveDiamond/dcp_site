@@ -94,8 +94,9 @@ TreeDisplay.createInputBox = function() {
             '<input id="input_box" type="text" style="width:' + boundingRect.width +
             '; height:' + TreeConstants.BOX_HEIGHT +
             '"> </div>')
-    var text = textElement.textContent
-    textElement.textContent = ''
+    var text = textElement.textContent;
+    textElement.textContent = '';
+    //$("#" + id + " image").hide(); TODO expand text box as they type
     // Erase prompt when clicked.
     if (!TreeConstructor.promptActive) $('#input_box').val(text);
     $('#input_box').focus();

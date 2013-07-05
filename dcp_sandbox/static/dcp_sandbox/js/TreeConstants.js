@@ -27,10 +27,10 @@ TreeConstants.IMAGE_PREFIX = "/static/dcp_sandbox/images/";
 // Key for tagToNode map in cookie
 TreeConstants.TAG_TO_NODE = "tagToNode";
 // Constants for reconstructing objective/constraint
-TreeConstants.OPERATORS = ["+","-","*","/"];
+TreeConstants.OPERATORS = ["+","-","*","/","<=",">=","=="];
 TreeConstants.ELLIPSIS = "...";
 // Initial prompt
-TreeConstants.PROMPT = "Click and type in an objective or constraint.";
+TreeConstants.PROMPT = "Click here and type in an expression or inequality.";
 TreeConstants.PROMPT_CONSTANT = 200;
 // Demo objective
 TreeConstants.DEMO = "log(square(z)) - log_sum_exp(2*x*z, -square(y)) + (norm(x,3) + log(y))";
