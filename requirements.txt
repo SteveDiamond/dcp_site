@@ -1,11 +1,6 @@
 Django==1.5.1
-South==0.7.6
-distribute==0.6.34
-dj-database-url==0.2.1
 nose==1.2.1
-pdos==1.0
 ply==3.4
-wsgiref==0.1.2
 yolk==0.4.3
 numpy==1.7.0
 cvxopt==1.1.5
