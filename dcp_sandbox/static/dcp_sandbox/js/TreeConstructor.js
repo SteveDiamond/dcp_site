@@ -58,19 +58,9 @@ TreeConstructor.processParseTree = function(root) {
     var centers = [];
     centers[root.tag] = treeWidth/2;
     TreeLayout.getCenters(root, widths, centers);
+    // Draw the new tree
     $(TreeConstants.TREE_DIV).html(''); // Clear old tree
     TreeDisplay.drawTree(TreeConstants.TREE_DIV, root, numNodes, levels, widths, centers, treeWidth);
-
-    // // Returns [P,RNode,RWidth, RSib] where Px = 0, RNodex >= RWidthw + SEPARTION*1
-    // // Sib used for optimization objective.
-    // var relationMatrices = TreeLayout.getRelations(root, numNodes, levels);
-    // var P = relationMatrices[0], RNode = relationMatrices[1],
-    // RWidth = relationMatrices[2], Sib = relationMatrices[3];
-    // // Formats layout problem as LP
-    // var data = TreeLayout.getCenters(P, RNode, RWidth, Sib, widths, numNodes, root, levels);
-    // // Solves LP to get box centers with minimum tree width.
-    // // Then draws tree.
-    // TreeDisplay.getLayout(data, root, numNodes, levels, widths);
 }
 
 /**
@@ -218,7 +208,7 @@ TreeConstructor.loadObjectiveRecursive = function(node, tagToNode) {
 TreeConstructor.getSurroundingParens = function(name) {
     // Stores the index of the matching close paren
     // for each open paren.
-    var parenMatches = TreeLayout.makeArrayOf(-1, name.length);
+    var parenMatches = TreeConstructor.makeArrayOf(-1, name.length);
     // Stack of open parens to be matched
     var parenStack = []; 
     var balance = 0;
@@ -236,4 +226,18 @@ TreeConstructor.getSurroundingParens = function(name) {
         surroundingParens++;
     }
     return surroundingParens;
+}
+
+
+/**
+ * Utility function for initializing arrays so all cells
+ * hold a given value.
+ * http://stackoverflow.com/questions/1295584/most-efficient-way-to-create-a-zero-filled-javascript-array
+ */
+TreeConstructor.makeArrayOf = function(value, length) {
+    var arr = []; var i = length;
+    while (i--) {
+        arr[i] = value;
+    }
+    return arr;
 }

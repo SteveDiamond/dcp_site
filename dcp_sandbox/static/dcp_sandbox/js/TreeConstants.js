@@ -4,10 +4,10 @@
 function TreeConstants() {
 
 }
-// Minimum separation between boxes.
-TreeConstants.MIN_BOX_SEP = 20;
-// Minimum ratio between the spacing between cousins and the spacing between siblings.
-TreeConstants.COUS_SIB_RATIO = 1.05
+// Minimum separation between siblings.
+TreeConstants.MIN_SIB_SEP = 20;
+// Minimum separation between cousins.
+TreeConstants.MIN_COUS_SEP = 40;
 // Minimum HORIZ_SEP between boxes
 TreeConstants.HORIZ_SEP = 10;
 // Minimum separation of boxes from edges
@@ -36,4 +36,4 @@ TreeConstants.ELLIPSIS = "...";
 TreeConstants.PROMPT = "Click here and type in an expression or inequality.";
 TreeConstants.PROMPT_CONSTANT = 200;
 // Demo objective
-TreeConstants.DEMO = "log(square(z)) - log_sum_exp(2*x*z, -square(y)) + (norm(x,3) + log(y))";
+TreeConstants.DEMO = "log(square(z)) - log_sum_exp(2*x*z, -square(y), z) + (norm(x,3) + log(y))";

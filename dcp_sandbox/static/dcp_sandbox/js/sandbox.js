@@ -2,7 +2,7 @@
  * Sandbox Module
  * Handles control flow for interacting with the parse tree.
  */
-(function($, numeric) {
+(function($) {
     $().ready(function(){
         var promptTree = {
                          name: TreeConstants.PROMPT,
@@ -10,4 +10,4 @@
                         };
         TreeConstructor.processParseTree(promptTree);
     });
-}(jQuery, numeric));
+}(jQuery));
