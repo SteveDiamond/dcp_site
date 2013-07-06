@@ -46,19 +46,31 @@ TreeConstructor.processParseTree = function(root) {
     // Map distance from root to list of nodes in left to right order.
     var levels = [];
     TreeConstructor.generateLevels(root, levels, 0);
+    // Add left and right pointer to each node.
+    TreeConstructor.addLeftRight(levels);
     // Get node box widths
     var widths = [];
     TreeLayout.getWidths(root, widths);
-    // Returns [P,RNode,RWidth, RSib] where Px = 0, RNodex >= RWidthw + SEPARTION*1
-    // Sib used for optimization objective.
-    var relationMatrices = TreeLayout.getRelations(root, numNodes, levels);
-    var P = relationMatrices[0], RNode = relationMatrices[1],
-    RWidth = relationMatrices[2], Sib = relationMatrices[3];
-    // Formats layout problem as LP
-    var data = TreeLayout.getCenters(P, RNode, RWidth, Sib, widths, numNodes, root, levels);
-    // Solves LP to get box centers with minimum tree width.
-    // Then draws tree.
-    TreeDisplay.getLayout(data, root, numNodes, levels, widths);
+    // Get the spacing between siblings.
+    TreeLayout.getPadding(root, widths);
+    var treeWidth = TreeLayout.getTreeWidth(root, widths);
+    // Get the centers of the nodes.
+    var centers = [];
+    centers[root.tag] = treeWidth/2;
+    TreeLayout.getCenters(root, widths, centers);
+    $(TreeConstants.TREE_DIV).html(''); // Clear old tree
+    TreeDisplay.drawTree(TreeConstants.TREE_DIV, root, numNodes, levels, widths, centers, treeWidth);
+
+    // // Returns [P,RNode,RWidth, RSib] where Px = 0, RNodex >= RWidthw + SEPARTION*1
+    // // Sib used for optimization objective.
+    // var relationMatrices = TreeLayout.getRelations(root, numNodes, levels);
+    // var P = relationMatrices[0], RNode = relationMatrices[1],
+    // RWidth = relationMatrices[2], Sib = relationMatrices[3];
+    // // Formats layout problem as LP
+    // var data = TreeLayout.getCenters(P, RNode, RWidth, Sib, widths, numNodes, root, levels);
+    // // Solves LP to get box centers with minimum tree width.
+    // // Then draws tree.
+    // TreeDisplay.getLayout(data, root, numNodes, levels, widths);
 }
 
 /**
@@ -95,6 +107,18 @@ TreeConstructor.generateLevels = function(root, levels, curLevel) {
     if(!root.children) return;
     for (var i=0; i < root.children.length; i++) {
         TreeConstructor.generateLevels(root.children[i], levels, curLevel+1);
+    }
+}
+
+/**
+ * Adds a left and right pointer to each node.
+ */
+TreeConstructor.addLeftRight = function(levels) {
+    for (var i=0; i < levels.length; i++) {
+        for (var j=1; j < levels[i].length; j++) {
+            levels[i][j-1].right = levels[i][j];
+            levels[i][j].left = levels[i][j-1];
+        }
     }
 }
 

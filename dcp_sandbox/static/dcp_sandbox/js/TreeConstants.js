@@ -4,7 +4,10 @@
 function TreeConstants() {
 
 }
-
+// Minimum separation between boxes.
+TreeConstants.MIN_BOX_SEP = 20;
+// Minimum ratio between the spacing between cousins and the spacing between siblings.
+TreeConstants.COUS_SIB_RATIO = 1.05
 // Minimum HORIZ_SEP between boxes
 TreeConstants.HORIZ_SEP = 10;
 // Minimum separation of boxes from edges
