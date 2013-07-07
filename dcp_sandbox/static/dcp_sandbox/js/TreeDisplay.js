@@ -66,7 +66,6 @@ TreeDisplay.createInputBox = function() {
             '"> </div>')
     var text = textElement.textContent;
     textElement.textContent = '';
-    //$("#" + id + " image").hide(); TODO expand text box as they type
     // Erase prompt when clicked.
     if (!TreeConstructor.promptActive) $('#input_box').val(text);
     $('#input_box').focus();
@@ -77,7 +76,7 @@ TreeDisplay.createInputBox = function() {
         TreeDisplay.resetTree(id, textElement, text);
     });
 
-    // Trigger rest if click enter.
+    // Trigger reset if click enter.
     $('#input_box').keypress(function(e) {
         var code = (e.keyCode ? e.keyCode : e.which);
         if (code == 13) { // Enter
