@@ -38,8 +38,13 @@ svg {
     border-radius: 0;
 }
 
-.dropdown-menu > li > p {
-    text-align:center;
+.navbar .dropdown-menu {
+    max-height: 250px;
+    overflow: auto;
+}
+
+.navbar .dropdown-menu:before {
+    content:normal;
 }
 
 #input_box {
