@@ -19,6 +19,12 @@ line.link {
     stroke-width: 1.5px;
 }
 
+line.arrow {
+    fill: none;
+    stroke: black;
+    stroke-width: 1.5px;
+}
+
 svg {
     display: block;
     margin: auto;

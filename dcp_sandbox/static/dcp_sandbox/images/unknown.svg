@@ -9,14 +9,62 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="793.29932"
-   height="757.68726"
+   width="608.54987"
+   height="708.55579"
    id="svg2"
    version="1.1"
    inkscape:version="0.48.2 r9819"
-   sodipodi:docname="unknown.svg">
+   sodipodi:docname="unknown.svg"
+   inkscape:export-filename="/Users/smd999995/PythonProjects/dcp_site/dcp_sandbox/static/dcp_sandbox/images/unknown.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
   <defs
-     id="defs4" />
+     id="defs4">
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath3796">
+      <rect
+         style="fill:#000000;fill-opacity:1;stroke:#3182bd;stroke-width:0;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         id="rect3798"
+         width="800"
+         height="764"
+         x="-23.652472"
+         y="322.81744" />
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath3800">
+      <rect
+         style="fill:#000000;fill-opacity:1;stroke:#3182bd;stroke-width:0;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         id="rect3802"
+         width="800"
+         height="764"
+         x="-23.652472"
+         y="322.81744" />
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath3804">
+      <rect
+         style="fill:#000000;fill-opacity:1;stroke:#3182bd;stroke-width:0;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         id="rect3806"
+         width="800"
+         height="764"
+         x="-23.652472"
+         y="322.81744" />
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath3808">
+      <rect
+         style="fill:#000000;fill-opacity:1;stroke:#3182bd;stroke-width:0;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         id="rect3810"
+         width="800"
+         height="764"
+         x="-42.935364"
+         y="292.1767" />
+    </clipPath>
+  </defs>
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -25,8 +73,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.5"
-     inkscape:cx="138.82094"
-     inkscape:cy="450.59648"
+     inkscape:cx="141.88767"
+     inkscape:cy="483.53083"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -47,7 +95,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -55,7 +103,7 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(21.652471,-325.13018)">
+     transform="translate(-70.72224,-329.69594)">
     <path
        sodipodi:type="arc"
        style="fill:none;stroke:none"
@@ -64,24 +112,35 @@
        sodipodi:cy="598.07648"
        sodipodi:rx="170"
        sodipodi:ry="205.71428"
-       d="m 525.71429,598.07648 c 0,113.61286 -76.11159,205.71428 -170,205.71428 -93.8884,0 -170,-92.10142 -170,-205.71428 0,-0.70088 0.003,-1.40174 0.009,-2.10258"
+       d="M 525.71429,598.07648 A 170,205.71428 0 1 1 185.72317,595.9739"
        sodipodi:start="0"
        sodipodi:end="3.1518137"
-       sodipodi:open="true" />
+       sodipodi:open="true"
+       transform="translate(19.282893,10.640733)"
+       clip-path="url(#clipPath3808)" />
     <path
        inkscape:connector-curvature="0"
        id="path4530"
-       d="m 374.2164,349.05521 1.56157,508.54989"
-       style="fill:none;stroke:#3182bd;stroke-width:100;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+       d="m 374.2164,379.69594 1.56157,508.54989"
+       style="fill:none;stroke:#3182bd;stroke-width:100;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       clip-path="url(#clipPath3804)"
+       transform="translate(0,-20)" />
     <path
        style="fill:none;stroke:#3182bd;stroke-width:100;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-       d="m 629.27213,602.54937 -508.54989,1.56157"
+       d="m 629.27213,633.1901 -508.54989,1.56157"
        id="path4615"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       clip-path="url(#clipPath3800)"
+       transform="translate(0,-20)" />
     <path
        inkscape:connector-curvature="0"
        id="path4617"
-       d="m 629.27213,968.54937 -508.54989,1.56157"
-       style="fill:none;stroke:#3182bd;stroke-width:100;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+       d="m 629.27213,999.1901 -508.54989,1.5616"
+       style="fill:none;stroke:#3182bd;stroke-width:75;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       inkscape:export-filename="/Users/smd999995/PythonProjects/dcp_site/dcp_sandbox/static/dcp_sandbox/images/unknown.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"
+       clip-path="url(#clipPath3796)"
+       transform="translate(0,-20)" />
   </g>
 </svg>

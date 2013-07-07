@@ -61,11 +61,54 @@ TreeLayout.getPadding = function(root, widths) {
 }
 
 /**
- * Determine the tree width so that the root node can be centered.
+ * Determine the tree width and how the root node can be centered.
+ * Returns [treeWidth, rootCenter].
  */
 TreeLayout.getTreeWidth = function(root, widths) {
-    var padding = Math.max(root.leftPadding, root.rightPadding, TreeConstants.EDGE_SEP);
-    return 2*padding + widths[root.tag];
+    var padding = 2*Math.max(root.leftPadding, root.rightPadding, TreeConstants.EDGE_SEP);
+    var center = (padding + widths[root.tag])/2;
+    // If in help mode, add room for the legends.
+    if (TreeConstructor.helpActive) {
+        var leftLegend = TreeLayout.getLegendWidth(TreeConstants.CURVATURE_LEGEND) + TreeConstants.LEGEND_PADDING;
+        var rightLegend = TreeLayout.getLegendWidth(TreeConstants.SIGN_LEGEND) + TreeConstants.LEGEND_PADDING;
+        padding += leftLegend + rightLegend;
+        center += leftLegend;
+    }
+    return [padding + widths[root.tag], center];
+}
+
+/**
+ * Determine the tree height.
+ */
+TreeLayout.getTreeHeight = function(levels) {
+    var numLevels = levels.length;
+    var treeHeight = numLevels*TreeConstants.BOX_HEIGHT + (numLevels-1)*TreeConstants.VERT_SEP + 2*TreeConstants.EDGE_VERT_SEP;
+    var legendHeight = 0;
+    if (TreeConstructor.helpActive) {
+        legendHeight = Math.max( TreeLayout.getLegendHeight(TreeConstants.CURVATURE_LEGEND), 
+                                 TreeLayout.getLegendHeight(TreeConstants.SIGN_LEGEND) );
+    }
+    return Math.max(treeHeight, legendHeight + 2*TreeConstants.EDGE_VERT_SEP);
+}
+
+/**
+ * Determine the width of the given legend.
+ */
+TreeLayout.getLegendWidth = function(legend) {
+    var widths = [legend.title.width(TreeConstants.FONT) + TreeConstants.SHORT_NAME_CONSTANT];
+    for (var i = 0; i < legend.text.length; i++) {
+        widths.push(TreeConstants.BOX_CONSTANT/2 +
+            legend.text[i].name.width(TreeConstants.FONT) + 
+            TreeConstants.SHORT_NAME_CONSTANT/2);
+    };
+    return Math.max.apply(null, widths);
+}
+
+/**
+ * Determine the height of the given legend.
+ */
+TreeLayout.getLegendHeight = function(legend) {
+    return (1 + legend.text.length)*TreeConstants.LEGEND_TEXT_HEIGHT;
 }
 
 /**

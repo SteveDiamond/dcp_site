@@ -6,45 +6,15 @@ function TreeDisplay() {
 }
 
 /**
- * Solve the LP server side to determine the layout.
- * Then draw the tree on callback.
- * http://stackoverflow.com/questions/4342926/how-can-i-send-json-data-to-server
- */
-TreeDisplay.getLayout = function(data, root, numNodes, levels, widths) {
-    $.ajax({ // create an AJAX call that handles CSRF
-        crossDomain: false,
-        beforeSend: function(xhr, settings) {
-            xhr.setRequestHeader("X-CSRFToken", $.cookie('csrftoken'));
-        },
-        url: 'solveLP',
-        type: 'POST',
-        contentType:'application/json',
-        data: JSON.stringify(data),
-        dataType:'json',
-        success: function(response) {
-            var x = response;
-            var centers = x.slice(0,numNodes);
-            var treeWidth = x[numNodes];
-            $(TreeConstants.TREE_DIV).html(''); // Clear old tree
-            TreeDisplay.drawTree(TreeConstants.TREE_DIV, root, numNodes, levels, widths, centers, treeWidth); // update the DIV
-        }
-    });
-    return false;
-}
-
-/**
  * Draws the parse tree.
  */
-TreeDisplay.drawTree = function(location, root, numNodes, levels, widths, centers, treeWidth) {
+TreeDisplay.drawTree = function(location, root, numNodes, levels, widths, centers, treeWidth, treeHeight) {
     // Inspired by http://bl.ocks.org/mbostock/1093025
-    var numLevels = levels.length;
-    var treeHeight = numLevels*TreeConstants.BOX_HEIGHT + (numLevels-1)*TreeConstants.VERT_SEP + 2*TreeConstants.EDGE_VERT_SEP;
-
     var svg = d3.select(location).append("svg:svg")
         .attr("width", treeWidth)
         .attr("height", treeHeight)
 
-    for (var i=0; i < numLevels; i++) {
+    for (var i=0; i < levels.length; i++) {
         // Draw nodes
         var nodeEnter = svg.selectAll("level"+i)
             .data(levels[i])
@@ -67,8 +37,10 @@ TreeDisplay.drawTree = function(location, root, numNodes, levels, widths, center
         // Draw links
         TreeDisplay.drawLinks(svg, i, levels, centers);
 
-        // Draw curvature and sign symbols
-        TreeDisplay.drawSymbols(svg, nodeEnter, widths);
+        // Draw curvature and sign symbols. Not for the prompt.
+        if (!TreeConstructor.promptActive) {
+            TreeDisplay.drawSymbols(svg, nodeEnter, widths);
+        }
     }
 
     svg.selectAll("text").on("click", TreeDisplay.createInputBox);
@@ -164,26 +136,41 @@ TreeDisplay.drawSymbols = function(svg, nodes, widths) {
             .attr("y", TreeConstants.SYMBOL_MARGIN)
             .attr("width", TreeConstants.BOX_CONSTANT/2 - 2*TreeConstants.SYMBOL_MARGIN)
             .attr("height", TreeConstants.BOX_HEIGHT - 2*TreeConstants.SYMBOL_MARGIN)
-            .attr("xlink:href", function(d) { return TreeConstants.IMAGE_PREFIX + d.curvature + ".png"; })
+            .attr("xlink:href", function(d) { 
+                return TreeConstants.IMAGE_PREFIX + d.curvature + TreeConstants.SVG_IMAGE_SUFFIX; 
+            })
 
     // Sign
     expressions.append("svg:image")
             .attr("x", function(d) { return widths[d.tag] + TreeConstants.SYMBOL_MARGIN - TreeConstants.BOX_CONSTANT/2; })
-            .attr("y", TreeConstants.SYMBOL_MARGIN + (TreeConstants.BOX_HEIGHT-minDimension)/2)
-            .attr("width", minDimension - 2*TreeConstants.SYMBOL_MARGIN)
-            .attr("height", minDimension - 2*TreeConstants.SYMBOL_MARGIN)
-            .attr("xlink:href", function(d) { return TreeConstants.IMAGE_PREFIX + d.sign + ".png"; })
+            .attr("y", TreeConstants.SYMBOL_MARGIN)
+            .attr("width", TreeConstants.BOX_CONSTANT/2 - 2*TreeConstants.SYMBOL_MARGIN)
+            .attr("height", TreeConstants.BOX_HEIGHT - 2*TreeConstants.SYMBOL_MARGIN)
+            .attr("xlink:href", function(d) { 
+                return TreeConstants.IMAGE_PREFIX + d.sign + TreeConstants.SVG_IMAGE_SUFFIX; 
+            })
 
-    // Invalid constraints
-    var constraints = nodes.filter(function(d) {
-        return !d.isShortNameNode && !d.curvature && d.errors && d.errors.unsorted_errors.length > 0;
-    });
+    // Constraints
+    var constraints = nodes.filter(function(d) { return !d.isShortNameNode && !d.curvature; });
     constraints.append("svg:image")
             .attr("x", TreeConstants.SYMBOL_MARGIN)
             .attr("y", TreeConstants.SYMBOL_MARGIN)
             .attr("width", TreeConstants.BOX_CONSTANT/2 - 2*TreeConstants.SYMBOL_MARGIN)
             .attr("height", TreeConstants.BOX_HEIGHT - 2*TreeConstants.SYMBOL_MARGIN)
-            .attr("xlink:href", function(d) { return TreeConstants.IMAGE_PREFIX + "invalid_constraint" + ".png"; })
+            .attr("xlink:href", function(d) { 
+                return TreeConstants.IMAGE_PREFIX + TreeDisplay.getConstraintSymbol(d) + TreeConstants.SVG_IMAGE_SUFFIX;   
+            })
+}
+
+/**
+ * Get the name of the symbol on the left hand side of the constraint box.
+ */
+TreeDisplay.getConstraintSymbol = function(node) {
+    if (node.errors && node.errors.unsorted_errors.length > 0) {
+        return "invalid_constraint";
+    } else {
+        return "valid_constraint";
+    }
 }
 
 /**
@@ -191,4 +178,85 @@ TreeDisplay.drawSymbols = function(svg, nodes, widths) {
  */
 TreeDisplay.getLevelY = function(level) {
     return level*(TreeConstants.BOX_HEIGHT + TreeConstants.VERT_SEP) + TreeConstants.EDGE_VERT_SEP;
+}
+
+/**
+ * Draws a legend explaining the curvature symbols and a legend explaining the sign symbols.
+ */
+TreeDisplay.drawLegend = function(legend, root, widths, centers, treeWidth) {
+    var svg = d3.select("svg");
+    TreeDisplay.drawLegendBox(svg, legend, treeWidth);
+    TreeDisplay.drawLegendArrow(svg, legend, root, widths, centers, treeWidth);
+}
+
+/**
+ * Draws the box containing the legend title, symbols, and symbol names.
+ */
+TreeDisplay.drawLegendBox = function(svg, legend, treeWidth) {
+    var legendWidth = TreeLayout.getLegendWidth(legend);
+    var legendHeight = TreeLayout.getLegendHeight(legend);
+    if (legend.left) {
+        var dx = TreeConstants.EDGE_SEP;
+    } else {
+        var dx = treeWidth - TreeConstants.EDGE_SEP - legendWidth;
+    }
+
+    var legendSVG = svg.append("svg:g")
+                        .attr("class", "node")
+                        .attr("id", legend.title + "Legend")
+                        .attr("transform", "translate(" + dx + "," + TreeConstants.EDGE_VERT_SEP + ")")
+
+    legendSVG.append("svg:rect")
+        .attr("width", legendWidth)
+        .attr("height", legendHeight)
+
+    // Draw title text.
+    legendSVG.append("svg:text")
+        .attr("dy", TreeConstants.LEGEND_TEXT_HEIGHT/2)
+        .attr("dx", ( legendWidth - legend.title.width(TreeConstants.FONT) )/2 )
+        .text(legend.title)
+
+    // Draw symbols and names.
+    for (var i = 0; i < legend.text.length; i++) {
+        var baseOffset = TreeConstants.LEGEND_TEXT_HEIGHT*(i + 1);
+        legendSVG.append("svg:image")
+            .attr("x", TreeConstants.SYMBOL_MARGIN)
+            .attr("y", TreeConstants.SYMBOL_MARGIN + baseOffset)
+            .attr("width", TreeConstants.BOX_CONSTANT/2 - 2*TreeConstants.SYMBOL_MARGIN)
+            .attr("height", TreeConstants.BOX_HEIGHT - 2*TreeConstants.SYMBOL_MARGIN)
+            .attr("xlink:href", TreeConstants.IMAGE_PREFIX + legend.text[i].symbol + TreeConstants.SVG_IMAGE_SUFFIX )
+
+        legendSVG.append("svg:text")
+                 .attr("dy", TreeConstants.LEGEND_TEXT_HEIGHT/2 + baseOffset)
+                 .attr("dx", TreeConstants.BOX_CONSTANT/2)
+                 .text(legend.text[i].name)
+    };
+}
+
+/**
+ * Draws the arrows from the legend box to the root node.
+ */
+TreeDisplay.drawLegendArrow = function(svg, legend, root, widths, centers, treeWidth) {
+    var legendWidth = TreeLayout.getLegendWidth(legend);
+    if (legend.left) {
+        var x1 = TreeConstants.EDGE_SEP + TreeLayout.getLegendWidth(legend);
+    } else {
+        var x1 = treeWidth - TreeConstants.EDGE_SEP - TreeLayout.getLegendWidth(legend);
+    }
+    var posMultiplier = legend.left ? -1 : 1;
+    var x2 = centers[root.tag] + posMultiplier*widths[root.tag]/2;
+    var y = TreeConstants.EDGE_VERT_SEP + TreeConstants.LEGEND_TEXT_HEIGHT/2;
+
+    svg.append("svg:line")
+       .attr("class", "arrow")
+       .attr("x1", x1)
+       .attr("y1", y)
+       .attr("x2", x2)
+       .attr("y2", y)
+
+    svg.append("svg:path")
+          .attr("d", "M " + x2 + " " + y +
+                     " l " + posMultiplier*TreeConstants.LEGEND_ARROW_WIDTH + 
+                     " " + -TreeConstants.LEGEND_ARROW_HEIGHT/2 +
+                     " l 0 " + TreeConstants.LEGEND_ARROW_HEIGHT + " z")
 }

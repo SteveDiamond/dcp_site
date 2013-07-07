@@ -7,6 +7,8 @@ function TreeConstructor() {
 
 // True until the user enters a valid objective/constraint.
 TreeConstructor.promptActive = true;
+// True if user clicks help button.
+TreeConstructor.helpActive = true;
 
 /**
  * Parses the given objective/constraint and creates a parse tree visualization.
@@ -40,7 +42,8 @@ TreeConstructor.deactivatePrompt = function() {
  * Processes the tree from the parser into a visualization.
  */
 TreeConstructor.processParseTree = function(root) {
-    var numNodes = TreeConstructor.augmentTree(root, 0); // Add short_name nodes and number nodes.
+    // Add short_name nodes and number nodes.
+    var numNodes = TreeConstructor.augmentTree(root, 0);
     // Save node info as attribute of TreeConstructor
     TreeConstructor.storeNodeMap(root);
     // Map distance from root to list of nodes in left to right order.
@@ -53,14 +56,20 @@ TreeConstructor.processParseTree = function(root) {
     TreeLayout.getWidths(root, widths);
     // Get the spacing between siblings.
     TreeLayout.getPadding(root, widths);
-    var treeWidth = TreeLayout.getTreeWidth(root, widths);
+    // Get tree width and height.
+    var widthVals = TreeLayout.getTreeWidth(root, widths);
+    var treeWidth = widthVals[0];
+    var treeHeight = TreeLayout.getTreeHeight(levels);
     // Get the centers of the nodes.
     var centers = [];
-    centers[root.tag] = treeWidth/2;
+    centers[root.tag] = widthVals[1];
     TreeLayout.getCenters(root, widths, centers);
     // Draw the new tree
     $(TreeConstants.TREE_DIV).html(''); // Clear old tree
-    TreeDisplay.drawTree(TreeConstants.TREE_DIV, root, numNodes, levels, widths, centers, treeWidth);
+    TreeDisplay.drawTree(TreeConstants.TREE_DIV, root, numNodes, levels, widths, centers, treeWidth, treeHeight);
+    // If help is active, draw the legends.
+    TreeDisplay.drawLegend(TreeConstants.CURVATURE_LEGEND, root, widths, centers, treeWidth);
+    TreeDisplay.drawLegend(TreeConstants.SIGN_LEGEND, root, widths, centers, treeWidth);
 }
 
 /**
