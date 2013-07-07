@@ -34,6 +34,10 @@ svg {
     text-align: center;
 }
 
+.navbar-inner {
+    border-radius: 0;
+}
+
 .dropdown-menu > li > p {
     text-align:center;
 }

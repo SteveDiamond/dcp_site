@@ -4,6 +4,8 @@
 function TreeConstants() {
 
 }
+// Tag of the root node.
+TreeConstants.ROOT_TAG = 0;
 // Minimum separation between siblings.
 TreeConstants.MIN_SIB_SEP = 20;
 // Minimum separation between cousins.

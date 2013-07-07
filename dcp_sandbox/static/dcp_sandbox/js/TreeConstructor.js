@@ -42,6 +42,8 @@ TreeConstructor.deactivatePrompt = function() {
  * Processes the tree from the parser into a visualization.
  */
 TreeConstructor.processParseTree = function(root) {
+    // Save a copy of the root.
+    TreeConstructor.root = $.extend(true, {}, root);
     // Add short_name nodes and number nodes.
     var numNodes = TreeConstructor.augmentTree(root, 0);
     // Save node info as attribute of TreeConstructor
@@ -68,8 +70,10 @@ TreeConstructor.processParseTree = function(root) {
     $(TreeConstants.TREE_DIV).html(''); // Clear old tree
     TreeDisplay.drawTree(TreeConstants.TREE_DIV, root, numNodes, levels, widths, centers, treeWidth, treeHeight);
     // If help is active, draw the legends.
-    TreeDisplay.drawLegend(TreeConstants.CURVATURE_LEGEND, root, widths, centers, treeWidth);
-    TreeDisplay.drawLegend(TreeConstants.SIGN_LEGEND, root, widths, centers, treeWidth);
+    if (TreeConstructor.helpActive) {
+        TreeDisplay.drawLegend(TreeConstants.CURVATURE_LEGEND, root, widths, centers, treeWidth);
+        TreeDisplay.drawLegend(TreeConstants.SIGN_LEGEND, root, widths, centers, treeWidth);
+    }
 }
 
 /**
@@ -128,7 +132,7 @@ TreeConstructor.addLeftRight = function(levels) {
 TreeConstructor.storeNodeMap = function(root) {
     var tagToNode = {};
     TreeConstructor.storeNodeMapRecursive(root, undefined, tagToNode);
-    TreeConstructor[TreeConstants.TAG_TO_NODE] = tagToNode;
+    TreeConstructor.tagToNode = tagToNode;
 }
 
 /**
@@ -160,7 +164,7 @@ TreeConstructor.storeNodeMapRecursive = function(node, parentTag, tagToNode) {
  * Uses the tagToNode map stored as an attribute of TreeConstructor.
  */
 TreeConstructor.loadObjective = function(id, text) {
-    var tagToNode = $.extend(true, {}, TreeConstructor[TreeConstants.TAG_TO_NODE]);
+    var tagToNode = $.extend(true, {}, TreeConstructor.tagToNode);
     var node = tagToNode[id];
     node.name = text;
     if (node.isShortNameNode) {
