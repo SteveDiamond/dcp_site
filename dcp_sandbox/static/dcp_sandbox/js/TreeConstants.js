@@ -13,7 +13,7 @@ TreeConstants.MIN_COUS_SEP = 40;
 // Minimum HORIZ_SEP between boxes
 TreeConstants.HORIZ_SEP = 10;
 // Minimum separation of boxes from edges
-TreeConstants.EDGE_SEP = 10;
+TreeConstants.EDGE_SEP = 100;
 // Constants for computing the box width
 TreeConstants.BOX_CONSTANT = 40;
 TreeConstants.SHORT_NAME_CONSTANT = 10;
@@ -27,6 +27,9 @@ TreeConstants.EDGE_VERT_SEP = 20;
 TreeConstants.SYMBOL_MARGIN = TreeConstants.BOX_CONSTANT/12;
 // Can the browser handle svg subimages?
 TreeConstants.SVG_IMAGE_SUFFIX = navigator.userAgent.indexOf("Firefox") == -1 ? ".svg" : ".png";
+// Classes for left and right symbols.
+TreeConstants.LEFT_SYMBOL = "left";
+TreeConstants.RIGHT_SYMBOL = "right";
 // Tree location
 TreeConstants.TREE_DIV = "#chart";
 // Location of images

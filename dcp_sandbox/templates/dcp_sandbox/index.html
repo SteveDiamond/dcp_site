@@ -20,7 +20,7 @@
   <script src="{% static "dcp_sandbox/js/sandbox.js" %}"></script>
 </head>
 <body>
-  <div class="navbar navbar-inverse" >
+  <div class="navbar navbar-inverse navbar-fixed-top" >
     <div class="navbar-inner">
       <ul class="nav">
         <li class="dropdown">
@@ -29,8 +29,8 @@
               <b class="caret"></b>
             </a>
             <ul class="dropdown-menu">
-              <li><a href="#">x,y,z unknown sign</a></li>
-              <li><a href="#">u,v,w positive</a></li>
+              <li><a href="#x">x,y,z unknown sign</a></li>
+              <li><a href="#u">u,v,w positive</a></li>
             </ul>
         </li>
         <li class="dropdown">
@@ -39,8 +39,8 @@
               <b class="caret"></b>
             </a>
             <ul class="dropdown-menu">
-              <li><a href="#">a,b,c unknown sign</a></li>
-              <li><a href="#">d,e,f positive</a></li>
+              <li><a href="#a">a,b,c unknown sign</a></li>
+              <li><a href="#d">d,e,f positive</a></li>
             </ul>
         </li>
         <li class="dropdown">
@@ -87,7 +87,7 @@
       </ul>
     </div>
   </div>
-  <div class="container-fluid">
+  <div id="tree_container" class="container-fluid">
     <div class="row-fluid">
       <div class="span12">
         {% csrf_token %}

@@ -58,10 +58,8 @@ TreeDisplay.createInputBox = function() {
     $('body').append('<div id="input_div" style="height:' + boundingRect.height + 
             '; width:' + boundingRect.width +
             '; height:' + boundingRect.height +
-            '; top:' + boundingRect.top +
-            '; left:' + boundingRect.left +
-            '; bottom:' + boundingRect.bottom +
-            '; right:' + boundingRect.right + 
+            '; top:' + ( boundingRect.top + $(document).scrollTop() ) +
+            '; left:' + ( boundingRect.left + $(document).scrollLeft() ) +
             '; position:absolute;">' +
             '<input id="input_box" type="text" style="width:' + boundingRect.width +
             '; height:' + TreeConstants.BOX_HEIGHT +
@@ -73,14 +71,21 @@ TreeDisplay.createInputBox = function() {
     if (!TreeConstructor.promptActive) $('#input_box').val(text);
     $('#input_box').focus();
 
-    // Trigger reset if click away or hit enter
+    // Trigger reset if click away.
     $('#input_box').blur(function() {
+        TreeDisplay.resizeNode(id, text, false);
         TreeDisplay.resetTree(id, textElement, text);
     });
 
+    // Trigger rest if click enter.
     $('#input_box').keypress(function(e) {
         var code = (e.keyCode ? e.keyCode : e.which);
-        if (code == 13) TreeDisplay.resetTree(id, textElement, text);
+        if (code == 13) { // Enter
+            TreeDisplay.resizeNode(id, text, false);
+            TreeDisplay.resetTree(id, textElement, text);
+        } else {
+            TreeDisplay.resizeNode(id, $('#input_box').val(), true);
+        }
     });
 }
 
@@ -93,6 +98,73 @@ TreeDisplay.resetTree = function(id, textElement, text) {
     $('#input_div').remove();
     TreeConstructor.parseObjective(objective); 
 }
+
+/**
+ * Expands the node so it can accomodate the input box.
+ * Trailing and leading whitespace is not considered.
+ */
+ TreeDisplay.resizeNode = function(id, text, inputActive) {
+    var node = TreeConstructor.tagToNode[id];
+    // Get group and its offset.
+    var group = $("#" + id)[0];
+    var transform = group.getAttribute("transform");
+    var pattern = /[\d\.]+/g;
+    var dx = parseFloat( pattern.exec(transform) );
+    var dy = parseFloat( pattern.exec(transform) );
+
+    var rectElement = group.getElementsByTagName('rect')[0];
+    var textWidth = text.width(TreeConstants.FONT);
+    var textMargin = TreeDisplay.getTextMargin(node);
+    var treeWidth = parseFloat( $("svg")[0].getAttribute("width") );
+    var oldWidth = parseFloat( rectElement.getAttribute("width") );
+    var newWidth = textWidth + 2*textMargin;
+    // Don't expand beyond the edge of the svg element.
+    var maxWidth = oldWidth + 2*Math.min(dx, treeWidth - oldWidth - dx);
+    newWidth = Math.min(newWidth, maxWidth);
+    // Do nothing if the rect is large enough and the user is inputting text.
+    if (inputActive && newWidth <= oldWidth) return;
+    var shift = (newWidth - oldWidth)/2;
+    group.setAttribute("transform", "translate(" + (dx - shift) + "," + dy + ")");
+    rectElement.setAttribute("width", newWidth);
+    var rightImage = $("#"+id).find("image.right");
+    if (rightImage.length > 0) {
+        var imageX = parseFloat( rightImage[0].getAttribute("x") );
+        rightImage[0].setAttribute("x", imageX + 2*shift);
+    }
+    // Resize input div and box if present.
+    if (inputActive) {
+        $("#input_div")[0].style.width = newWidth;
+        pattern = /[\d\.]+/g;
+        var left = parseFloat( pattern.exec($("#input_div")[0].style.left) );
+        $("#input_div")[0].style.left = (left - shift) + "px";
+        $("#input_box")[0].style.width = newWidth;
+    }
+    // Hide all arrows/groups that overlap with the current group
+    // if expanding. Otherwise show them all.
+    if (inputActive) {
+        TreeDisplay.hideOverlapped($(".arrow"), group);
+        TreeDisplay.hideOverlapped($("g").not("#"+id), group);
+    } else {
+        $(".arrow").show();
+        $("g").show();
+    }
+ }
+
+/**
+ * Hide all elements in overlapped that overlap with elem.
+ * http://stackoverflow.com/questions/12066870/how-to-check-if-an-element-is-overlapping-other-elements
+ */
+ TreeDisplay.hideOverlapped = function(overlapped, elem) {
+    var elemRect = elem.getBoundingClientRect();
+    overlapped.each(function() {
+        var rect = $(this)[0].getBoundingClientRect();
+        var overlap = !(elemRect.right < rect.left || 
+                        elemRect.left > rect.right || 
+                        elemRect.bottom < rect.top || 
+                        elemRect.top > rect.bottom)
+        if (overlap) $(this).hide();
+    })
+ }
 
 /**
  * Get the size of the space between the text and the edge of the box.
@@ -132,6 +204,7 @@ TreeDisplay.drawSymbols = function(svg, nodes, widths) {
     var minDimension = Math.min(TreeConstants.BOX_CONSTANT/2, TreeConstants.BOX_HEIGHT);
     // Curvature
     expressions.append("svg:image")
+            .attr("class", TreeConstants.LEFT_SYMBOL)
             .attr("x", TreeConstants.SYMBOL_MARGIN)
             .attr("y", TreeConstants.SYMBOL_MARGIN)
             .attr("width", TreeConstants.BOX_CONSTANT/2 - 2*TreeConstants.SYMBOL_MARGIN)
@@ -142,6 +215,7 @@ TreeDisplay.drawSymbols = function(svg, nodes, widths) {
 
     // Sign
     expressions.append("svg:image")
+            .attr("class", TreeConstants.RIGHT_SYMBOL)
             .attr("x", function(d) { return widths[d.tag] + TreeConstants.SYMBOL_MARGIN - TreeConstants.BOX_CONSTANT/2; })
             .attr("y", TreeConstants.SYMBOL_MARGIN)
             .attr("width", TreeConstants.BOX_CONSTANT/2 - 2*TreeConstants.SYMBOL_MARGIN)
@@ -153,6 +227,7 @@ TreeDisplay.drawSymbols = function(svg, nodes, widths) {
     // Constraints
     var constraints = nodes.filter(function(d) { return !d.isShortNameNode && !d.curvature; });
     constraints.append("svg:image")
+            .attr("class", TreeConstants.LEFT_SYMBOL)
             .attr("x", TreeConstants.SYMBOL_MARGIN)
             .attr("y", TreeConstants.SYMBOL_MARGIN)
             .attr("width", TreeConstants.BOX_CONSTANT/2 - 2*TreeConstants.SYMBOL_MARGIN)
@@ -255,6 +330,7 @@ TreeDisplay.drawLegendArrow = function(svg, legend, root, widths, centers, treeW
        .attr("y2", y)
 
     svg.append("svg:path")
+          .attr("class", "arrow")
           .attr("d", "M " + x2 + " " + y +
                      " l " + posMultiplier*TreeConstants.LEGEND_ARROW_WIDTH + 
                      " " + -TreeConstants.LEGEND_ARROW_HEIGHT/2 +

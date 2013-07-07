@@ -141,6 +141,7 @@ TreeConstructor.storeNodeMap = function(root) {
 TreeConstructor.storeNodeMapRecursive = function(node, parentTag, tagToNode) {
     var nodeInfo = {'name': node.name, 
                     'isShortNameNode': node.isShortNameNode,
+                    'isPrompt': node.isPrompt,
                     'parentTag': parentTag,
                    };
     if (node.children) {

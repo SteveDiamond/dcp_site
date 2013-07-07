@@ -47,6 +47,10 @@ svg {
     content:normal;
 }
 
+#tree_container {
+    padding-top: 62px;
+}
+
 #input_box {
     background-color: transparent;
     color: black;
