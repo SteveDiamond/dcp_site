@@ -13,7 +13,8 @@ TreeConstants.MIN_COUS_SEP = 40;
 // Minimum HORIZ_SEP between boxes
 TreeConstants.HORIZ_SEP = 10;
 // Minimum separation of boxes from edges
-TreeConstants.EDGE_SEP = 100;
+// Depends on whether legends present.
+TreeConstants.EDGE_SEP = {true: 10, false: 100}
 // Constants for computing the box width
 TreeConstants.BOX_CONSTANT = 40;
 TreeConstants.SHORT_NAME_CONSTANT = 10;
@@ -45,9 +46,12 @@ TreeConstants.PROMPT_CONSTANT = 200;
 // Demo objective
 TreeConstants.DEMO = "log(square(z)) - log_sum_exp(2*x*z, -square(y), z) + (norm(x,3) + log(y))";
 
+// Map of help active/inactive to help button text.
+TreeConstants.HELP_BUTTON_TEXT = {true: "Hide Help", false: "Show Help"}
+
 // Legend constants
 // Space for legends on the left and right.
-TreeConstants.LEGEND_PADDING = 100;
+TreeConstants.LEGEND_PADDING = 75;
 TreeConstants.LEGEND_WIDTH = 200;
 TreeConstants.LEGEND_TEXT_HEIGHT = 30;
 TreeConstants.LEGEND_ARROW_WIDTH = 8;
@@ -68,3 +72,6 @@ TreeConstants.SIGN_LEGEND = {"title": "Sign",
             ],
     "left": false,
 };
+
+// Alert div location.
+TreeConstants.ERROR_DIV = "#error_placeholder";

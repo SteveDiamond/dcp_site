@@ -27,8 +27,23 @@ TreeConstructor.parseObjective = function(objective) {
             TreeConstructor.deactivatePrompt();
             TreeConstructor.processParseTree(root);
         },
-        error: function(jqXHR, textStatus, errorThrown) {}
+        error: function(jqXHR, textStatus, errorThrown) {
+            var errorText = jqXHR.responseText + 
+                            " Try rewriting the expression '" +
+                            objective + "'.";
+            TreeConstructor.showParseError(errorText);
+        }
     });
+}
+
+/**
+ * Show error message from the parser.
+ * http://stackoverflow.com/questions/10082330/dynamically-create-bootstrap-alerts-box-through-javascript
+ */
+TreeConstructor.showParseError = function(message) {
+    $(TreeConstants.ERROR_DIV).html('<div class="alert alert-error">' +
+        '<a class="close" data-dismiss="alert">×</a>' +
+        '<span><strong>Error!</strong> '+message+'</span></div>')
 }
 
 /**

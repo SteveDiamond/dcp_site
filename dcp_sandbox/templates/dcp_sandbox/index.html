@@ -60,7 +60,7 @@
               <li><a href="#inv_pos(x)">inv_pos(x)</a></li>
               <li><a href="#kl_div(x,y)">kl_div(x, y)</a></li>
               <li><a href="#log(x)">log(x)</a></li>
-              <li><a href="#log_norm_cdf(x)">log_norm_cdf(x)</a></li>
+              <li><a href="#log_normcdf(x)">log_normcdf(x)</a></li>
               <li><a href="#log_sum_exp(x,y)">log_sum_exp(x, y)</a></li>
               <li><a href="#max(x,y)">max(x, y)</a></li>
               <li><a href="#min(x,y)">min(x, y)</a></li>
@@ -83,17 +83,34 @@
               <li><a href="#sum_square_pos(x,y)">sum_square_pos(x, y)</a></li>
             </ul>
         </li>
-        <li><button type="button" id="help" class="btn btn-primary" data-toggle="button">Hide Help</button></li>
+        <li><button type="button" id="help" class="btn btn-primary">Hide Help</button></li>
+        <!-- Button to trigger modal -->
+        <a href="#feedback" role="button" class="btn btn-primary" data-toggle="modal">Feedback</a>
       </ul>
     </div>
   </div>
   <div id="tree_container" class="container-fluid">
     <div class="row-fluid">
       <div class="span12">
+        <div id = "error_placeholder"></div>
         {% csrf_token %}
         <!--Body content-->
         <div id="chart"></div>
       </div>
+    </div>
+  </div>
+  <!-- Feedback Modal -->
+  <div id="feedback" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="feedbackLabel" aria-hidden="true">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      <h3 id="feedbackLabel">Let us know how to improve the site!</h3>
+    </div>
+    <div class="modal-body">
+      <p>One fine body…</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+      <button class="btn btn-primary">Send Feedback</button>
     </div>
   </div>
 </body>

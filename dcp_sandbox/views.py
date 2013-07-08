@@ -27,7 +27,7 @@ def parse(request):
     text = unicodedata.normalize('NFKD', unicode_text).encode('ascii','ignore')
     # Reject empty text
     if len(text) == 0:
-        return HttpResponseServerError(json.dumps("Empty input"))
+        return HttpResponseServerError("The empty string is not a valid expression.")
 
     for line in str.split(text, '\r\n'):
         try:
@@ -35,7 +35,7 @@ def parse(request):
         except Exception, e:
             log.debug('Parser error')
             log.error(e)
-            return HttpResponseServerError(json.dumps("Parser error"))
+            return HttpResponseServerError(str(e))
 
     json_str = ""
     if len(parser.statements) > 0:

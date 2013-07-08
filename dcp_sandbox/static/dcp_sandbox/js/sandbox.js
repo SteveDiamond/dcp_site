@@ -7,7 +7,8 @@
         // Listen to help toggle button.
         $("#help").click(function() {
             TreeConstructor.helpActive = !TreeConstructor.helpActive;
-            TreeConstructor.processParseTree(TreeConstructor.root); 
+            $("#help").text(TreeConstants.HELP_BUTTON_TEXT[TreeConstructor.helpActive]);
+            TreeConstructor.processParseTree(TreeConstructor.root);
         });
         // Enable function selection.
         $(window).bind('hashchange', function(e) {
@@ -15,7 +16,14 @@
             var hashIndex = atom.indexOf("#");
             if (hashIndex != -1 && atom.length > 1) {
                 window.location.hash = "";
-                TreeConstructor.parseObjective( atom.substr(hashIndex + 1) );
+                atom = atom.substr(hashIndex + 1);
+                // Add the atom or replace the prompt.
+                if (TreeConstructor.promptActive) {
+                    var objective = atom;
+                } else {
+                    var objective = TreeConstructor.root.name + "+" + atom;
+                }
+                TreeConstructor.parseObjective(objective);
             }
         });
         // Show prompt.

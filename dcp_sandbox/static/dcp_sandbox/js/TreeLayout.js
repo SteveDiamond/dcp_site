@@ -65,7 +65,9 @@ TreeLayout.getPadding = function(root, widths) {
  * Returns [treeWidth, rootCenter].
  */
 TreeLayout.getTreeWidth = function(root, widths) {
-    var padding = 2*Math.max(root.leftPadding, root.rightPadding, TreeConstants.EDGE_SEP);
+    var padding = 2*Math.max(root.leftPadding, 
+                             root.rightPadding, 
+                             TreeConstants.EDGE_SEP[TreeConstructor.helpActive]);
     var center = (padding + widths[root.tag])/2;
     // If in help mode, add room for the legends.
     if (TreeConstructor.helpActive) {

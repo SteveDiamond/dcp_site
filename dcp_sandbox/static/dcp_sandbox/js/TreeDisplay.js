@@ -269,10 +269,11 @@ TreeDisplay.drawLegend = function(legend, root, widths, centers, treeWidth) {
 TreeDisplay.drawLegendBox = function(svg, legend, treeWidth) {
     var legendWidth = TreeLayout.getLegendWidth(legend);
     var legendHeight = TreeLayout.getLegendHeight(legend);
+    var edgePadding = TreeConstants.EDGE_SEP[TreeConstructor.helpActive];
     if (legend.left) {
-        var dx = TreeConstants.EDGE_SEP;
+        var dx = edgePadding;
     } else {
-        var dx = treeWidth - TreeConstants.EDGE_SEP - legendWidth;
+        var dx = treeWidth - edgePadding - legendWidth;
     }
 
     var legendSVG = svg.append("svg:g")
@@ -312,10 +313,11 @@ TreeDisplay.drawLegendBox = function(svg, legend, treeWidth) {
  */
 TreeDisplay.drawLegendArrow = function(svg, legend, root, widths, centers, treeWidth) {
     var legendWidth = TreeLayout.getLegendWidth(legend);
+    var edgePadding = TreeConstants.EDGE_SEP[TreeConstructor.helpActive]
     if (legend.left) {
-        var x1 = TreeConstants.EDGE_SEP + TreeLayout.getLegendWidth(legend);
+        var x1 = edgePadding + TreeLayout.getLegendWidth(legend);
     } else {
-        var x1 = treeWidth - TreeConstants.EDGE_SEP - TreeLayout.getLegendWidth(legend);
+        var x1 = treeWidth - edgePadding - TreeLayout.getLegendWidth(legend);
     }
     var posMultiplier = legend.left ? -1 : 1;
     var x2 = centers[root.tag] + posMultiplier*widths[root.tag]/2;
