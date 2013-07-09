@@ -1,14 +1,15 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseServerError
 from django.core.urlresolvers import reverse
+from django.core.mail import send_mail
 
 from dcp_parser.parser import Parser
 from dcp_parser.json.statement_encoder import StatementEncoder
+
 import unicodedata
-
 import json
-
 import logging
+
 log = logging.getLogger(__name__)
 
 # Pre-declared variables and parameters
@@ -42,6 +43,15 @@ def parse(request):
         expression = parser.statements[len(parser.statements)-1] # Return last statement
         json_str = StatementEncoder().encode(expression)
     return HttpResponse(json_str)
+
+# Email the admins.
+def send_feedback(request):
+    unicode_text = request.POST['text']
+    # Convert to standard Python string (ASCII)
+    text = unicodedata.normalize('NFKD', unicode_text).encode('ascii','ignore')
+    send_mail('DCP Analyzer Feedback', text, 'dcp.stanford.edu@gmail.com',
+        ['diamond.po.central@gmail.com'], fail_silently=False)
+    return HttpResponse("OK")
 
 # TODO should be visible?
 def test(request):

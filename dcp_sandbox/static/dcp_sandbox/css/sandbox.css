@@ -62,3 +62,7 @@ li > button {
     text-align: center;
     padding: 0;
 }
+
+textarea.feedback {
+    width: 500;
+}

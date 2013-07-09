@@ -8,6 +8,12 @@ ADMINS = (
     # ('Your Name', 'your_email@example.com'),
 )
 
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'dcp.stanford.edu@gmail.com'
+EMAIL_HOST_PASSWORD = '1khfiHFD(F8f'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
 MANAGERS = ADMINS
 
 SITE_ROOT = os.getcwd()
