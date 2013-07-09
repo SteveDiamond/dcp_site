@@ -75,6 +75,7 @@ ATOM_DEFINITIONS = [
    "sign": "Positive",
    "monotonicity": "Increasing for positive arguments. Decreasing for negative arguments.",
    "example": "huber(x, 1)",
+   "cvx_equivalent": "huber, huber_pos, huber_circ",
   },
   {"name":"inv_pos",
    "arguments": "Takes a single expression as an argument.",
@@ -196,6 +197,7 @@ ATOM_DEFINITIONS = [
    "sign": "Positive",
    "monotonicity": "Increasing for positive arguments. Decreasing for negative arguments.",
    "example": "square(x)",
+   "cvx_equivalent": "square, square_pos, square_abs",
   },
   {"name":"pow",
    "arguments": ("Takes a single expression followed by a parameter as arguments. "
