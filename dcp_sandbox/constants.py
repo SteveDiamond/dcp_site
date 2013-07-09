@@ -218,6 +218,7 @@ ATOM_DEFINITIONS = [
    "monotonicity": ("Non-increasing for p <= 0. Non-decreasing for 0 < p < 1. "
                     "If p >= 1, increasing for positive arguments and non-increasing for negative arguments."),
    "example": "pow(x, 3)",
+   "cvx_equivalent": "pow_p",
   },
 ]
 

@@ -97,6 +97,12 @@
         <p>{{ function.monotonicity }}</p>
         <h4>Example Usage:</h4>
         <p>{{ function.example }}</p>
+        <h4>CVX Equivalent:</h4>
+        {% if function.cvx_equivalent %}
+          <p>{{ function.cvx_equivalent }}</p>
+        {% else %}
+          <p>{{ function.name }}</p>
+        {% endif %}
       </div>
     </div>
   {% endfor %}
