@@ -12,8 +12,9 @@ TreeConstructor.helpActive = true;
 
 /**
  * Parses the given objective/constraint and creates a parse tree visualization.
+ * modifiedText is the text the user inserted to create the current objective.
  */
-TreeConstructor.parseObjective = function(objective) {
+TreeConstructor.parseObjective = function(objective, modifiedText) {
     $.ajax({ // create an AJAX call...
         crossDomain: false,
                     beforeSend: function(xhr, settings) {
@@ -30,7 +31,7 @@ TreeConstructor.parseObjective = function(objective) {
         error: function(jqXHR, textStatus, errorThrown) {
             var errorText = jqXHR.responseText + 
                             " Try rewriting the expression '" +
-                            objective + "'.";
+                            modifiedText + "'.";
             TreeConstructor.showParseError(errorText);
         }
     });
@@ -42,8 +43,8 @@ TreeConstructor.parseObjective = function(objective) {
  */
 TreeConstructor.showParseError = function(message) {
     $(TreeConstants.ERROR_DIV).html('<div class="alert alert-error">' +
-        '<a class="close" data-dismiss="alert">×</a>' +
-        '<span><strong>Error!</strong> '+message+'</span></div>')
+        '<button type="button" class="close" data-dismiss="alert">&times;</button>' +
+        '<span><strong>Error!</strong> ' + message + '</span></div>')
 }
 
 /**

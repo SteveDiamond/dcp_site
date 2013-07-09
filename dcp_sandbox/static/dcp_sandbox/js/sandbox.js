@@ -23,7 +23,7 @@
                 } else {
                     var objective = TreeConstructor.root.name + "+" + atom;
                 }
-                TreeConstructor.parseObjective(objective);
+                TreeConstructor.parseObjective(objective, atom);
             }
         });
         // Feedback button sends email.
@@ -40,7 +40,7 @@
                     data: {text: message},
                 });
             }
-            
+
         })
         // Show prompt.
         var promptTree = {

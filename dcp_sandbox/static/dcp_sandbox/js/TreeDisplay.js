@@ -92,10 +92,11 @@ TreeDisplay.createInputBox = function() {
  * Resets the tree based on the newly entered text in #input_box.
  */
 TreeDisplay.resetTree = function(id, textElement, text) {
-    var objective = TreeConstructor.loadObjective(id, $('#input_box').val());
+    var modifiedText = $('#input_box').val();
+    var objective = TreeConstructor.loadObjective(id, modifiedText);
     textElement.textContent = text;
     $('#input_div').remove();
-    TreeConstructor.parseObjective(objective); 
+    TreeConstructor.parseObjective(objective, modifiedText); 
 }
 
 /**
