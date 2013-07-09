@@ -60,7 +60,7 @@ ATOM_DEFINITIONS = [
          "\mbox{ where } x \in \mathbb{R}^{n}."),
    "curvature": "Concave",
    "sign": "Negative if any argument is negative. Otherwise positive.",
-   "monotonicity": "Increasing for all arguments.",
+   "monotonicity": "Non-decreasing for all arguments.",
    "example": "geo_mean(x, y)",
   },
   {"name":"huber",
@@ -84,7 +84,7 @@ ATOM_DEFINITIONS = [
          "\mbox{ where } x \in \mathbb{R}."),
    "curvature": "Convex",
    "sign": "Positive",
-   "monotonicity": "Decreasing",
+   "monotonicity": "Non-increasing",
    "example": "inv_pos(x)",
   },
   {"name":"kl_div",
@@ -107,7 +107,7 @@ ATOM_DEFINITIONS = [
          "\mbox{ where } x \in \mathbb{R}."),
    "curvature": "Concave",
    "sign": "Unknown",
-   "monotonicity": "Increasing",
+   "monotonicity": "Non-decreasing",
    "example": "log(x)",
   },
   {"name":"log_sum_exp",
@@ -127,7 +127,7 @@ ATOM_DEFINITIONS = [
                          " \mbox{ where } x \in \mathbb{R}^{n}."),   
    "curvature": "Convex",
    "sign": "The largest argument sign under the ordering negative < unknown < positive.",
-   "monotonicity": "Increasing in all arguments.",
+   "monotonicity": "Non-decreasing in all arguments.",
    "example": "max(x, y)",
   },
   {"name":"min",
@@ -137,21 +137,22 @@ ATOM_DEFINITIONS = [
                          " \mbox{ where } x \in \mathbb{R}^{n}."),   
    "curvature": "Concave",
    "sign": "The smallest argument sign under the ordering negative < unknown < positive.",
-   "monotonicity": "Increasing in all arguments.",
+   "monotonicity": "Non-decreasing in all arguments.",
    "example": "min(x, y)",
   },
   {"name":"norm",
    "arguments": ("Takes a variable number of expressions followed by a parameter as arguments. "
                  "The expressions are interpreted as a vector. "
-                 "The parameter must be a number p with p >= 1 or Inf. "
+                 "The parameter must either be a number p with p >= 1 or be Inf. "
                  "The default parameter is 2."),
-   "mathematical_definition": ("\operatorname{norm}(x,p) = \\begin{cases} "
-                               "\left( \sum_{k=1}^{n} |x_{k}|^{p}} \\right)^{1/p} &\mbox{if } p >= 1 \\\\"
-                               "\max \left\{ |x_{k}| | k \in \{1,...,n \} \\right\} &\mbox{if } p = \mbox{Inf} \end{cases} \\\\"
-                               " \mbox{ where } x \in \mathbb{R}^{n}."),   
+   "mathematical_definition": ("\\begin{aligned} "
+                               " \operatorname{norm}(x,p) &= \left( \sum_{k=1}^{n} |x_{k}|^{p}} \\right)^{1/p} \\\\"
+                               " \operatorname{norm}(x,\mbox{Inf}) &= \max \left\{ \left| x_{k} \\right| | k \in \{1,...,n \} \\right\} \\\\"
+                               " \mbox{ where } x \in \mathbb{R}^{n}."
+                               " \end{aligned} "),
    "curvature": "Convex",
    "sign": "Positive",
-   "monotonicity": "Increasing in all arguments.",
+   "monotonicity": "Non-decreasing in all arguments.",
    "example": "norm(x, y, 1)",
   },
   {"name":"pos",
@@ -161,30 +162,65 @@ ATOM_DEFINITIONS = [
          "\mbox{ where } x \in \mathbb{R}."),
    "curvature": "Convex",
    "sign": "Positive",
-   "monotonicity": "Increasing",
+   "monotonicity": "Non-decreasing",
    "example": "pos(x)",
   },
-
+  {"name":"quad_over_lin",
+   "arguments": "Takes two expressions as arguments.",
+   "mathematical_definition": 
+        ("\operatorname{quad\_over\_lin}(x,y) = \\begin{cases} x^{2}/y &\mbox{if } y > 0 \\\\ "
+         "+\infty & \mbox{if } y <= 0 \end{cases} \\\\"
+         "\mbox{ where } x,y \in \mathbb{R}."),
+   "curvature": "Convex",
+   "sign": "Positive",
+   "monotonicity": ("Increasing in the first argument if the argument is positive. "
+                    "Decreasing if the argument is negative. "
+                    "Non-increasing in the second argument."),
+   "example": "quad_over_lin(x, y)",
+  },
+  {"name":"sqrt",
+   "arguments": "Takes a single expression as an argument.",
+   "mathematical_definition": 
+        ("\operatorname{sqrt}(x) = \\begin{cases} \sqrt{x} &\mbox{if } x \ge 0 \\\\ "
+         "-\infty & \mbox{if } x < 0 \end{cases} \\\\"
+         "\mbox{ where } x \in \mathbb{R}."),
+   "curvature": "Concave",
+   "sign": "Negative if the argument is negative. Otherwise positive.",
+   "monotonicity": "Non-decreasing",
+   "example": "sqrt(x)",
+  },
+  {"name":"square",
+   "arguments": "Takes a single expression as an argument.",
+   "mathematical_definition": "\operatorname{square}(x) = x^{2} \mbox{ where } x \in \mathbb{R}.",
+   "curvature": "Convex",
+   "sign": "Positive",
+   "monotonicity": "Increasing for positive arguments. Decreasing for negative arguments.",
+   "example": "square(x)",
+  },
+  {"name":"pow",
+   "arguments": ("Takes a single expression followed by a parameter as arguments. "
+                 "The parameter must be a number. "),
+   "mathematical_definition":
+        ("\\begin{aligned} "
+        " p &\le 0: \operatorname{pow}(x,p) &= "
+        "\\begin{cases} x^{p} &\mbox{if } x > 0 \\\\"
+        " +\infty &\mbox{if } x \le 0 \end{cases} \\\\"
+        " 0 < p &< 1: \operatorname{pow}(x,p) &= "
+        "\\begin{cases} x^{p} &\mbox{if } x \ge 0 \\\\"
+        " -\infty &\mbox{if } x \le 0 \end{cases}\\\\"
+        " p &\ge 1: \operatorname{pow}(x,p) &= "
+        "\\begin{cases} x^{p} &\mbox{if } x \ge 0 \\\\"
+        " +\infty &\mbox{if } x \le 0 \end{cases}\\\\"
+        " \mbox{ where } x \in \mathbb{R}^{n}."
+        " \end{aligned} "),
+   "curvature": "Concave for 0 < p < 1. Otherwise convex.",
+   "sign": "The argument's sign for 0 < p < 1. Otherwise positive.",
+   "monotonicity": ("Non-increasing for p <= 0. Non-decreasing for 0 < p < 1. "
+                    "If p >= 1, non-decreasing for positive arguments and non-increasing for negative arguments."),
+   "example": "pow(x, 3)",
+  },
 ]
-# <li><a href="#abs" data-toggle="modal">abs</a></li>
-# <li><a href="#berhu" data-toggle="modal">berhu</a></li>
-# <li><a href="#entr" data-toggle="modal">entr</a></li>
-# <li><a href="#exp" data-toggle="modal">exp</a></li>
-# <li><a href="#geo_mean" data-toggle="modal">geo_mean</a></li>
-# <li><a href="#huber" data-toggle="modal">huber</a></li>
-# <li><a href="#inv_pos" data-toggle="modal">inv_pos</a></li>
-# <li><a href="#kl_div" data-toggle="modal">kl_div</a></li>
-# <li><a href="#log" data-toggle="modal">log</a></li>
-# <li><a href="#log_sum_exp" data-toggle="modal">log_sum_exp</a></li>
-# <li><a href="#max" data-toggle="modal">max</a></li>
-# <li><a href="#min" data-toggle="modal">min</a></li>
-# <li><a href="#norm" data-toggle="modal">norm</a></li>
-# <li><a href="#pos" data-toggle="modal">pos</a></li>
 
-# <li><a href="#pow" data-toggle="modal">pow</a></li>
-# <li><a href="#quad_over_lin" data-toggle="modal">quad_over_lin</a></li>
-# <li><a href="#sqrt" data-toggle="modal">sqrt</a></li>
-# <li><a href="#square" data-toggle="modal">square</a></li>
-# <li><a href="#sum" data-toggle="modal">sum</a></li>
+# TODO add these functions?
 # <li><a href="#sum_largest" data-toggle="modal">sum_largest</a></li>
 # <li><a href="#sum_smallest" data-toggle="modal">sum_smallest</a></li>
