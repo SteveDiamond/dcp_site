@@ -207,16 +207,16 @@ ATOM_DEFINITIONS = [
         " +\infty &\mbox{if } x \le 0 \end{cases} \\\\"
         " 0 < p &< 1: \operatorname{pow}(x,p) &= "
         "\\begin{cases} x^{p} &\mbox{if } x \ge 0 \\\\"
-        " -\infty &\mbox{if } x \le 0 \end{cases}\\\\"
+        " -\infty &\mbox{if } x < 0 \end{cases}\\\\"
         " p &\ge 1: \operatorname{pow}(x,p) &= "
         "\\begin{cases} x^{p} &\mbox{if } x \ge 0 \\\\"
-        " +\infty &\mbox{if } x \le 0 \end{cases}\\\\"
+        " +\infty &\mbox{if } x < 0 \end{cases}\\\\"
         " \mbox{ where } x \in \mathbb{R}^{n}."
         " \end{aligned} "),
    "curvature": "Concave for 0 < p < 1. Otherwise convex.",
    "sign": "The argument's sign for 0 < p < 1. Otherwise positive.",
    "monotonicity": ("Non-increasing for p <= 0. Non-decreasing for 0 < p < 1. "
-                    "If p >= 1, non-decreasing for positive arguments and non-increasing for negative arguments."),
+                    "If p >= 1, increasing for positive arguments and non-increasing for negative arguments."),
    "example": "pow(x, 3)",
   },
 ]
