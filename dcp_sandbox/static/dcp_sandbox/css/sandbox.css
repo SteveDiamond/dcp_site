@@ -5,7 +5,7 @@
     stroke-width: 1.5px;
 }
 
-.node text, #input_box {
+.node text, #inputBox {
     font: 14px sans-serif;
 }
 
@@ -51,11 +51,11 @@ li > button {
     content:normal;
 }
 
-#tree_container {
+#treeContainer {
     padding-top: 62px;
 }
 
-#input_box {
+#inputBox {
     background-color: transparent;
     color: black;
     outline: none;
@@ -65,4 +65,8 @@ li > button {
 
 textarea.feedback {
     width: 500;
+}
+
+.function-title {
+    text-align: center;
 }

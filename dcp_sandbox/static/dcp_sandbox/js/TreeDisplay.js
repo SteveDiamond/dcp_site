@@ -55,47 +55,47 @@ TreeDisplay.createInputBox = function() {
     var textElement = this;
     var rectElement = this.parentElement.getElementsByTagName('rect')[0];
     var boundingRect = rectElement.getBoundingClientRect();
-    $('body').append('<div id="input_div" style="height:' + boundingRect.height + 
+    $('body').append('<div id="inputDiv" style="height:' + boundingRect.height + 
             '; width:' + boundingRect.width +
             '; height:' + boundingRect.height +
             '; top:' + ( boundingRect.top + $(document).scrollTop() ) +
             '; left:' + ( boundingRect.left + $(document).scrollLeft() ) +
             '; position:absolute;">' +
-            '<input id="input_box" type="text" style="width:' + boundingRect.width +
+            '<input id="inputBox" type="text" style="width:' + boundingRect.width +
             '; height:' + TreeConstants.BOX_HEIGHT +
             '"> </div>')
     var text = textElement.textContent;
     textElement.textContent = '';
     // Erase prompt when clicked.
-    if (!TreeConstructor.promptActive) $('#input_box').val(text);
-    $('#input_box').focus();
+    if (!TreeConstructor.promptActive) $('#inputBox').val(text);
+    $('#inputBox').focus();
 
     // Trigger reset if click away.
-    $('#input_box').blur(function() {
+    $('#inputBox').blur(function() {
         TreeDisplay.resizeNode(id, text, false);
         TreeDisplay.resetTree(id, textElement, text);
     });
 
     // Trigger reset if click enter.
-    $('#input_box').keypress(function(e) {
+    $('#inputBox').keypress(function(e) {
         var code = (e.keyCode ? e.keyCode : e.which);
         if (code == 13) { // Enter
             TreeDisplay.resizeNode(id, text, false);
             TreeDisplay.resetTree(id, textElement, text);
         } else {
-            TreeDisplay.resizeNode(id, $('#input_box').val(), true);
+            TreeDisplay.resizeNode(id, $('#inputBox').val(), true);
         }
     });
 }
 
 /**
- * Resets the tree based on the newly entered text in #input_box.
+ * Resets the tree based on the newly entered text in #inputBox.
  */
 TreeDisplay.resetTree = function(id, textElement, text) {
-    var modifiedText = $('#input_box').val();
+    var modifiedText = $('#inputBox').val();
     var objective = TreeConstructor.loadObjective(id, modifiedText);
     textElement.textContent = text;
-    $('#input_div').remove();
+    $('#inputDiv').remove();
     TreeConstructor.parseObjective(objective, modifiedText); 
 }
 
@@ -133,11 +133,11 @@ TreeDisplay.resetTree = function(id, textElement, text) {
     }
     // Resize input div and box if present.
     if (inputActive) {
-        $("#input_div")[0].style.width = newWidth;
+        $("#inputDiv")[0].style.width = newWidth;
         pattern = /[\d\.]+/g;
-        var left = parseFloat( pattern.exec($("#input_div")[0].style.left) );
-        $("#input_div")[0].style.left = (left - shift) + "px";
-        $("#input_box")[0].style.width = newWidth;
+        var left = parseFloat( pattern.exec($("#inputDiv")[0].style.left) );
+        $("#inputDiv")[0].style.left = (left - shift) + "px";
+        $("#inputBox")[0].style.width = newWidth;
     }
     // Hide all arrows/groups that overlap with the current group
     // if expanding. Otherwise show them all.

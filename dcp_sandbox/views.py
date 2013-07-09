@@ -6,22 +6,21 @@ from django.core.mail import send_mail
 from dcp_parser.parser import Parser
 from dcp_parser.json.statement_encoder import StatementEncoder
 
+import constants
 import unicodedata
 import json
 import logging
 
 log = logging.getLogger(__name__)
 
-# Pre-declared variables and parameters
-preamble = ['variable x y z', 'variable positive u v w',
-            'parameter a b c', 'parameter positive d e f']
-
 def index(request):
-    return render(request, 'dcp_sandbox/index.html')
+    sorted_atoms = sorted(constants.ATOM_DEFINITIONS, key=lambda atom: atom["name"])
+    return render(request, 'dcp_sandbox/index.html', 
+                 {'functions': sorted_atoms})
 
 def parse(request):
     parser = Parser()
-    for line in preamble:
+    for line in constants.PREAMBLE:
         parser.parse(line)
     unicode_text = request.POST['text']
     # Convert to standard Python string (ASCII)

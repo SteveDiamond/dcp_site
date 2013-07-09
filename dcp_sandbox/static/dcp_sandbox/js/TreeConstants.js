@@ -74,4 +74,4 @@ TreeConstants.SIGN_LEGEND = {"title": "Sign",
 };
 
 // Alert div location.
-TreeConstants.ERROR_DIV = "#error_placeholder";
+TreeConstants.ERROR_DIV = "#errorPlaceholder";
