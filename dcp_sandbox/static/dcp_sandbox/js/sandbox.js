@@ -27,8 +27,6 @@
                 });
             }
         })
-        // Creates and saves a list of possible tokens for autocomplete.
-        savePossibleTokensList();
         // Show prompt.
         var promptTree = {
                          name: TreeConstants.PROMPT,
@@ -36,17 +34,4 @@
                         };
         TreeConstructor.processParseTree(promptTree);
     });
-    
-    /**
-     * Creates and saves a list of possible tokens for autocomplete.
-     */
-    savePossibleTokensList = function() {
-        var possibleTokens = TreeConstants.VARIABLES;
-        possibleTokens = possibleTokens.concat(TreeConstants.PARAMETERS);
-        possibleTokens = possibleTokens.concat(TreeConstants.OPERATORS);
-        $(".function-example").each(function() { 
-            possibleTokens.push( $.trim( $(this).text() ) );
-        })
-        TreeDisplay.possibleTokens = possibleTokens;
-    }
 }(jQuery));

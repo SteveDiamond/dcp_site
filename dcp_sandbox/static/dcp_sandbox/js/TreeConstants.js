@@ -78,7 +78,3 @@ TreeConstants.SIGN_LEGEND = {"title": "Sign",
 
 // Alert div location.
 TreeConstants.ERROR_DIV = "#errorPlaceholder";
-
-// All available variables and parameters for autocomplete
-TreeConstants.VARIABLES = ["x", "y", "z", "u", "v", "w"];
-TreeConstants.PARAMETERS = ["a", "b", "c", "d", "e", "f"];
