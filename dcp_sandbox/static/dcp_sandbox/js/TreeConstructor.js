@@ -12,9 +12,10 @@ TreeConstructor.helpActive = true;
 
 /**
  * Parses the given objective/constraint and creates a parse tree visualization.
- * modifiedText is the text the user inserted to create the current objective.
+ * objective - the objective/constraint to parse.
+ * id - the id of the node the user edited.
  */
-TreeConstructor.parseObjective = function(objective, modifiedText) {
+TreeConstructor.parseObjective = function(objective, id) {
     $.ajax({ // create an AJAX call...
         crossDomain: false,
                     beforeSend: function(xhr, settings) {
@@ -24,15 +25,24 @@ TreeConstructor.parseObjective = function(objective, modifiedText) {
         type: 'POST',
         data: {text: objective},
         success: function(response) {
-            var root = JSON.parse(response); // Load parse tree
+            TreeDisplay.errorState = false;
+            // Clean up alerts and input boxes.
+            $('#inputDiv').remove();
+            $('.alert').alert('close');
+            // Load parse tree
+            var root = JSON.parse(response);
             TreeConstructor.deactivatePrompt();
             TreeConstructor.processParseTree(root);
         },
         error: function(jqXHR, textStatus, errorThrown) {
-            var errorText = jqXHR.responseText + 
-                            " Try rewriting the expression '" +
-                            modifiedText + "'.";
-            TreeConstructor.showParseError(errorText);
+            TreeConstructor.showParseError(jqXHR.responseText);
+            // Note error state and the erroneous text.
+            TreeDisplay.errorState = true;
+            TreeDisplay.errorText = $('#inputBox').val();
+            // Force user to fix the erroneous text.
+            TreeDisplay.positionInputBox(id);
+            $('#'+id).attr("class", "node " + TreeConstants.ERROR_NODE);
+            $('#inputBox').focus();
         }
     });
 }

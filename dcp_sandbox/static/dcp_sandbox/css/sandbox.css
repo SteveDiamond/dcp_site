@@ -70,3 +70,7 @@ textarea.feedback {
 .function-title {
     text-align: center;
 }
+
+.error-node rect {
+    fill: #f2dede;
+}

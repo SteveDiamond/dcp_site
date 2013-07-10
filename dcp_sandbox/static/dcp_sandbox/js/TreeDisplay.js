@@ -59,20 +59,12 @@ TreeDisplay.drawTree = function(location, root, numNodes, levels, widths, center
  * Updates the overall expression to reflect local changes.
  */
 TreeDisplay.createInputBox = function() {
+    if (TreeDisplay.errorState) return;
     var id = this.parentElement.id;
     var textElement = this;
-    var rectElement = this.parentElement.getElementsByTagName('rect')[0];
-    var boundingRect = rectElement.getBoundingClientRect();
-    $('body').append('<div id="inputDiv" style="height:' + boundingRect.height + 
-            '; width:' + boundingRect.width +
-            '; height:' + boundingRect.height +
-            '; top:' + ( boundingRect.top + $(document).scrollTop() ) +
-            '; left:' + ( boundingRect.left + $(document).scrollLeft() ) +
-            '; position:absolute;">' +
-            '<input id="inputBox" type="text" autocomplete="off" ' +
-            'style="width:' + boundingRect.width +
-            '; height:' + TreeConstants.BOX_HEIGHT +
-            '"> </div>')
+    $('body').append('<div id="inputDiv" style="position:absolute;">' +
+            '<input id="inputBox" type="text" autocomplete="off"> </div>')
+    TreeDisplay.positionInputBox(id);
     var text = textElement.textContent;
     textElement.textContent = '';
 
@@ -82,15 +74,20 @@ TreeDisplay.createInputBox = function() {
 
     // Trigger reset if click away.
     $('#inputBox').blur(function() {
-        TreeDisplay.resizeNode(id, text, false);
-        TreeDisplay.resetTree(id, textElement, text);
+        // If the user didn't change the text, click again instead of
+        // parsing the objective again.
+        if (TreeDisplay.errorState && 
+            TreeDisplay.errorText == $('#inputBox').val()) {
+            setTimeout(function(){ $('#inputBox').focus(); }, 100);
+        } else { // User changed the text, so try to parse.
+            TreeDisplay.resetTree(id, textElement, text);
+        }
     });
 
     // Trigger reset if click enter.
     $('#inputBox').keypress(function(e) {
         var code = (e.keyCode ? e.keyCode : e.which);
         if (code == 13) { // Enter
-            TreeDisplay.resizeNode(id, text, false);
             TreeDisplay.resetTree(id, textElement, text);
         } else {
             TreeDisplay.resizeNode(id, $('#inputBox').val(), true);
@@ -99,14 +96,30 @@ TreeDisplay.createInputBox = function() {
 }
 
 /**
+ * Positions the input box over the node with the given id.
+ */
+TreeDisplay.positionInputBox = function(id) {
+    var rectElement = $("#"+id)[0].getElementsByTagName('rect')[0];
+    var boundingRect = rectElement.getBoundingClientRect();
+    var inputDiv = $("#inputDiv")[0];
+    inputDiv.style.height = boundingRect.height;
+    inputDiv.style.width = boundingRect.width;
+    inputDiv.style.top = boundingRect.top + $(document).scrollTop();
+    inputDiv.style.left = boundingRect.left + $(document).scrollLeft();
+
+    var inputBox = $("#inputBox")[0];
+    inputBox.style.width = boundingRect.width;
+    inputBox.style.height = TreeConstants.BOX_HEIGHT;
+}
+
+/**
  * Resets the tree based on the newly entered text in #inputBox.
  */
 TreeDisplay.resetTree = function(id, textElement, text) {
     var modifiedText = $('#inputBox').val();
     var objective = TreeConstructor.loadObjective(id, modifiedText);
-    textElement.textContent = text;
-    $('#inputDiv').remove();
-    TreeConstructor.parseObjective(objective, modifiedText); 
+    // textElement.textContent = text;
+    TreeConstructor.parseObjective(objective, id);
 }
 
 /**

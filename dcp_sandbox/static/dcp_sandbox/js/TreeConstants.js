@@ -43,6 +43,8 @@ TreeConstants.ELLIPSIS = "...";
 // Editable and fixed text classes.
 TreeConstants.EDITABLE_TEXT = "editable-text";
 TreeConstants.FIXED_TEXT = "fixed-text";
+// Class of a node in an error state.
+TreeConstants.ERROR_NODE = "error-node";
 // Initial prompt
 TreeConstants.PROMPT = "Click here and type in an expression, equality, or inequality.";
 TreeConstants.PROMPT_CONSTANT = 200;
