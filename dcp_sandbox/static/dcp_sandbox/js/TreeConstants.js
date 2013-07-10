@@ -40,6 +40,9 @@ TreeConstants.TAG_TO_NODE = "tagToNode";
 // Constants for reconstructing objective/constraint
 TreeConstants.OPERATORS = ["+","-","*","/","<=",">=","==","="];
 TreeConstants.ELLIPSIS = "...";
+// Editable and fixed text classes.
+TreeConstants.EDITABLE_TEXT = "editable-text";
+TreeConstants.FIXED_TEXT = "fixed-text";
 // Initial prompt
 TreeConstants.PROMPT = "Click here and type in an expression, equality, or inequality.";
 TreeConstants.PROMPT_CONSTANT = 200;
@@ -75,3 +78,7 @@ TreeConstants.SIGN_LEGEND = {"title": "Sign",
 
 // Alert div location.
 TreeConstants.ERROR_DIV = "#errorPlaceholder";
+
+// All available variables and parameters for autocomplete
+TreeConstants.VARIABLES = ["x", "y", "z", "u", "v", "w"];
+TreeConstants.PARAMETERS = ["a", "b", "c", "d", "e", "f"];

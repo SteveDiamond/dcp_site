@@ -30,6 +30,13 @@ TreeDisplay.drawTree = function(location, root, numNodes, levels, widths, center
             .attr("height", TreeConstants.BOX_HEIGHT)
 
         nodeEnter.append("svg:text")
+            .attr("class", function(d) {
+                if (d.isShortNameNode) {
+                    return TreeConstants.FIXED_TEXT;
+                } else {
+                    return TreeConstants.EDITABLE_TEXT;
+                }
+            })
             .attr("dy", TreeConstants.BOX_HEIGHT/2)
             .attr("dx", TreeDisplay.getTextMargin)
             .text(function(d) { return d.name; })
@@ -42,8 +49,9 @@ TreeDisplay.drawTree = function(location, root, numNodes, levels, widths, center
             TreeDisplay.drawSymbols(svg, nodeEnter, widths);
         }
     }
-
-    svg.selectAll("text").on("click", TreeDisplay.createInputBox);
+    // Make expression text boxes editable.
+    svg.selectAll("text."+TreeConstants.EDITABLE_TEXT).on("click", 
+                                                          TreeDisplay.createInputBox);
 }
 
 /**
@@ -61,11 +69,27 @@ TreeDisplay.createInputBox = function() {
             '; top:' + ( boundingRect.top + $(document).scrollTop() ) +
             '; left:' + ( boundingRect.left + $(document).scrollLeft() ) +
             '; position:absolute;">' +
-            '<input id="inputBox" type="text" style="width:' + boundingRect.width +
+            '<input id="inputBox" type="text" autocomplete="off" ' +
+            'style="width:' + boundingRect.width +
             '; height:' + TreeConstants.BOX_HEIGHT +
             '"> </div>')
     var text = textElement.textContent;
     textElement.textContent = '';
+    // Add autocomplete.
+    $("#inputBox").typeahead({
+        source: TreeDisplay.possibleTokens,
+        matcher: function(item) {
+            item = item.toLowerCase();
+            var tokens = this.query.split(" ");
+            var latest = tokens[tokens.length-1];
+            return latest.length > 0 && item.indexOf(latest) != -1;
+        },
+        updater: function(item) {
+            var tokens = this.query.split(" ");
+            tokens[tokens.length-1] = item;
+            return tokens.join(" ");
+        }
+    });
     // Erase prompt when clicked.
     if (!TreeConstructor.promptActive) $('#inputBox').val(text);
     $('#inputBox').focus();
