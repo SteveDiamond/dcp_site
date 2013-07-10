@@ -82,12 +82,12 @@ TreeDisplay.createInputBox = function() {
             item = item.toLowerCase();
             var tokens = this.query.split(" ");
             var latest = tokens[tokens.length-1];
-            return latest.length > 0 && item.indexOf(latest) != -1;
+            return latest.length > 0 && item.indexOf(latest) == 0;
         },
         updater: function(item) {
             var tokens = this.query.split(" ");
             tokens[tokens.length-1] = item;
-            return tokens.join(" ");
+            return tokens.join(" ") + " ";
         }
     });
     // Erase prompt when clicked.
