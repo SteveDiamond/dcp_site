@@ -1,0 +1,37 @@
+[
+  {
+    "model": "dcp_sandbox.curvature",
+    "pk": 1,
+    "fields": {
+      "name": "constant"
+    }
+  },
+  {
+    "model": "dcp_sandbox.curvature",
+    "pk": 2,
+    "fields": {
+      "name": "affine"
+    }
+  },
+  {
+    "model": "dcp_sandbox.curvature",
+    "pk": 3,
+    "fields": {
+      "name": "convex"
+    }
+  },
+  {
+    "model": "dcp_sandbox.curvature",
+    "pk": 4,
+    "fields": {
+      "name": "concave"
+    }
+  },
+  {
+    "model": "dcp_sandbox.curvature",
+    "pk": 5,
+    "fields": {
+      "name": "unknown"
+    }
+  }
+]

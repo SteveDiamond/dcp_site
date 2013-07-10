@@ -38,7 +38,7 @@ TreeConstants.IMAGE_PREFIX = "/static/dcp_sandbox/images/";
 // Key for tagToNode map in cookie
 TreeConstants.TAG_TO_NODE = "tagToNode";
 // Constants for reconstructing objective/constraint
-TreeConstants.OPERATORS = ["+","-","*","/","<=",">=","=="];
+TreeConstants.OPERATORS = ["+","-","*","/","<=",">=","==","="];
 TreeConstants.ELLIPSIS = "...";
 // Initial prompt
 TreeConstants.PROMPT = "Click here and type in an expression, equality, or inequality.";

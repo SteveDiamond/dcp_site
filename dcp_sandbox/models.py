@@ -9,7 +9,7 @@ class Curvature(models.Model):
 
 # The possible positions an argument could occur in.
 class Position(models.Model):
-    name = models.CharField(max_length=30)
+    name = models.IntegerField()
 
 # An arithmetic operator, atom, or parameterized atom.
 class Operator(models.Model):

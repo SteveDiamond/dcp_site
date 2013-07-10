@@ -1,0 +1,23 @@
+[
+  {
+    "model": "dcp_sandbox.sign",
+    "pk": 1,
+    "fields": {
+      "name": "positive"
+    }
+  },
+  {
+    "model": "dcp_sandbox.sign",
+    "pk": 2,
+    "fields": {
+      "name": "negative"
+    }
+  },
+  {
+    "model": "dcp_sandbox.sign",
+    "pk": 3,
+    "fields": {
+      "name": "unknown"
+    }
+  }
+]

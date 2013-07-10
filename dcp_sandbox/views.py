@@ -10,6 +10,7 @@ import constants
 import unicodedata
 import json
 import logging
+import random
 
 log = logging.getLogger(__name__)
 
@@ -55,3 +56,24 @@ def send_feedback(request):
 # TODO should be visible?
 def test(request):
     return render(request, 'dcp_sandbox/test.html')
+
+# Generate a random expression.
+# signs - valid signs for the expression.
+# curvatures - valid curvature for the expression.
+# prob_terminate - probability of returning a terminal expression.
+def get_random_expression(signs, curvatures, prob_terminate):
+    terminal = random.random() < prob_terminate
+    # get set of expressions tbat match curvature, sign, terminal
+    # randomly choose one based on weights
+    # args = []
+    # for i in range(num_args):
+    #   select new argument that matches operator_signs, operator_curvatures
+    #   args.append( get_random_expression(arg.sign, arg.curvature, prob_terminate) )
+    # name = expr.prefix
+    # for i in range(expr.num_args):
+    #     if i != 0: name += expr.infix
+    #     name += arg[i]
+    # name += expr.suffix
+    # return name
+
+    return "test"
