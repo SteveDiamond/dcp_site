@@ -53,7 +53,6 @@ TreeConstructor.parseObjective = function(objective, id) {
  */
 TreeConstructor.showParseError = function(message) {
     $(TreeConstants.ERROR_DIV).html('<div class="alert alert-error">' +
-        '<button type="button" class="close" data-dismiss="alert">&times;</button>' +
         '<span><strong>Error!</strong> ' + message + '</span></div>')
 }
 

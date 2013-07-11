@@ -65,14 +65,14 @@ def get_random_expression(signs, curvatures, prob_terminate):
     terminal = random.random() < prob_terminate
     # get set of expressions tbat match curvature, sign, terminal
     # randomly choose one based on weights
+    # if terminal: return expr.prefix
+    # Randomly pick signature that matches sign, curvature
     # args = []
-    # for i in range(num_args):
-    #   select new argument that matches operator_signs, operator_curvatures
+    # for arg in signature.arguments:
     #   args.append( get_random_expression(arg.sign, arg.curvature, prob_terminate) )
-    # name = expr.prefix
-    # for i in range(expr.num_args):
-    #     if i != 0: name += expr.infix
-    #     name += arg[i]
+    # name = expr.prefix + args[0]
+    # for i in range(1, expr.num_args):
+    #     name += expr.infix + arg[i]
     # name += expr.suffix
     # return name
 
