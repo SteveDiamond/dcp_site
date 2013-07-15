@@ -10,23 +10,16 @@ class Curvature(models.Model):
 # An arithmetic operator, atom, or parameterized atom.
 class Operator(models.Model):
     prefix = models.CharField(max_length=30) # 'atom('
-    infix = models.CharField(max_length=30) # ',' or binary operator
+    infix = models.CharField(max_length=30) # ', ' or binary operator
     suffix = models.CharField(max_length=30) # ')' or 'parameter)'
+    sign = models.ForeignKey(Sign, verbose_name = "the operator's sign")
+    curvature = models.ForeignKey(Curvature, verbose_name = "the operator's curvature")
+    terminal = models.BooleanField()
+    weight = models.IntegerField(default=1) # Relative likelihood of being chosen
+
+# An argument for an operator.
+class Argument(models.Model):
+    operator = models.ForeignKey(Operator)
     signs = models.ManyToManyField(Sign, verbose_name = "possible signs")
     curvatures = models.ManyToManyField(Curvature, verbose_name = "possible curvatures")
-    num_args = models.IntegerField() # number of arguments (no varargs)
-    terminal = models.BooleanField()
-    weight = models.IntegerField() # Relative likelihood of being chosen
-
-# A signature for an operator (i.e. a list of arguments).
-class Signature(models.Model):
-    operator = models.ForeignKey(Operator)
-    operator_signs = models.ManyToManyField(Sign, verbose_name = "possible signs for the operator")
-    operator_curvatures = models.ManyToManyField(Curvature, verbose_name = "possible curvatures for the operator")
-
-# An argument in a signature.
-class Argument(models.Model):
-    signature = models.ForeignKey(Signature)
-    sign = models.ForeignKey(Sign, related_name="+")
-    curvature = models.ForeignKey(Curvature, related_name="+")
-    position = models.IntegerField()
+    position = models.IntegerField(default=0)

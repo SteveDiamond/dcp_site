@@ -2,7 +2,7 @@ $(document).ready(function(){
     module("Tree Tests");
 
     test( "Test makeArrayOf", 1, function() {
-        deepEqual(TreeLayout.makeArrayOf(-1,3), [-1,-1,-1], "Passed!" );
+        deepEqual(TreeConstructor.makeArrayOf(-1,3), [-1,-1,-1], "Passed!" );
     });
 
     test( "Test getSurroundingParens", 3, function() {
