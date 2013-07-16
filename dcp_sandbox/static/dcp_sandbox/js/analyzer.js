@@ -1,5 +1,5 @@
 /**
- * Sandbox Module
+ * Analyzer Module
  * Handles page load for analyzer.
  */
 (function($) {

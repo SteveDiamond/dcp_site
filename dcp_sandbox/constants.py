@@ -153,7 +153,8 @@ ATOM_DEFINITIONS = [
                                " \end{aligned} "),
    "curvature": "Convex",
    "sign": "Positive",
-   "monotonicity": "Non-decreasing in all arguments.",
+   "monotonicity": ("For all arguments, non-decreasing if the argument is positive"
+                    " and non-increasing if the argument is negative."),
    "example": "norm(x, y, 1)",
   },
   {"name":"pos",

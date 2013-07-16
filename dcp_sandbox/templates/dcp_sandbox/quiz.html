@@ -19,6 +19,7 @@
   <script src="{% static "dcp_sandbox/js/TreeLayout.js" %}"></script>
   <script src="{% static "dcp_sandbox/js/TreeDisplay.js" %}"></script>
   <script src="{% static "dcp_sandbox/js/analyzer.js" %}"></script>
+  <script src="{% static "dcp_sandbox/js/quiz.js" %}"></script>
 </head>
 <body>
   <div class="navbar navbar-inverse navbar-fixed-top" >
@@ -32,16 +33,6 @@
             <ul class="dropdown-menu">
               <li><a href="#">x,y,z unknown sign</a></li>
               <li><a href="#">u,v,w positive</a></li>
-            </ul>
-        </li>
-        <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              Parameters
-              <b class="caret"></b>
-            </a>
-            <ul class="dropdown-menu">
-              <li><a href="#">a,b,c unknown sign</a></li>
-              <li><a href="#">d,e,f positive</a></li>
             </ul>
         </li>
         <li class="dropdown">
@@ -67,6 +58,21 @@
         <li class="divider-vertical"></li> 
         <li>
           <div><a href="#feedback" role="button" class="btn btn-primary" data-toggle="modal">Feedback</a></div>
+        </li>
+        <!-- Buttons to specify random expression attributes -->
+        <li class="divider-vertical"></li> 
+        <li>
+          <div class="btn-group" data-toggle="buttons-checkbox">
+            <button id="convex" type="button" class="btn btn-primary">Convex</button>
+            <button id="concave" type="button" class="btn btn-primary">Concave</button>
+            <button id="positive" type="button" class="btn btn-primary">Positive</button>
+            <button id="negative" type="button" class="btn btn-primary">Negative</button>
+          </div>
+        </li>
+        <!-- Button to generate random expression -->
+        <li class="divider-vertical"></li>
+        <li>
+          <button type="button" id="newExpression" class="btn btn-primary">New Expression</button>
         </li>
       </ul>
     </div>
