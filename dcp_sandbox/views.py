@@ -6,14 +6,12 @@ from django.core.mail import send_mail
 from dcp_parser.parser import Parser
 from dcp_parser.json.statement_encoder import StatementEncoder
 
-from django.db.models import Q
 from dcp_sandbox.models import *
 
 import constants
 import unicodedata
 import json
 import logging
-import random
 
 log = logging.getLogger(__name__)
 
@@ -82,54 +80,6 @@ def new_expr(request):
                 )
     return HttpResponse(name)
 
-# Generate a random expression.
-# possibilities - an array of dicts with possible expression types.
-# positive - must be positive?
-# negative - must be negative?
-# convex - must be convex?
-# concave - must be concave?
-# prob_terminate - probability of returning a terminal expression.
-def get_random_expression(possibilities, prob_terminate):
-    terminal = random.random() < prob_terminate
-    expressions = []
-    for expr_type in possibilities:
-        expressions += Operator.objects.filter(
-                            Q(positive=expr_type["positive"]) | Q(positive=True),
-                            Q(negative=expr_type["negative"]) | Q(negative=True),
-                            Q(convex=expr_type["convex"]) | Q(convex=True),
-                            Q(concave=expr_type["concave"]) | Q(concave=True),
-                            Q(terminal=terminal) | Q(terminal=True),
-                       ).all()
-    expr = weighted_choice(expressions)
-    names = []
-    for i in range(expr.num_args):
-        possible_args = expr.argument_set.filter(position=i).all()
-        possible_types = []
-        for arg in possible_args:
-            possible_types.append({"positive": arg.positive,
-                                   "negative": arg.negative,
-                                   "convex": arg.convex,
-                                   "concave": arg.concave,
-                                   })
-        name,sub_expr = get_random_expression(possible_types, 2*prob_terminate)
-        names.append(add_parens(name, expr, sub_expr, i))
-    return (expr.prefix + expr.infix.join(names) + expr.suffix, expr)
-
-# Randomly select an operator from the list,
-# taking operator weight into account.
-def weighted_choice(operators):
-    choice = sum(op.weight for op in operators) * random.random()
-    total = 0
-    for op in operators:
-        total += op.weight
-        if total > choice:
-            return op
-    assert False
-
-# Add surrounding parentheses if needed for order of operations.
-def add_parens(name, expression, sub_expression, position):
-    if expression.infix == " - " and \
-    sub_expression.infix in [" - ", " + "] and position == 1:
-        return "(" + name + ")"
-    else:
-        return name
+# Intro page.
+def intro(request):
+    return render(request, 'dcp_sandbox/intro.html')

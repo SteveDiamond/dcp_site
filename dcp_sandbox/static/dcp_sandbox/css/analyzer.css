@@ -61,6 +61,7 @@ svg {
 
 textarea.feedback {
     width: 500;
+    display: block;
 }
 
 .function-title {

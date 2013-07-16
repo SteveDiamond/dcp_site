@@ -9,7 +9,22 @@
     });
 }(jQuery))
 
+DEFAULT_DIFFICULTY = "intermediate";
+DIFFICULTY_MAP = {easy: 0.5, intermediate: 0.25, advanced: 0.1};
+
 loadNewExpression = function() {
+    var hash = window.location.hash;
+    if (hash.length > 1) {
+        hash = hash.substr(1);
+    } else {
+        hash = DEFAULT_DIFFICULTY;
+    }
+    if (isNaN(parseFloat(hash))) {
+        var difficulty = DIFFICULTY_MAP[hash];
+    } else {
+        var difficulty = parseFloat(hash);
+    }
+    
     TreeDisplay.errorState = false;
     $.ajax({ // create an AJAX call...
         crossDomain: false,
@@ -21,11 +36,11 @@ loadNewExpression = function() {
         type: 'POST',
         data: {
             true_str: "true",
-            positive: $("#positive").hasClass("active"),
-            negative: $("#negative").hasClass("active"),
+            positive: false,
+            negative: false,
             convex: $("#convex").hasClass("active"),
             concave: $("#concave").hasClass("active"),
-            prob_terminate: 0.1,
+            prob_terminate: difficulty,
         },
         success: function(response) {
             TreeConstructor.parseObjective(response);

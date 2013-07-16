@@ -59,7 +59,7 @@ ATOM_DEFINITIONS = [
          "-\infty & \mbox{otherwise } \end{cases} \\\\"
          "\mbox{ where } x \in \mathbb{R}^{n}."),
    "curvature": "Concave",
-   "sign": "Negative if any argument is negative. Otherwise positive.",
+   "sign": "The smallest argument sign under the ordering negative < unknown < positive.",
    "monotonicity": "Non-decreasing for all arguments.",
    "example": "geo_mean(x, y)",
   },
@@ -187,7 +187,7 @@ ATOM_DEFINITIONS = [
          "-\infty & \mbox{if } x < 0 \end{cases} \\\\"
          "\mbox{ where } x \in \mathbb{R}."),
    "curvature": "Concave",
-   "sign": "Negative if the argument is negative. Otherwise positive.",
+   "sign": "The sign of the argument.",
    "monotonicity": "Non-decreasing",
    "example": "sqrt(x)",
   },
