@@ -72,36 +72,46 @@ def quiz(request):
 # Helper for quiz. Gets new random expression.
 def new_expr(request):
     true_str = request.POST['true_str']
-    name,expr = get_random_expression(request.POST['positive'] == true_str, 
-                                 request.POST['negative'] == true_str,
-                                 request.POST['convex'] == true_str,
-                                 request.POST['concave'] == true_str,
-                                 float(request.POST['prob_terminate']))
-    print name 
+    expr_type = {"positive": request.POST['positive'] == true_str,
+                 "negative": request.POST['negative'] == true_str,
+                 "convex": request.POST['convex'] == true_str,
+                 "concave": request.POST['concave'] == true_str,
+                }
+    name,expr = get_random_expression([expr_type],
+                                      float(request.POST['prob_terminate'])
+                )
     return HttpResponse(name)
 
 # Generate a random expression.
+# possibilities - an array of dicts with possible expression types.
 # positive - must be positive?
 # negative - must be negative?
 # convex - must be convex?
 # concave - must be concave?
 # prob_terminate - probability of returning a terminal expression.
-def get_random_expression(positive, negative, convex, concave, prob_terminate):
+def get_random_expression(possibilities, prob_terminate):
     terminal = random.random() < prob_terminate
-    expr = weighted_choice( Operator.objects.filter(
-                                Q(positive=positive) | Q(positive=True),
-                                Q(negative=negative) | Q(negative=True),
-                                Q(convex=convex) | Q(convex=True),
-                                Q(concave=concave) | Q(concave=True),
-                                terminal=terminal
-                            ).all()
-                          )
+    expressions = []
+    for expr_type in possibilities:
+        expressions += Operator.objects.filter(
+                            Q(positive=expr_type["positive"]) | Q(positive=True),
+                            Q(negative=expr_type["negative"]) | Q(negative=True),
+                            Q(convex=expr_type["convex"]) | Q(convex=True),
+                            Q(concave=expr_type["concave"]) | Q(concave=True),
+                            Q(terminal=terminal) | Q(terminal=True),
+                       ).all()
+    expr = weighted_choice(expressions)
     names = []
     for i in range(expr.num_args):
-        arg = random.choice( expr.argument_set.filter(position=i).all() )
-        name,sub_expr = get_random_expression(arg.positive, arg.negative, 
-                                              arg.convex, arg.concave, 
-                                              2*prob_terminate)
+        possible_args = expr.argument_set.filter(position=i).all()
+        possible_types = []
+        for arg in possible_args:
+            possible_types.append({"positive": arg.positive,
+                                   "negative": arg.negative,
+                                   "convex": arg.convex,
+                                   "concave": arg.concave,
+                                   })
+        name,sub_expr = get_random_expression(possible_types, 2*prob_terminate)
         names.append(add_parens(name, expr, sub_expr, i))
     return (expr.prefix + expr.infix.join(names) + expr.suffix, expr)
 

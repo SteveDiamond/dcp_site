@@ -1,7 +1,7 @@
 from django.db import models
 
 # The default operator weight.
-DEFAULT_WEIGHT = 100
+DEFAULT_WEIGHT = 1000
 
 # An arithmetic operator, atom, or parameterized atom.
 class Operator(models.Model):

@@ -10,98 +10,102 @@ from dcp_sandbox.models import *
 Operator.objects.all().delete()
 Argument.objects.all().delete()
 
-# Unknown sign variables.
+# Unknown, positive, and negative terminals.
 for name in ["x","y","z"]:
     Operator.objects.create(prefix=name, infix="", suffix="", 
                             terminal=True, num_args=0,
-                            weight=DEFAULT_WEIGHT,
+                            weight=0.1*DEFAULT_WEIGHT/3,
                             positive=False, negative=False,
                             convex=True, concave=True)
 
-# # Positive and negative variables.
-# for name in ["u","v","w"]:
-#     Operator.objects.create(prefix=name, infix="", suffix="", 
-#                             terminal=True, num_args=0,
-#                             weight=DEFAULT_WEIGHT,
-#                             positive=True, negative=False,
-#                             convex=True, concave=True)
-#     Operator.objects.create(prefix=("-"+name), infix="", suffix="", 
-#                             terminal=True, num_args=0,
-#                             weight=DEFAULT_WEIGHT,
-#                             positive=False, negative=True,
-#                             convex=True, concave=True)
+    # Operator.objects.create(prefix="pos("+name, infix="", suffix=")", 
+    #                         terminal=True, num_args=0,
+    #                         weight=DEFAULT_WEIGHT/3,
+    #                         positive=True, negative=False,
+    #                         convex=True, concave=False)
 
-# Positive constants
-for name in ["1","42","364"]:
+    # Operator.objects.create(prefix="-pos("+name, infix="", suffix=")", 
+    #                         terminal=True, num_args=0,
+    #                         weight=DEFAULT_WEIGHT/3,
+    #                         positive=False, negative=True,
+    #                         convex=False, concave=True)
+
+# Affine expressions.
+for name in ["x + 1","y - 42","z + 364"]:
     Operator.objects.create(prefix=name, infix="", suffix="", 
                             terminal=True, num_args=0,
-                            weight=0.5*DEFAULT_WEIGHT/3,
-                            positive=True, negative=False,
+                            weight=0.2*DEFAULT_WEIGHT/3,
+                            positive=False, negative=False,
                             convex=True, concave=True)
 
-
-# Negative constants
-for name in ["-2","-35","-7"]:
-    Operator.objects.create(prefix=name, infix="", suffix="", 
-                            terminal=True, num_args=0,
-                            weight=0.5*DEFAULT_WEIGHT/3,
-                            positive=False, negative=True,
-                            convex=True, concave=True)
+# Zero to fall back on.
+Operator.objects.create(prefix="0", infix="", suffix="", 
+                        terminal=True, num_args=0,
+                        weight=DEFAULT_WEIGHT/1000,
+                        positive=True, negative=True,
+                        convex=True, concave=True)
 
 # binary + and arguments.
-for positive in [True, False]:
-    for negative in [True, False]:
-        for convex in [True, False]:
-            for concave in [True, False]:
-                if (not convex and not concave) or (positive and negative):
-                    continue
-                elif convex and concave:
-                    weight = 0.05*DEFAULT_WEIGHT/3
-                elif positive or negative:
-                    weight = 0.15*DEFAULT_WEIGHT/4
-                else:
-                    weight = 0.8*DEFAULT_WEIGHT
-                op = Operator.objects.create(prefix="", infix=" + ", suffix="",
-                                             terminal=False, num_args=2,
-                                             weight=weight,
-                                             positive=positive, negative=negative,
-                                             convex=convex, concave=concave)
+for convex in [True, False]:
+    for concave in [True, False]:
+        if (convex == concave):
+            continue
+        op = Operator.objects.create(prefix="", infix=" + ", suffix="",
+                                     terminal=False, num_args=2,
+                                     weight=DEFAULT_WEIGHT,
+                                     positive=False, negative=False,
+                                     convex=convex, concave=concave)
 
-                for i in range(2):
-                    Argument.objects.create(operator=op, position=i,
-                                            positive=positive, negative=negative,
-                                            convex=convex, concave=concave)
+        for i in range(2):
+            Argument.objects.create(operator=op, position=i,
+                                    positive=False, negative=False,
+                                    convex=convex, concave=concave)
 
 
 # binary - and arguments.
-for positive in [True, False]:
-    for negative in [True, False]:
-        for convex in [True, False]:
-            for concave in [True, False]:
-                if (not convex and not concave) or (positive and negative):
-                    continue
-                elif convex and concave:
-                    weight = 0.05*DEFAULT_WEIGHT/3
-                elif positive or negative:
-                    weight = 0.15*DEFAULT_WEIGHT/4
-                else:
-                    weight = 0.8*DEFAULT_WEIGHT
-                op = Operator.objects.create(prefix="", infix=" - ", suffix="",
-                                             terminal=False, num_args=2,
-                                             weight=weight,
-                                             positive=positive, negative=negative,
-                                             convex=convex, concave=concave)
+# for positive in [True, False]:
+#     for negative in [True, False]:
+#         for convex in [True, False]:
+#             for concave in [True, False]:
+#                 if (convex == concave) or (positive and negative):
+#                     continue
+#                 elif positive or negative:
+#                     weight = 0.2*DEFAULT_WEIGHT/4
+#                 else:
+#                     weight = 0.8*DEFAULT_WEIGHT
+#                 op = Operator.objects.create(prefix="", infix=" - ", suffix="",
+#                                              terminal=False, num_args=2,
+#                                              weight=weight,
+#                                              positive=positive, negative=negative,
+#                                              convex=convex, concave=concave)
 
-                Argument.objects.create(operator=op, position=0,
-                                        positive=positive, negative=negative,
-                                        convex=convex, concave=concave)
+#                 Argument.objects.create(operator=op, position=0,
+#                                         positive=positive, negative=negative,
+#                                         convex=convex, concave=concave)
 
-                Argument.objects.create(operator=op, position=1,
-                                        positive=negative, negative=positive,
-                                        convex=concave, concave=convex)
+#                 Argument.objects.create(operator=op, position=1,
+#                                         positive=negative, negative=positive,
+#                                         convex=concave, concave=convex)
+for convex in [True, False]:
+    for concave in [True, False]:
+        if (convex == concave):
+            continue
+        op = Operator.objects.create(prefix="", infix=" - ", suffix="",
+                                     terminal=False, num_args=2,
+                                     weight=DEFAULT_WEIGHT,
+                                     positive=False, negative=False,
+                                     convex=convex, concave=concave)
+
+        Argument.objects.create(operator=op, position=0,
+                                positive=False, negative=False,
+                                convex=convex, concave=concave)
+
+        Argument.objects.create(operator=op, position=1,
+                                positive=False, negative=False,
+                                convex=concave, concave=convex)
 
 
-# # max and arguments
+# max and arguments
 # for positive in [True, False]:
 #     for negative in [True, False]:
 #         if positive and negative: 
@@ -126,32 +130,26 @@ for positive in [True, False]:
 #             Argument.objects.create(operator=op, position=1,
 #                                     positive=False, negative=False,
 #                                     convex=True, concave=False)
+op = Operator.objects.create(prefix="max(", infix=", ", suffix=")",
+                             terminal=False, num_args=2,
+                             weight=DEFAULT_WEIGHT,
+                             positive=False, negative=False,
+                             convex=True, concave=False)
+for i in range(2):
+    Argument.objects.create(operator=op, position=i,
+                            positive=False, negative=False,
+                            convex=True, concave=False)
 
 # min and arguments
-for positive in [True, False]:
-    for negative in [True, False]:
-        if positive and negative: 
-            continue
-        elif not positive and not negative:
-            weight = 0.5*DEFAULT_WEIGHT
-        else:
-            weight = 0.5*DEFAULT_WEIGHT/2
-        op = Operator.objects.create(prefix="min(", infix=", ", suffix=")",
-                                     terminal=False, num_args=2,
-                                     weight=weight,
-                                     positive=positive, negative=negative,
-                                     convex=False, concave=True)
-        Argument.objects.create(operator=op, position=0,
-                                positive=positive, negative=negative,
-                                convex=False, concave=True)
-        if positive:
-            Argument.objects.create(operator=op, position=1,
-                                    positive=True, negative=False,
-                                    convex=False, concave=True)
-        else:
-            Argument.objects.create(operator=op, position=1,
-                                    positive=False, negative=False,
-                                    convex=False, concave=True)
+op = Operator.objects.create(prefix="min(", infix=", ", suffix=")",
+                             terminal=False, num_args=2,
+                             weight=DEFAULT_WEIGHT,
+                             positive=False, negative=False,
+                             convex=False, concave=True)
+for i in range(2):
+    Argument.objects.create(operator=op, position=i,
+                            positive=False, negative=False,
+                            convex=False, concave=True)
 
 # log and arguments
 op = Operator.objects.create(prefix="log(", infix=", ", suffix=")",
@@ -218,12 +216,12 @@ Argument.objects.create(operator=op, position=0,
 # geo_mean and arguments
 op = Operator.objects.create(prefix="geo_mean(", infix=", ", suffix=")",
                              terminal=False, num_args=2,
-                             weight=DEFAULT_WEIGHT,
-                             positive=True, negative=False,
+                             weight=0.8*DEFAULT_WEIGHT,
+                             positive=False, negative=False,
                              convex=False, concave=True)
 for i in range(op.num_args):
     Argument.objects.create(operator=op, position=i,
-                            positive=True, negative=False,
+                            positive=False, negative=False,
                             convex=False, concave=True)
 
 # huber and arguments
@@ -292,14 +290,6 @@ for i in range(op.num_args):
                             convex=True, concave=True)
 
 # sqrt and arguments
-op = Operator.objects.create(prefix="sqrt(", infix=", ", suffix=")",
-                             terminal=False, num_args=1,
-                             weight=0.2*DEFAULT_WEIGHT,
-                             positive=True, negative=False,
-                             convex=False, concave=True)
-Argument.objects.create(operator=op, position=0,
-                        positive=True, negative=False,
-                        convex=False, concave=True)
 op = Operator.objects.create(prefix="sqrt(", infix=", ", suffix=")",
                              terminal=False, num_args=1,
                              weight=0.8*DEFAULT_WEIGHT,
