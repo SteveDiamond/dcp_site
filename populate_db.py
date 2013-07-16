@@ -294,9 +294,17 @@ for i in range(op.num_args):
 # sqrt and arguments
 op = Operator.objects.create(prefix="sqrt(", infix=", ", suffix=")",
                              terminal=False, num_args=1,
-                             weight=DEFAULT_WEIGHT,
+                             weight=0.2*DEFAULT_WEIGHT,
                              positive=True, negative=False,
                              convex=False, concave=True)
 Argument.objects.create(operator=op, position=0,
                         positive=True, negative=False,
+                        convex=False, concave=True)
+op = Operator.objects.create(prefix="sqrt(", infix=", ", suffix=")",
+                             terminal=False, num_args=1,
+                             weight=0.8*DEFAULT_WEIGHT,
+                             positive=False, negative=False,
+                             convex=False, concave=True)
+Argument.objects.create(operator=op, position=0,
+                        positive=False, negative=False,
                         convex=False, concave=True)
