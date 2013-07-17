@@ -88,6 +88,16 @@ for i in range(2):
                             positive=False, negative=False,
                             convex=False, concave=True)
 
+# min{x,0} and arguments
+op = Operator.objects.create(prefix="min(", infix=", ", suffix=", 0)",
+                             terminal=False, num_args=1,
+                             weight=DEFAULT_WEIGHT,
+                             positive=False, negative=True,
+                             convex=False, concave=True)
+Argument.objects.create(operator=op, position=0,
+                        positive=False, negative=False,
+                        convex=False, concave=True)
+
 # log and arguments
 op = Operator.objects.create(prefix="log(", infix=", ", suffix=")",
                              terminal=False, num_args=1,
