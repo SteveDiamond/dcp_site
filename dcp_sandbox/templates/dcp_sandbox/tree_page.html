@@ -1,7 +1,7 @@
+{% load staticfiles %}
 <head>
-  <title>DCP Analyzer</title>
+  <title>{% block title %}Tree Page{% endblock %}</title>
   <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-  {% load staticfiles %}
   <!-- Bootstrap and jQuery + plugins -->
   <link href="{% static "dcp_sandbox/bootstrap/css/bootstrap.min.css" %}" rel="stylesheet" media="screen">
   <script src="{% static "dcp_sandbox/jquery-1.9.1.min.js" %}"></script>
@@ -19,32 +19,13 @@
   <script src="{% static "dcp_sandbox/js/TreeLayout.js" %}"></script>
   <script src="{% static "dcp_sandbox/js/TreeDisplay.js" %}"></script>
   <script src="{% static "dcp_sandbox/js/treeInteraction.js" %}"></script>
-  <script src="{% static "dcp_sandbox/js/analyzer.js" %}"></script>
+  {% block page_js %}{% endblock %}
 </head>
 <body>
   <div class="navbar navbar-inverse navbar-fixed-top">
     <div class="navbar-inner">
       <ul class="nav">
-        <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              Variables
-              <b class="caret"></b>
-            </a>
-            <ul class="dropdown-menu">
-              <li><a href="#">x,y,z unknown sign</a></li>
-              <li><a href="#">u,v,w positive</a></li>
-            </ul>
-        </li>
-        <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              Parameters
-              <b class="caret"></b>
-            </a>
-            <ul class="dropdown-menu">
-              <li><a href="#">a,b,c unknown sign</a></li>
-              <li><a href="#">d,e,f positive</a></li>
-            </ul>
-        </li>
+        {% block pre_functions_nav %}{% endblock %}
         <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               Functions
@@ -69,6 +50,7 @@
         <li>
           <div><a href="#feedback" role="button" class="btn btn-primary" data-toggle="modal">Feedback</a></div>
         </li>
+        {% block post_feedback_nav %}{% endblock %}
       </ul>
     </div>
   </div>

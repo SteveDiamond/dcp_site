@@ -16,9 +16,9 @@ import logging
 log = logging.getLogger(__name__)
 
 # Load the analyzer.
-def index(request):
+def analyzer(request):
     sorted_atoms = sorted(constants.ATOM_DEFINITIONS, key=lambda atom: atom["name"])
-    return render(request, 'dcp_sandbox/index.html', 
+    return render(request, 'dcp_sandbox/analyzer.html', 
                  {'functions': sorted_atoms})
 
 # Parse an expression or constraint.
@@ -36,8 +36,9 @@ def parse(request):
     for line in str.split(text, '\r\n'):
         try:
             parser.parse(line)
+            log.debug('Parsed %s' % line)
         except Exception, e:
-            log.debug('Parser error')
+            log.debug('Parser error on %s' % line)
             log.error(e)
             return HttpResponseServerError(str(e))
 
@@ -78,6 +79,7 @@ def new_expr(request):
     name = get_random_expression([expr_type],
                                  float(request.POST['prob_terminate']),
                                  float(request.POST['prob_increase']))
+    log.debug("Generated %s" % name)
     return HttpResponse(name)
 
 # Intro page.
