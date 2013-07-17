@@ -14,8 +14,9 @@ TreeConstructor.helpActive = true;
  * Parses the given objective/constraint and creates a parse tree visualization.
  * objective - the objective/constraint to parse.
  * id - the id of the node the user edited.
+ * func - an optional function to execute after success.
  */
-TreeConstructor.parseObjective = function(objective, id) {
+TreeConstructor.parseObjective = function(objective, id, success_function) {
     $.ajax({ // create an AJAX call...
         crossDomain: false,
                     beforeSend: function(xhr, settings) {
@@ -33,6 +34,7 @@ TreeConstructor.parseObjective = function(objective, id) {
             var root = JSON.parse(response);
             TreeConstructor.deactivatePrompt();
             TreeConstructor.processParseTree(root);
+            if (success_function) success_function();
         },
         error: function(jqXHR, textStatus, errorThrown) {
             TreeConstructor.showParseError(jqXHR.responseText);
@@ -95,7 +97,7 @@ TreeConstructor.processParseTree = function(root) {
     $(TreeConstants.TREE_DIV).html(''); // Clear old tree
     TreeDisplay.drawTree(TreeConstants.TREE_DIV, root, numNodes, levels, widths, centers, treeWidth, treeHeight);
     // If help is active, draw the legends.
-    if (TreeConstructor.helpActive) {
+    if (TreeConstructor.helpActive && !TreeConstructor.promptActive) {
         TreeDisplay.drawLegend(TreeConstants.CURVATURE_LEGEND, root, widths, centers, treeWidth);
         TreeDisplay.drawLegend(TreeConstants.SIGN_LEGEND, root, widths, centers, treeWidth);
     }

@@ -53,6 +53,7 @@ def send_feedback(request):
     unicode_text = request.POST['text']
     # Convert to standard Python string (ASCII)
     text = unicodedata.normalize('NFKD', unicode_text).encode('ascii','ignore')
+    log.debug("Sent feedback %s" % text)
     send_mail('DCP Analyzer Feedback', text, 'dcp.stanford.edu@gmail.com',
         ['diamond.po.central@gmail.com'], fail_silently=False)
     return HttpResponse("OK")
@@ -78,7 +79,8 @@ def new_expr(request):
                 }
     name = get_random_expression([expr_type],
                                  float(request.POST['prob_terminate']),
-                                 float(request.POST['prob_increase']))
+                                 float(request.POST['prob_increase']),
+                                 request.POST['dcp'] == true_str)
     log.debug("Generated %s" % name)
     return HttpResponse(name)
 

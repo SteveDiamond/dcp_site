@@ -8,14 +8,6 @@
 {% endblock %}
 
 {% block post_feedback_nav %}
-<!-- Buttons to specify random expression attributes -->
-<li class="divider-vertical"></li> 
-<li>
-  <div class="btn-group" data-toggle="buttons-checkbox">
-    <button id="convex" type="button" class="btn btn-primary">Convex</button>
-    <button id="concave" type="button" class="btn btn-primary">Concave</button>
-  </div>
-</li>
 <li class="divider-vertical"></li> 
 <li class="dropdown">
     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -28,9 +20,19 @@
       <li><a href="#advanced">Advanced</a></li>
     </ul>
 </li>
-<!-- Button to generate random expression -->
-<li class="divider-vertical"></li>
+<!-- Buttons to specify random expression attributes -->
+<li class="divider-vertical answers"></li> 
 <li>
-  <button type="button" id="newExpression" class="btn btn-primary">New Expression</button>
+  <div class="btn-group answers">
+    <button id="affine" type="button" class="btn btn-primary answer">Affine</button>
+    <button id="convex" type="button" class="btn btn-primary answer">Convex</button>
+    <button id="concave" type="button" class="btn btn-primary answer">Concave</button>
+    <button id="non-convex" type="button" class="btn btn-primary answer">Non-DCP</button>
+  </div>
+</li>
+<!-- Button to generate random expression -->
+<li class="divider-vertical new-expression"></li>
+<li>
+  <button type="button" id="newExpression" class="btn btn-primary new-expression">New Expression</button>
 </li>
 {% endblock %}

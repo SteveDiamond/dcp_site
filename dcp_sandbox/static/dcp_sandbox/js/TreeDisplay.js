@@ -31,7 +31,7 @@ TreeDisplay.drawTree = function(location, root, numNodes, levels, widths, center
 
         nodeEnter.append("svg:text")
             .attr("class", function(d) {
-                if (d.isShortNameNode) {
+                if (d.isShortNameNode || !TreeConstructor.editable) {
                     return TreeConstants.FIXED_TEXT;
                 } else {
                     return TreeConstants.EDITABLE_TEXT;

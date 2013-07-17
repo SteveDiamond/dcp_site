@@ -4,6 +4,8 @@
  */
 (function($) {
     $().ready(function(){
+        // Nodes in the parse tree can be edited.
+        TreeConstructor.editable = true;
         // Show prompt.
         var promptTree = {
                          name: TreeConstants.PROMPT,
