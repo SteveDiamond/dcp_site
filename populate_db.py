@@ -10,6 +10,7 @@ from dcp_sandbox.models import *
 Operator.objects.all().delete()
 Argument.objects.all().delete()
 
+# Terminals
 # Unknown sign variables.
 for name in ["x","y","z"]:
     Operator.objects.create(prefix=name, infix="", suffix="", 
@@ -18,14 +19,16 @@ for name in ["x","y","z"]:
                             positive=False, negative=False,
                             convex=True, concave=True)
 
+
 # Affine expressions.
-for name in ["x + 1","y - 42","z + 364"]:
+for name in ["x / 2","y - 42","364 * z"]:
     Operator.objects.create(prefix=name, infix="", suffix="", 
                             terminal=True, num_args=0,
-                            weight=0.2*DEFAULT_WEIGHT/3,
+                            weight=0.1*DEFAULT_WEIGHT/3,
                             positive=False, negative=False,
                             convex=True, concave=True)
 
+# Operators/Functions
 # binary + and arguments.
 for convex in [True, False]:
     for concave in [True, False]:
@@ -33,7 +36,7 @@ for convex in [True, False]:
             continue
         op = Operator.objects.create(prefix="", infix=" + ", suffix="",
                                      terminal=False, num_args=2,
-                                     weight=DEFAULT_WEIGHT,
+                                     weight=DEFAULT_WEIGHT/2,
                                      positive=False, negative=False,
                                      convex=convex, concave=concave)
 
@@ -50,7 +53,7 @@ for convex in [True, False]:
             continue
         op = Operator.objects.create(prefix="", infix=" - ", suffix="",
                                      terminal=False, num_args=2,
-                                     weight=DEFAULT_WEIGHT,
+                                     weight=DEFAULT_WEIGHT/2,
                                      positive=False, negative=False,
                                      convex=convex, concave=concave)
 
@@ -130,7 +133,7 @@ Argument.objects.create(operator=op, position=0,
 # entr and arguments
 op = Operator.objects.create(prefix="entr(", infix=", ", suffix=")",
                              terminal=False, num_args=1,
-                             weight=DEFAULT_WEIGHT,
+                             weight=0.5*DEFAULT_WEIGHT,
                              positive=False, negative=False,
                              convex=False, concave=True)
 Argument.objects.create(operator=op, position=0,
@@ -187,7 +190,7 @@ Argument.objects.create(operator=op, position=0,
 # kl_div and arguments
 op = Operator.objects.create(prefix="kl_div(", infix=", ", suffix=")",
                              terminal=False, num_args=2,
-                             weight=DEFAULT_WEIGHT,
+                             weight=0.5*DEFAULT_WEIGHT,
                              positive=False, negative=False,
                              convex=True, concave=False)
 for i in range(op.num_args):

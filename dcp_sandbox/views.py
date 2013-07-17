@@ -75,9 +75,9 @@ def new_expr(request):
                  "convex": request.POST['convex'] == true_str,
                  "concave": request.POST['concave'] == true_str,
                 }
-    name,expr = get_random_expression([expr_type],
-                                      float(request.POST['prob_terminate'])
-                )
+    name = get_random_expression([expr_type],
+                                 float(request.POST['prob_terminate']),
+                                 float(request.POST['prob_increase']))
     return HttpResponse(name)
 
 # Intro page.

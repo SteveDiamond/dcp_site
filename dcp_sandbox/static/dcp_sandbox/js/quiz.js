@@ -10,7 +10,10 @@
 }(jQuery))
 
 DEFAULT_DIFFICULTY = "intermediate";
-DIFFICULTY_MAP = {easy: 0.5, intermediate: 0.25, advanced: 0.1};
+DIFFICULTY_MAP = {easy: {prob_terminate: 0.05, prob_increase: 20},
+                  intermediate: {prob_terminate: 0.01, prob_increase: 10},
+                  advanced: {prob_terminate: 0.01, prob_increase: 5}
+                 };
 
 loadNewExpression = function() {
     var hash = window.location.hash;
@@ -19,12 +22,7 @@ loadNewExpression = function() {
     } else {
         hash = DEFAULT_DIFFICULTY;
     }
-    if (isNaN(parseFloat(hash))) {
-        var difficulty = DIFFICULTY_MAP[hash];
-    } else {
-        var difficulty = parseFloat(hash);
-    }
-    
+
     TreeDisplay.errorState = false;
     $.ajax({ // create an AJAX call...
         crossDomain: false,
@@ -40,7 +38,8 @@ loadNewExpression = function() {
             negative: false,
             convex: $("#convex").hasClass("active"),
             concave: $("#concave").hasClass("active"),
-            prob_terminate: difficulty,
+            prob_terminate: DIFFICULTY_MAP[hash].prob_terminate,
+            prob_increase: DIFFICULTY_MAP[hash].prob_increase,
         },
         success: function(response) {
             TreeConstructor.parseObjective(response);
