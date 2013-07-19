@@ -88,7 +88,7 @@ for i in range(2):
                             positive=False, negative=False,
                             convex=False, concave=True)
 
-# min{x,0} and arguments
+# min(x,0) and arguments
 op = Operator.objects.create(prefix="min(", infix=", ", suffix=", 0)",
                              terminal=False, num_args=1,
                              weight=DEFAULT_WEIGHT,
