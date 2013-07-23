@@ -86,7 +86,7 @@ TreeLayout.getTreeHeight = function(levels) {
     var numLevels = levels.length;
     var treeHeight = numLevels*TreeConstants.BOX_HEIGHT + (numLevels-1)*TreeConstants.VERT_SEP + 2*TreeConstants.EDGE_VERT_SEP;
     var legendHeight = 0;
-    if (TreeConstructor.helpActive) {
+    if (!TreeConstructor.promptActive && TreeConstructor.helpActive) {
         legendHeight = Math.max( TreeLayout.getLegendHeight(TreeConstants.CURVATURE_LEGEND), 
                                  TreeLayout.getLegendHeight(TreeConstants.SIGN_LEGEND) );
     }

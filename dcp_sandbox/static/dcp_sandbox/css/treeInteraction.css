@@ -47,6 +47,10 @@ svg {
     content:normal;
 }
 
+.dropdown + li.divider-vertical {
+    margin-left: 0;
+}
+
 #treeContainer {
     padding-top: 62px;
 }

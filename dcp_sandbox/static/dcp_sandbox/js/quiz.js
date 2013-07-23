@@ -3,7 +3,13 @@
  * Handles page load for quiz.
  */
 (function($) {
-    DEFAULT_DIFFICULTY = "intermediate";
+    rightStreakLength = 0;
+    wrongStreakLength = 0;
+    level = 0;
+    STREAK_TO_LEVEL_UP = 5;
+    STREAK_TO_LEVEL_DOWN = 5;
+    MAX_LEVEL = 2;
+    LEVEL_TO_DIFFICULTY = ["easy", "intermediate", "advanced"];
     DIFFICULTY_MAP = {easy: {prob_terminate: 0.05, prob_increase: 20},
                       intermediate: {prob_terminate: 0.01, prob_increase: 10},
                       advanced: {prob_terminate: 0.01, prob_increase: 5}
@@ -19,24 +25,24 @@
                               "concave": "concave",
                               "non-convex": "non-DCP"
                              }
+    CONTINUE_BUTTON = "<button type=\"button\" " +
+                      "id=\"newExpression\" " +
+                      "class=\"btn btn-primary new-expression\">" +
+                      "New Expression</button>";
 
     $().ready(function(){
         // Start with answers hidden.
         $(".answers").hide();
         // Nodes in the parse tree cannot be edited.
         TreeConstructor.editable = false;
-        // Listen to new expression button.
-        $("#newExpression").click(loadNewExpression);
         // Start with an expression.
-        $("#newExpression").click();
+        loadNewExpression();
         // Listen to the answer buttons.
         $(".answer").click(showParseTree);
     });
 
     // Generate and display a random expression.
     function loadNewExpression() {
-        // Hide the new expression button until the user selects an answer.
-        toggleButtons();
         var difficulty = getDifficulty();
         // http://stackoverflow.com/questions/10134237/javascript-random-integer-between-two-numbers
         var choice = Math.floor(Math.random() * 3);
@@ -64,6 +70,8 @@
                 TreeConstructor.promptActive = true;
                 var expression = {name: response};
                 TreeConstructor.processParseTree(expression);
+                // Hide the new expression button until the user selects an answer.
+                toggleButtons();
             }
         });
     }
@@ -74,7 +82,7 @@
         if (hash.length > 1) {
             hash = hash.substr(1);
         } else {
-            hash = DEFAULT_DIFFICULTY;
+            hash = LEVEL_TO_DIFFICULTY[level];
         }
         return hash;
     }
@@ -100,18 +108,46 @@
      */
     function feedbackForAnswer(answer) {
         var curvature = TreeConstructor.root.curvature;
+        var suffix = ". " + CONTINUE_BUTTON;
         if (curvature == answer) {
-            var message = "The expression is " + CURVATURE_DISPLAY_NAME[curvature] +
-                          ". Click \"New Expression\" to continue."
+            var message = "The expression is " + 
+                          CURVATURE_DISPLAY_NAME[curvature] + suffix;
             $(TreeConstants.ERROR_DIV).html('<div class="alert alert-success">' +
             '<span><strong>Correct!</strong> ' + message + '</span></div>')
         } else {
             var message = "The expression is " + CURVATURE_DISPLAY_NAME[curvature] + 
                           ", but you answered " + CURVATURE_DISPLAY_NAME[answer] +
-                          ". Click \"New Expression\" to continue."
+                           suffix;
             $(TreeConstants.ERROR_DIV).html('<div class="alert alert-error">' +
             '<span><strong>Incorrect!</strong> ' + message + '</span></div>')
-        }  
+        }
+        // Increase/decrease difficulty
+        updateLevel(curvature == answer);
+        // Listen to new expression button.
+        $("#newExpression").click(loadNewExpression);
+    }
+
+    /**
+     * Increase/decrease difficulty in response to streaks of correct/incorrect
+     * answers.
+     * correct - was the user's answer correct?
+     */
+    function updateLevel(correct) {
+        if (correct) {
+            rightStreakLength++;
+            wrongStreakLength = 0;
+        } else {
+            rightStreakLength = 0;
+            wrongStreakLength++;
+        }
+        // Increase/decrease difficulty based on performance.
+        if (rightStreakLength >= STREAK_TO_LEVEL_UP) {
+            rightStreakLength = 0;
+            level = Math.min(level + 1, MAX_LEVEL)
+        } else if (wrongStreakLength >= STREAK_TO_LEVEL_DOWN) {
+            wrongStreakLength = 0;
+            level = Math.max(level - 1, 0);
+        }
     }
 
     // Alternately hide and show the answer buttons and new expression button.

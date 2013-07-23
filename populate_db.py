@@ -127,7 +127,7 @@ Argument.objects.create(operator=op, position=0,
 # berhu and arguments
 op = Operator.objects.create(prefix="berhu(", infix=", ", suffix=", 2)",
                              terminal=False, num_args=1,
-                             weight=DEFAULT_WEIGHT,
+                             weight=0.25*DEFAULT_WEIGHT,
                              positive=True, negative=False,
                              convex=True, concave=False)
 Argument.objects.create(operator=op, position=0,
@@ -200,7 +200,7 @@ Argument.objects.create(operator=op, position=0,
 # kl_div and arguments
 op = Operator.objects.create(prefix="kl_div(", infix=", ", suffix=")",
                              terminal=False, num_args=2,
-                             weight=0.5*DEFAULT_WEIGHT,
+                             weight=0.25*DEFAULT_WEIGHT,
                              positive=False, negative=False,
                              convex=True, concave=False)
 for i in range(op.num_args):
