@@ -79,3 +79,8 @@ textarea.feedback {
 .error-node rect {
     fill: #f2dede;
 }
+
+.center {
+    float: none !important;
+    margin: 0 auto !important;
+}
