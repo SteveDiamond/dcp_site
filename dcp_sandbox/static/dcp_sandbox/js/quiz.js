@@ -3,17 +3,24 @@
  * Handles page load for quiz.
  */
 (function($) {
+    // Level constants and variables.
     rightStreakLength = 0;
     wrongStreakLength = 0;
     level = 0;
     STREAK_TO_LEVEL_UP = 5;
     STREAK_TO_LEVEL_DOWN = 5;
     MAX_LEVEL = 2;
-    LEVEL_TO_DIFFICULTY = ["easy", "intermediate", "advanced"];
-    DIFFICULTY_MAP = {easy: {prob_terminate: 0.05, prob_increase: 20},
-                      intermediate: {prob_terminate: 0.01, prob_increase: 10},
-                      advanced: {prob_terminate: 0.01, prob_increase: 5}
-                     };
+    // Difficulty contants.
+    EASY_KEY = "Easy";
+    MEDIUM_KEY = "Medium";
+    HARD_KEY = "Hard";
+    LEVEL_TO_DIFFICULTY = [EASY_KEY, MEDIUM_KEY, HARD_KEY];
+
+    DIFFICULTY_MAP = {}
+    DIFFICULTY_MAP[EASY_KEY] = {prob_terminate: 0.05, prob_increase: 20};
+    DIFFICULTY_MAP[MEDIUM_KEY] = {prob_terminate: 0.01, prob_increase: 10};
+    DIFFICULTY_MAP[HARD_KEY] = {prob_terminate: 0.01, prob_increase: 5};
+
     EXPRESSION_TYPES = [{convex: true, concave: false, dcp:true},
                         {convex: false, concave: true, dcp:true},
                         {convex: false, concave: false, dcp:false},
@@ -39,11 +46,15 @@
         loadNewExpression();
         // Listen to the answer buttons.
         $(".answer").click(showParseTree);
+        // Listen for change in difficulty.
+        $(window).bind( 'hashchange', setDifficulty);
     });
 
     // Generate and display a random expression.
     function loadNewExpression() {
         var difficulty = getDifficulty();
+        // Display the current difficulty.
+        displayDifficulty(difficulty);
         // http://stackoverflow.com/questions/10134237/javascript-random-integer-between-two-numbers
         var choice = Math.floor(Math.random() * 3);
         $.ajax({ // create an AJAX call...
@@ -78,14 +89,35 @@
 
     // Get the current difficulty.
     function getDifficulty() {
+        return LEVEL_TO_DIFFICULTY[level];
+    }
+
+    /**
+     * Show the current difficulty.
+     */
+    function displayDifficulty(difficulty) {
+        $("#difficulty").html("Difficulty: " + difficulty + 
+                              " <b class=\"caret\"></b>");
+    }
+
+    /**
+     * Loads a new expression with the difficulty
+     * specified by the hash and resets level variables.
+     */
+     function setDifficulty() {
         var hash = window.location.hash;
         if (hash.length > 1) {
             hash = hash.substr(1);
-        } else {
-            hash = LEVEL_TO_DIFFICULTY[level];
+            newLevel = LEVEL_TO_DIFFICULTY.indexOf(hash);
+            if (newLevel != -1) {
+                level = newLevel;
+                rightStreakLength = 0;
+                wrongStreakLength = 0;
+                loadNewExpression();
+            }
+            window.location.hash = "";
         }
-        return hash;
-    }
+     }
 
     /**
      * Show the full parse tree for the current expression.

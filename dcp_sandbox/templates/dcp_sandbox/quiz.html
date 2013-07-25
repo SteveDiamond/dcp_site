@@ -7,16 +7,17 @@
 <script src="{% static "dcp_sandbox/js/quiz.js" %}"></script>
 {% endblock %}
 
-{% block post_functions_nav %}
+{% block post_feedback_nav %}
+<li class="divider-vertical left-of-dropdown"></li>
 <li class="dropdown">
-    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+    <a id="difficulty" href="#" class="dropdown-toggle" data-toggle="dropdown">
       Difficulty
       <b class="caret"></b>
     </a>
     <ul class="dropdown-menu">
-      <li><a href="#easy">Easy</a></li>
-      <li><a href="#intermediate">Intermediate</a></li>
-      <li><a href="#advanced">Advanced</a></li>
+      <li><a href="#Easy">Easy</a></li>
+      <li><a href="#Medium">Medium</a></li>
+      <li><a href="#Hard">Hard</a></li>
     </ul>
 </li>
 {% endblock %}
