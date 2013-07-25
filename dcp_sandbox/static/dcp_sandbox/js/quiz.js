@@ -82,7 +82,8 @@
                 var expression = {name: response};
                 TreeConstructor.processParseTree(expression);
                 // Hide the new expression button until the user selects an answer.
-                toggleButtons();
+                $(".new-expression").hide();
+                $(".answers").show();
             }
         });
     }
@@ -125,7 +126,8 @@
      */
     function showParseTree() {
         // Hide the answers until the user generates a new expression.
-        toggleButtons();
+        $(".new-expression").show();
+        $(".answers").hide();
         var expression = $("#"+TreeConstants.ROOT_TAG).text();
         // Show help if active.
         TreeConstructor.promptActive = false;
@@ -180,12 +182,6 @@
             wrongStreakLength = 0;
             level = Math.max(level - 1, 0);
         }
-    }
-
-    // Alternately hide and show the answer buttons and new expression button.
-    function toggleButtons() {
-        $(".answers").toggle();
-        $(".new-expression").toggle();
     }
 
     // Utility function to call functions with some arguments supplied.
