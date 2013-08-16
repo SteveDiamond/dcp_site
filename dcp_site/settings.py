@@ -160,7 +160,7 @@ LOGGING = {
             'level':'DEBUG',
             'class':'logging.handlers.RotatingFileHandler',
             'filename': SITE_ROOT + "/logfile",
-            'maxBytes': 50000,
+            'maxBytes': 500000,
             'backupCount': 2,
             'formatter': 'standard',
         },
