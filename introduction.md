@@ -75,13 +75,25 @@ Sign, monotonicity, and curvature
 The sign of an expression depends on the sign of its components. For instance,
 the sum of two positive expressions is positive, etc.
 
-The
-monotonicity of a function depends on the argument sign. For instance, the
-`square` atom is usually nonmonotone in its argument. However, when the
+The monotonicity of a function depends on the argument sign. For instance,
+the `square` atom is usually nonmonotone in its argument. However, when the
 argument is positive, it is increasing; when the argument is negative, it is
 decreasing.
 
+The curvature of an expression follows from the DCP rules and the basic rules
 
+    convex + convex = convex
+    concave + concave = concave
+    affine + affine = affine
+    constant + constant = constant
+    positive constant * convex = convex
+    negative constant * convex = concave
+    positive constant * concave = concave
+    negative constant * concave = convex
+
+
+Example
+-------
 As an example, we'll walk through the application of the DCP rule when applied
 to the expression `sqrt(1 + x^2)`.
 
@@ -102,10 +114,6 @@ rule).
 Mathematically, `norm([1; x]) = sqrt(1 + x^2)`, but only the first is
 verifiably convex from local information, while the latter violates the DCP
 rule.
-
-Signed DCP
-----------
-
 
 
 Exercises
