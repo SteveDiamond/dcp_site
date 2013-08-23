@@ -1,128 +1,35 @@
+{% extends "dcp_sandbox/base.html" %}
 {% load staticfiles %}
-<head>
-  <title>{% block title %}Tree Page{% endblock %}</title>
-  <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-  <!-- Bootstrap and jQuery + plugins -->
-  <link href="{% static "dcp_sandbox/bootstrap/css/bootstrap.min.css" %}" rel="stylesheet" media="screen">
-  <script src="{% static "dcp_sandbox/jquery-1.9.1.min.js" %}"></script>
-  <script src="{% static "dcp_sandbox/jquery.cookie.js" %}"></script>
-  <script src="{% static "dcp_sandbox/jquery.jslatex.js" %}"></script>
-  <script src="{% static "dcp_sandbox/bootstrap/js/bootstrap.min.js" %}"></script>
 
-  <!-- D3.js -->
-  <script type="text/javascript" src="{% static "dcp_sandbox/d3.v3/d3.v3.min.js" %}"></script>
+{% block title %}Tree Page{% endblock %}
 
-  <!-- page specific -->
-  <link href="{% static "dcp_sandbox/css/treeInteraction.css" %}" rel="stylesheet">
-  <script src="{% static "dcp_sandbox/js/TreeConstants.js" %}"></script>
-  <script src="{% static "dcp_sandbox/js/TreeConstructor.js" %}"></script>
-  <script src="{% static "dcp_sandbox/js/TreeLayout.js" %}"></script>
-  <script src="{% static "dcp_sandbox/js/TreeDisplay.js" %}"></script>
-  <script src="{% static "dcp_sandbox/js/treeInteraction.js" %}"></script>
-  {% block page_js %}{% endblock %}
-</head>
-<body>
-  <div class="navbar navbar-inverse navbar-fixed-top">
-    <div class="navbar-inner">
-      <ul class="nav">
-        <!-- Menu -->
-        <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              Menu
-              <b class="caret"></b>
-            </a>
-            <ul class="dropdown-menu">
-                <li><a href="/analyzer">Analyzer</a>
-                </li>
-                <li><a href="/quiz">Quiz</a></li>
-            </ul>
-        </li>
-        {% block pre_functions_nav %}{% endblock %}
-        <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              Functions
-              <b class="caret"></b>
-            </a>
-            <ul class="dropdown-menu">
-              {% for function in functions %}
-                <li>
-                  <a href="#{{ function.name }}" data-toggle="modal">
-                    {{ function.name }}
-                  </a>
-                </li>
-              {% endfor %}
-            </ul>
-        </li>
-        <li class="divider-vertical"></li>
-        <li>
-          <button type="button" id="help" class="btn btn-primary">Hide Help</button>
-        </li>
-        <!-- Button to trigger modal -->
-        <li class="divider-vertical"></li>
-        <li>
-          <div><a href="#feedback" role="button" class="btn btn-primary" data-toggle="modal">Feedback</a></div>
-        </li>
-        {% block post_feedback_nav %}{% endblock %}
-        <li class="divider-vertical"></li>
-      </ul>
+<!-- page specific -->
+{% block page_js %}
+<script src="{% static "dcp_sandbox/js/TreeConstants.js" %}"></script>
+<script src="{% static "dcp_sandbox/js/TreeConstructor.js" %}"></script>
+<script src="{% static "dcp_sandbox/js/TreeLayout.js" %}"></script>
+<script src="{% static "dcp_sandbox/js/TreeDisplay.js" %}"></script>
+<script src="{% static "dcp_sandbox/js/treeInteraction.js" %}"></script>
+{% block tree_page_js %}{% endblock %}
+{% endblock %}
+  
+{% block post_functions_nav %}
+<li class="divider-vertical"></li>
+<li>
+  <button type="button" id="help" class="btn btn-primary">Hide Help</button>
+</li>
+{% endblock %}
+
+{% block page_content %}
+<div id="treeContainer" class="container-fluid">
+  <div class="row-fluid">
+    <div class="span12">
+      <div id = "errorPlaceholder"></div>
+      {% csrf_token %}
+      <!--Body content-->
+      <div id="chart"></div>
+      {% block below_tree %}{% endblock %}
     </div>
   </div>
-  <div id="treeContainer" class="container-fluid">
-    <div class="row-fluid">
-      <div class="span12">
-        <div id = "errorPlaceholder"></div>
-        {% csrf_token %}
-        <!--Body content-->
-        <div id="chart"></div>
-        {% block below_tree %}{% endblock %}
-      </div>
-    </div>
-  </div>
-
-  <!-- Documentation Modals -->
-  {% for function in functions %}
-    <div id="{{ function.name }}" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="{{ function.name }}Label" aria-hidden="true">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3 id="{{ function.name }}Label" class="function-title">
-          The '{{ function.name }}' function
-        </h3>
-      </div>
-      <div class="modal-body">
-        <h4>Arguments:</h4>
-        <p>{{ function.arguments }}</p>
-        <h4>Mathematical definition:</h4>
-        <p class="latex">{{ function.mathematical_definition }}</p>
-        <h4>Curvature:</h4>
-        <p>{{ function.curvature }}</p>
-        <h4>Sign:</h4>
-        <p>{{ function.sign }}</p>
-        <h4>Monotonicity:</h4>
-        <p>{{ function.monotonicity }}</p>
-        <h4>Example Usage:</h4>
-        <p class="function-example" >{{ function.example }}</p>
-        <h4>CVX Equivalent:</h4>
-        {% if function.cvx_equivalent %}
-          <p>{{ function.cvx_equivalent }}</p>
-        {% else %}
-          <p>{{ function.name }}</p>
-        {% endif %}
-      </div>
-    </div>
-  {% endfor %}
-
-  <!-- Feedback Modal -->
-  <div id="feedback" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="feedbackLabel" aria-hidden="true">
-    <div class="modal-header">
-      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-      <h3 id="feedbackLabel">Let us know how to improve the site!</h3>
-    </div>
-    <div class="modal-body">
-      <textarea class="feedback" rows="10"></textarea>
-    </div>
-    <div class="modal-footer">
-      <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-      <button class="btn btn-primary feedback" data-dismiss="modal">Send Feedback</button>
-    </div>
-  </div>
-</body>
+</div>
+{% endblock %}

@@ -1,0 +1,123 @@
+{% load staticfiles %}
+<head>
+  <title>{% block title %}{% endblock %}</title>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+  <!-- Bootstrap and jQuery + plugins -->
+  <link href="{% static "dcp_sandbox/bootstrap/css/bootstrap.min.css" %}" rel="stylesheet" media="screen">
+  <script src="{% static "dcp_sandbox/jquery-1.9.1.min.js" %}"></script>
+  <script src="{% static "dcp_sandbox/jquery.cookie.js" %}"></script>
+  <script src="{% static "dcp_sandbox/jquery.jslatex.js" %}"></script>
+  <script src="{% static "dcp_sandbox/bootstrap/js/bootstrap.min.js" %}"></script>
+
+  <!-- D3.js -->
+  <script type="text/javascript" src="{% static "dcp_sandbox/d3.v3/d3.v3.min.js" %}"></script>
+
+  <!-- Site wide js and CSS -->
+  <link href="{% static "dcp_sandbox/css/treeInteraction.css" %}" rel="stylesheet">
+  <script type="text/javascript" src="{% static "dcp_sandbox/js/base.js" %}"></script>
+  {% block page_js %}{% endblock %}
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-43450134-1', 'stanford.edu');
+    ga('send', 'pageview');
+
+  </script>
+</head>
+<body>
+  <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+      <ul class="nav">
+        <!-- Menu -->
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              Menu
+              <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a href="/intro">Introduction</a></li>
+                <li><a href="/quiz">Quiz</a></li>
+                <li><a href="/analyzer">Analyzer</a></li>
+            </ul>
+        </li>
+        {% block pre_functions_nav %}{% endblock %}
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              Functions
+              <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+              {% for function in functions %}
+                <li>
+                  <a href="#{{ function.name }}" data-toggle="modal">
+                    {{ function.name }}
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+        </li>
+        {% block post_functions_nav %}{% endblock %}
+        <!-- Button to trigger modal -->
+        <li class="divider-vertical"></li>
+        <li>
+          <div><a href="#feedback" role="button" class="btn btn-primary" data-toggle="modal">Feedback</a></div>
+        </li>
+        {% block post_feedback_nav %}{% endblock %}
+        <li class="divider-vertical"></li>
+      </ul>
+    </div>
+  </div>
+
+  {% block page_content %}{% endblock %}
+
+  <!-- Documentation Modals -->
+  {% for function in functions %}
+    <div id="{{ function.name }}" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="{{ function.name }}Label" aria-hidden="true">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="{{ function.name }}Label" class="function-title">
+          The '{{ function.name }}' function
+        </h3>
+      </div>
+      <div class="modal-body">
+        <h4>Arguments:</h4>
+        <p>{{ function.arguments }}</p>
+        <h4>Mathematical definition:</h4>
+        <p class="latex">{{ function.mathematical_definition }}</p>
+        <h4>Curvature:</h4>
+        <p>{{ function.curvature }}</p>
+        <h4>Sign:</h4>
+        <p>{{ function.sign }}</p>
+        <h4>Monotonicity:</h4>
+        <p>{{ function.monotonicity }}</p>
+        <h4>Example Usage:</h4>
+        <p class="function-example" >{{ function.example }}</p>
+        <h4>CVX Equivalent:</h4>
+        {% if function.cvx_equivalent %}
+          <p>{{ function.cvx_equivalent }}</p>
+        {% else %}
+          <p>{{ function.name }}</p>
+        {% endif %}
+      </div>
+    </div>
+  {% endfor %}
+
+  <!-- Feedback Modal -->
+  <div id="feedback" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="feedbackLabel" aria-hidden="true">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      <h3 id="feedbackLabel">Let us know how to improve the site!</h3>
+    </div>
+    <div class="modal-body">
+      <textarea class="feedback" rows="10"></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+      <button class="btn btn-primary feedback" data-dismiss="modal">Send Feedback</button>
+    </div>
+  </div>
+</body>

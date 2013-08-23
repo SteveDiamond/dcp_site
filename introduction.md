@@ -1,9 +1,19 @@
 Disciplined Convex Programming at Stanford
 ==========================================
 
-This interactive website is designed to complement material from Stanford
-University's convex optimization course, [EE364a](http://www.stanford.edu/class/ee364a).
-It is designed to teach the basics of disciplined convex programming (DCP).
+This website is designed to teach disciplined convex programming (DCP). DCP is a system for constructing convex optimization problems. The DCP rules guarantee that any problem constructed using DCP can be solved with convex optimization. DCP is used by [CVX](http://cvxr.com/cvx/) and [CVXPY](https://github.com/cvxgrp/cvxpy). 
+
+This introduction covers the rules of DCP. After reading the introduction, visit the [DCP Quiz](http://dcp.stanford.edu/quiz) to practice applying the DCP rules to mathematical expressions. A [DCP Analyzer](http://dcp.stanford.edu/analyzer) is also available where you can enter expressions, equalities, and inequalities and see a visualization of the DCP analysis.
+
+Expressions
+------------
+In DCP, mathematical expressions are viewed as parse trees. The leaves of the parse tree are variables and constants. Parent nodes represent the application of an arithmetic operator or function to the child nodes. Hence, the root node represents the overall expression while each parent node represents a subexpression. Consider the expression `-2*x + 3`. The tree visualization below shows the DCP analysis of the expression.
+
+TODO screenshot from analyzer
+
+Each node in the tree has a sign and curvature. The signs and curvatures of the leaf nodes are determined by their type. Variables are affine and have unknown sign. Constants are positive or negative depending on their numeric value and their curvature is constant.
+
+The signs and curvatures of parent nodes are determined from the signs and curvatures of their children. The table below summarizes 
 
 The DCP rule
 ------------
@@ -60,12 +70,12 @@ arguments to these binary operators must have constant curvature.
 
 Atoms
 -----
-In additions to creating expressions from standard mathematical operators, we
+In addition to creating expressions from standard mathematical operators, we
 also provide a set of atoms whith known curvature and monotonicities. For
 instance, the `sqrt` atom is concave and increasing in its argument. We give
 a list of the provided atoms and their properties [here](http://google.com).
 
-When compose with an expression, we determine whether the result is convex,
+When an atom is composed with an expression, we determine whether the result is convex,
 concave, or affine using the DCP rules. This uses only local information from
 the expression and not any global information (such as the nonnegativity of
 an expression, etc.).
@@ -126,3 +136,6 @@ curvature.
 On a separate page, you can form expressions using the set of atoms provided
 and examine the resulting expression tree.
 
+About
+--------
+This website was created by Steven Diamond in 2013 to complement material from Stanford University's convex optimization course, [EE364a](http://www.stanford.edu/class/ee364a).

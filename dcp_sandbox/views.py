@@ -15,11 +15,23 @@ import logging
 
 log = logging.getLogger(__name__)
 
+# Renders the target page, passing on function info.
+def base_page(target, request):
+    sorted_atoms = sorted(constants.ATOM_DEFINITIONS, key=lambda atom: atom["name"])
+    return render(request, target, 
+                 {'functions': sorted_atoms})
+
+# Intro page.
+def intro(request):
+    return base_page('dcp_sandbox/intro.html', request)
+
 # Load the analyzer.
 def analyzer(request):
-    sorted_atoms = sorted(constants.ATOM_DEFINITIONS, key=lambda atom: atom["name"])
-    return render(request, 'dcp_sandbox/analyzer.html', 
-                 {'functions': sorted_atoms})
+    return base_page('dcp_sandbox/analyzer.html', request)
+
+# Load quiz mode.
+def quiz(request):
+    return base_page('dcp_sandbox/quiz.html', request)
 
 # Parse an expression or constraint.
 def parse(request):
@@ -62,13 +74,6 @@ def send_feedback(request):
 def test(request):
     return render(request, 'dcp_sandbox/test.html')
 
-
-# Load quiz mode.
-def quiz(request):
-    sorted_atoms = sorted(constants.ATOM_DEFINITIONS, key=lambda atom: atom["name"])
-    return render(request, 'dcp_sandbox/quiz.html', 
-                 {'functions': sorted_atoms})
-
 # Helper for quiz. Gets new random expression.
 def new_expr(request):
     true_str = request.POST['true_str']
@@ -83,7 +88,3 @@ def new_expr(request):
                                  request.POST['dcp'] == true_str)
     log.debug("Generated %s" % name)
     return HttpResponse(name)
-
-# Intro page.
-def intro(request):
-    return render(request, 'dcp_sandbox/intro.html')
