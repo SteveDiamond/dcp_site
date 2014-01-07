@@ -38,14 +38,12 @@
 
   <p>Expressions are formed from variables, which have names <code>x, y, z, u, v, w</code>, parameters, which have names <code>a, b, c, d, e, f</code>, numerical constants such as <code>3</code> or <code>-2.44</code>, standard arithmetic operators such as <code>+, -, *, /</code>, and a library of functions such as <code>max, square, sqrt</code>, and others. For simplicity, all expressions in the DCP analyzer are scalar. Some examples are</p>
 
-  <pre><code>
-  expr1 = 3.69 + b/3
-  expr2 = x-4*u
-  expr3 = sqrt(x) - min(u, v-a)
-  max(2.66-sqrt(u), square(x+2*y))
-  square(x) + sqrt(square(u)+1)
-  max(x, 1) - exp(u)
-  </code></pre>
+  <pre><code>expr1 = 3.69 + b/3
+expr2 = x-4*u
+expr3 = sqrt(x) - min(u, v-a)
+max(2.66-sqrt(u), square(x+2*y))
+square(x) + sqrt(square(u)+1)
+max(x, 1) - exp(u)</code></pre>
 
   <p>The first expression is constant and the second expression is an affine function of the variables. The third is a concave function of the variables, and the fourth and fifth expressions are convex functions of the variables. The sixth expression is neither convex nor concave.</p>
 

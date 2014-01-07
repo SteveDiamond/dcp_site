@@ -8,13 +8,10 @@ Visit the [DCP Quiz](/quiz) to practice applying the [DCP rules](/rules#rules) t
 
 Related Links
 -------------
-The following links offer more information on convex optimization and DCP.
-
-[Convex Optimization](http://www.stanford.edu/~boyd/cvxbook/), a textbook by Stephen Boyd and Lieven Vandenberghe.
-
-[EE364a](http://www.stanford.edu/class/ee364a/), a Stanford course on convex optimization.
-
-[Disciplined Convex Programming](http://www.stanford.edu/~boyd/papers/disc_cvx_prog.html), a paper by Michael Grant.
+The following links offer more information on convex optimization and DCP:
+*[Convex Optimization](http://www.stanford.edu/~boyd/cvxbook/), a textbook by Stephen Boyd and Lieven Vandenberghe.
+*[EE364a](http://www.stanford.edu/class/ee364a/), a Stanford course on convex optimization.
+*[Disciplined Convex Programming](http://www.stanford.edu/~boyd/papers/disc_cvx_prog.html), a paper by Michael Grant.
 
 </xmp>
 <script src="http://strapdownjs.com/v/0.2/strapdown.js"></script>
