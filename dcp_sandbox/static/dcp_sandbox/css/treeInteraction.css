@@ -39,7 +39,7 @@ svg {
 }
 
 .navbar .dropdown-menu {
-    max-height: 250px;
+    max-height: 500px;
     overflow: auto;
 }
 
@@ -55,7 +55,7 @@ li.divider-vertical.left-of-dropdown {
     margin-right: 0;
 }
 
-#treeContainer {
+.below-nav {
     padding-top: 62px;
 }
 

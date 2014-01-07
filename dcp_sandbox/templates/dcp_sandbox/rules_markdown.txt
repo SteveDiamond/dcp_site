@@ -1,0 +1,107 @@
+<xmp style="display:none;">
+
+Curvature and Sign
+------------
+
+In DCP, a mathematical expression is defined by its *curvature* and *sign*. 
+The curvature can be *constant*, *affine*, *convex*, *concave*, or *unknown*. 
+For a function $\text{ }f: \mathbb{R^{n}} \to \mathbb{R}$ with domain $\mathbb{R^{n}}$, the curvature
+types have the following definitions:
+$$ \begin{array}{lcr}
+\text{Constant:} & f(\alpha x + (1-\alpha)y) = f(x) & \forall x,y \in \mathbb{R^{n}}, \alpha \in [0,1] \\\\
+\text{Affine:} & f(\alpha x + (1-\alpha)y) = \alpha f(x) + (1-\alpha)f(y) & \forall x,y \in \mathbb{R^{n}}, \alpha \in [0,1] \\\\
+\text{Convex:} & f(\alpha x + (1-\alpha)y) \leq \alpha f(x) + (1-\alpha)f(y) & \forall x,y \in \mathbb{R^{n}}, \alpha \in [0,1] \\\\
+\text{Concave:} & f(\alpha x + (1-\alpha)y) \geq \alpha f(x) + (1-\alpha)f(y) & \forall x,y \in \mathbb{R^{n}}, \alpha \in [0,1] \\\\
+\end{array} $$
+The curvature of expressions that follow the DCP rules can always be determined. 
+If an expression violates the DCP rules, its curvature is marked as unknown.
+See [Convex Optimization](http://www.stanford.edu/~boyd/cvxbook/), Section 3, for a fuller discussion of function curvature.
+
+The sign of an expression can be *positive* (i.e., non-negative), *negative* (i.e., non-positive), or *unknown*. An expression has unknown sign if it can be positive or negative depending on the value of the expression's variables and parameters.
+
+Expressions
+------------------------
+Expressions are formed from variables, which have names `x, y, z, u, v, w`, parameters, which have names `a, b, c, d, e, f`, numerical constants such as `3` or `-2.44`, standard arithmetic operators such as `+, -, *, /`, and a library of functions such as `max, square, sqrt`, and others. For simplicity, all expressions in the DCP analyzer are scalar. Some examples are
+
+	expr1 = 3.69 + b/3
+	expr2 = x-4*u
+	expr3 = sqrt(x) - min(u, v-a)
+	max(2.66-sqrt(u), square(x+2*y))
+	square(x) + sqrt(square(u)+1)
+	max(x, 1) - exp(u)
+
+The first expression is constant and the second expression is an affine function of the variables. The third is a concave function of the variables, and the fourth and fifth expressions are convex functions of the variables. The sixth expression is neither convex nor concave.
+
+### Analyzing Expressions
+
+Consider the expression `2*square(x) + 3`. The tree visualization below shows how the full expression is constructed from smaller sub-expressions.
+
+![2*square(x) + 3](/static/dcp_sandbox/images/arith_expr.png)
+
+Each node in the tree is marked with a curvature and sign. The leaf nodes of an expression tree are variables, parameters, and constants. These have the following properties:
+
+* Variables have affine curvature and unknown sign.
+* Parameters have constant curvature with (possibly) known sign and unknown value.
+* Constants have constant curvature and known value. The sign of a constant is determined by its value.
+
+The curvature and sign of each parent node is determined from the curvatures and signs of its children using the [DCP rules](#rules).
+
+<a name="rules"></a>
+The DCP Rules
+------------
+
+### Arithmetic Rules
+
+* You cannot multiply two non-constants. For example, `x * x` violates DCP.
+* You cannot divide by a non-constant. For example, `1 / x` violates DCP.
+
+### Curvature Rules
+
+Let $\text{ }f: \mathbb{R^{n}} \to \mathbb{R}$ be a function applied to the expressions $ expr\_1, expr\_2, ..., expr\_n $. 
+Then $\text{ } f(expr\_1, expr\_2, ..., expr\_n)$ is convex if $\text{ } f$ is a convex function and for each $expr\_{i}$ one of the following conditions holds:
+
+* $f$ is non-decreasing in argument i and $expr\_{i}$ is convex.
+* $f$ is non-increasing in argument i and $expr\_{i}$ is concave.
+* $expr\_{i}$ is affine.
+
+$f(expr\_1, expr\_2, ..., expr\_n)$ is concave if $\text{ } f$ is a concave function and for each $expr\_{i}$ one of the following conditions holds:
+
+* $f$ is non-decreasing in argument i and $expr\_{i}$ is concave.
+* $f$ is non-increasing in argument i and $expr\_{i}$ is convex.
+* $expr\_{i}$ is affine.
+
+If one of the $\text{ } expr\_{i}$ does not satisfy any of the conditions, the curvature of $\text{ } f(expr\_1, expr\_2, ..., expr\_n)$ is unknown. In addition, if all the $\text{ } expr\_{i}$ are constant, then $\text{ } f(expr\_1, expr\_2, ..., expr\_n)$ is constant.
+
+Arithmetic operators are affine functions, so both the rule for convex functions and the rule for concave functions apply.
+
+### Sign Rules
+
+For some functions monotonicity (i.e., whether the function is increasing or decreasing in each argument) depends on the sign of the arguments. For example, `square(expr)` is increasing if `expr` is positive and decreasing if `expr` is negative. For this reason DCP tracks the signs of expressions as well as the curvatures.
+
+Each function (and arithmetic operator) has a different rule for determining the sign of the function from the signs of its arguments. These rules are exhaustive, meaning they capture every case where the sign of the function can be determined. As an example, here is the rule for `+` applied to the expressions `expr1` and `expr2`:
+
+The sign of the expression `expr1 + expr2` is
+
+* Positive if `expr1` and `expr2` are both positive.
+* Negative if `expr1` and `expr2` are both negative.
+* Unknown in all other cases.
+
+The sign rule for each function is part of its entry under the Functions tab.
+
+### Example
+
+We'll walk through the application of the DCP rules to the expression `sqrt(1 + square(x))`.
+
+The variable `x` has affine curvature. The `square` function is convex and non-monotone, so it can take
+the affine expression `x` as an argument; the result `square(x)` is convex.
+
+The convex expression `square(x)` plus the constant `1` is also also convex. The
+atom `sqrt` is concave and increasing, which means it can only take a concave
+argument. Since `1 + square(x)` is convex, `sqrt(1 + square(x))` violates the DCP rules 
+and cannot be verified as convex.
+
+In fact, `sqrt(1 + square(x))` is convex. But to comply with the DCP rules
+we must rewrite the expression as `norm(1, x, 2)`, the L2 norm of the vector [1, x].
+
+</xmp>
+<script src="http://strapdownjs.com/v/0.2/strapdown.js"></script>

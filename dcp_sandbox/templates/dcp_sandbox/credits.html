@@ -1,0 +1,24 @@
+{% extends "dcp_sandbox/base.html" %}
+{% load staticfiles %}
+
+{% block title %}Credits{% endblock %}
+
+{% block page_content %}
+
+<nav>
+  <ul class="nav nav-pills nav-stacked span1">
+    <li><a href="/intro">Home</a></li>
+    <li><a href="/rules">Rules</a></li>
+    <li><a href="/functions">Functions</a></li>
+    <li><a href="/analyzer">Analyzer</a></li>
+    <li><a href="/quiz">Quiz</a></li>
+    <li class="active"><a href="/credits">Credits</a></li>
+  </ul>
+</nav>
+<div class="span10">
+  <h3>Credits</h3>
+
+  <p>This website was created by Steven Diamond in 2013 with help from Eric Chu and Stephen Boyd.</p>
+</div>
+
+{% endblock %}

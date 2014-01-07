@@ -4,127 +4,32 @@
 {% block title %}Introduction{% endblock %}
 
 {% block page_content %}
-<xmp style="display:none;">
 
-Disciplined Convex Programming at Stanford
-==========================================
-This website is designed to teach disciplined convex programming (DCP). DCP is
-a system for constructing mathematical expressions with known curvature.
-DCP is used by the modeling languages [CVX](http://cvxr.com/cvx/) and [CVXPY](https://github.com/cvxgrp/cvxpy)
-to check whether optimization problems are convex.
+<nav>
+  <ul class="nav nav-pills nav-stacked span1">
+    <li class="active"><a href="/intro">Home</a></li>
+    <li><a href="/rules">Rules</a></li>
+    <li><a href="/analyzer">Analyzer</a></li>
+    <li><a href="/quiz">Quiz</a></li>
+    <li><a href="/credits">Credits</a></li>
+  </ul>
+</nav>
+<div class="span10">
+  <h1>Stanford Disciplined Convex Programming Website</h1>
 
-This introduction covers the rules of DCP. After reading the introduction,
-visit the [DCP Quiz](http://dcp.stanford.edu/quiz) to practice applying the
-DCP rules to mathematical expressions. Alternatively, visit the [DCP
-Analyzer](http://dcp.stanford.edu/analyzer) to type in expressions, equalities, 
-and inequalities and see a visualization of the DCP analysis.
+  <p>This website is designed to teach disciplined convex programming (DCP). DCP is a system for constructing mathematical expressions with known curvature from a given library of base functions. DCP is used by the <a href="http://www.stanford.edu/~boyd/cvxbook/">convex optimization</a> modeling languages <a href="http://cvxr.com/cvx/">CVX</a> and <a href="https://github.com/cvxgrp/cvxpy">CVXPY</a> to ensure that the specified optimization problems are convex.</p>
 
-Curvature and Sign
-------------
+  <p>Visit the <a href="/quiz">DCP Quiz</a> to practice applying the <a href="/rules#rules">DCP rules</a> to mathematical expressions. Alternatively, visit the <a href="/analyzer">DCP Analyzer</a> to type in expressions, equalities, and inequalities and see a visualization of the DCP analysis.</p>
 
-In DCP, a mathematical expression is defined by its *curvature* and *sign*. 
-The curvature can be *constant*, *affine*, *convex*, *concave*, or *unknown*. 
-For a function $\text{ }f: \mathbb{R^{n}} \to \mathbb{R}$ with domain $\mathbb{R^{n}}$, the curvature
-types have the following definitions:
-$$ \begin{array}{lcr}
-\text{Constant:} & f(\alpha x + (1-\alpha)y) = f(x) & \forall x,y \in \mathbb{R^{n}}, \alpha \in [0,1] \\\\
-\text{Affine:} & f(\alpha x + (1-\alpha)y) = \alpha f(x) + (1-\alpha)f(y) & \forall x,y \in \mathbb{R^{n}}, \alpha \in [0,1] \\\\
-\text{Convex:} & f(\alpha x + (1-\alpha)y) \leq \alpha f(x) + (1-\alpha)f(y) & \forall x,y \in \mathbb{R^{n}}, \alpha \in [0,1] \\\\
-\text{Concave:} & f(\alpha x + (1-\alpha)y) \geq \alpha f(x) + (1-\alpha)f(y) & \forall x,y \in \mathbb{R^{n}}, \alpha \in [0,1] \\\\
-\end{array} $$
-The curvature of expressions that follow the DCP rules can always be determined. 
-If an expression violates the DCP rules, its curvature is marked as unknown.
-See [Convex Optimization](http://www.stanford.edu/~boyd/cvxbook/), Section 3, for a fuller discussion of function curvature.
+  <h2>Related Links</h2>
 
-The sign of an expression can be *positive* (i.e., non-negative), *negative* (i.e., non-positive), or *unknown*. An expression has unknown sign if it can be positive or negative depending on the value of the expression's variables and parameters.
+  <p>The following links offer more information on convex optimization and DCP.</p>
 
-Constructing Expressions
-------------------------
+  <p><a href="http://www.stanford.edu/~boyd/cvxbook/">Convex Optimization</a>, a textbook by Stephen Boyd and Lieven Vandenberghe.</p>
 
-The simplest expressions are variables, parameters, and constants. These have
-the following properties:
+  <p><a href="http://www.stanford.edu/class/ee364a/">EE364a</a>, a Stanford course on convex optimization.</p>
 
-* Variables have affine curvature and unknown sign.
-* Parameters have constant curvature with (possibly) known sign and
-unknown value.
-* Constants have constant curvature and known value. The sign of a constant is determined by its value.
+  <p><a href="http://www.stanford.edu/~boyd/papers/disc_cvx_prog.html">Disciplined Convex Programming</a>, a paper by Michael Grant.</p>
+</div>
 
-You can combine expressions using the arithmetic operators `+`, `-`, `*`, and `/`. 
-Note that special care must be taken with `*` and `/`. See the [Arithmetic Rules](#rules).
-
-You can also apply functions to expressions. The available functions are listed under the Functions tab. Click on a function to see detailed information about it.
-
-### Example
-
-Consider the expression `2*square(x) + 3`. The tree visualization below shows how the full expression is constructed from smaller sub-expressions.
-
-![2*square(x) + 3](/static/dcp_sandbox/images/arith_expr.png)
-
-Each node in the tree is marked with a curvature and sign. The leaf nodes are variables and constants, so their curvature and sign are known properties. The curvature and sign of each parent node is determined from the curvatures and signs of its children using the [DCP rules](#rules).
-
-<a name="rules"></a>
-The DCP Rules
-------------
-
-### Arithmetic Rules
-
-* You cannot multiply two non-constants. For example, `x * x` violates DCP.
-* You cannot divide by a non-constant. For example, `1 / x` violates DCP.
-
-### Curvature Rules
-
-Let $\text{ }f: \mathbb{R^{n}} \to \mathbb{R}$ be a function applied to the expressions $ exp\_1, exp\_2, ..., exp\_n $. 
-Then $\text{ } f(exp\_1, exp\_2, ..., exp\_n)$ is convex if $\text{ } f$ is a convex function and for each $exp\_{i}$ one of the following conditions holds:
-
-* $f$ is non-decreasing in argument i and $exp\_{i}$ is convex.
-* $f$ is non-increasing in argument i and $exp\_{i}$ is concave.
-* $exp\_{i}$ is affine.
-
-$f(exp\_1, exp\_2, ..., exp\_n)$ is concave if $\text{ } f$ is a concave function and for each $exp\_{i}$ one of the following conditions holds:
-
-* $f$ is non-decreasing in argument i and $exp\_{i}$ is concave.
-* $f$ is non-increasing in argument i and $exp\_{i}$ is convex.
-* $exp\_{i}$ is affine.
-
-If one of the $\text{ } exp\_{i}$ does not satisfy any of the conditions, the curvature of $\text{ } f(exp\_1, exp\_2, ..., exp\_n)$ is unknown. In addition, if all the $\text{ } exp\_{i}$ are constant, then $\text{ } f(exp\_1, exp\_2, ..., exp\_n)$ is constant.
-
-Arithmetic operators are affine functions, so both the rule for convex functions and the rule for concave functions apply.
-
-### Sign Rules
-
-For some functions monotonicity (i.e., whether the function is increasing or decreasing in each argument) depends on the sign of the arguments. For example, `square(exp)` is increasing if `exp` is positive and decreasing if `exp` is negative. For this reason DCP tracks the signs of expressions as well as the curvatures.
-
-Each function (and arithmetic operator) has a different rule for determining the sign of the function from the signs of its arguments. These rules are exhaustive, meaning they capture every case where the sign of the function can be determined. As an example, here is the rule for `+` applied to the expressions `exp1` and `exp2`:
-
-The sign of the expression `exp1 + exp2` is
-
-* Positive if `exp1` and `exp2` are both positive.
-* Negative if `exp1` and `exp2` are both negative.
-* Unknown in all other cases.
-
-The sign rule for each function is part of its entry under the Functions tab.
-
-### Example
-
-We'll walk through the application of the DCP rules to the expression `sqrt(1 + square(x))`.
-
-The variable `x` has affine curvature. The `square` function is convex and non-monotone, so it can take
-the affine expression `x` as an argument; the result `square(x)` is convex.
-
-The convex expression `square(x)` plus the constant `1` is also also convex. The
-atom `sqrt` is concave and increasing, which means it can only take a concave
-argument. Since `1 + square(x)` is convex, `sqrt(1 + square(x))` violates the DCP rules 
-and cannot be verified as convex.
-
-In fact, `sqrt(1 + square(x))` is convex. But to comply with the DCP rules
-we must rewrite the expression as `norm(1, x, 2)`, the L2 norm of the vector [1, x].
-
-About
---------
-This website was created by Steven Diamond in 2013 to complement material from
-Stanford University's convex optimization course,
-[EE364a](http://www.stanford.edu/class/ee364a).
-
-</xmp>
-<script src="http://strapdownjs.com/v/0.2/strapdown.js"></script>
 {% endblock %}

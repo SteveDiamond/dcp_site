@@ -16,20 +16,17 @@
 {% block post_functions_nav %}
 <li class="divider-vertical"></li>
 <li>
-  <button type="button" id="help" class="btn btn-primary">Hide Help</button>
+  <button type="button" id="help" class="btn btn-primary">Hide Legends</button>
 </li>
 {% endblock %}
 
 {% block page_content %}
-<div id="treeContainer" class="container-fluid">
-  <div class="row-fluid">
-    <div class="span12">
-      <div id = "errorPlaceholder"></div>
-      {% csrf_token %}
-      <!--Body content-->
-      <div id="chart"></div>
-      {% block below_tree %}{% endblock %}
-    </div>
-  </div>
+{% block menu %}{% endblock %}
+<div class="span11">
+  <div id = "errorPlaceholder"></div>
+  {% csrf_token %}
+  <!--Body content-->
+  <div id="chart"></div>
+  {% block below_tree %}{% endblock %}
 </div>
 {% endblock %}

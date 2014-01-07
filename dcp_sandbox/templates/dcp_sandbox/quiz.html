@@ -26,12 +26,27 @@
 <!-- Answer buttons -->
 <div class="row-fluid">
   <div class="span12 text-center">
-    <div class="btn-group answers">
-      <button id="affine" type="button" class="btn btn-primary answer">Affine</button>
-      <button id="convex" type="button" class="btn btn-primary answer">Convex</button>
-      <button id="concave" type="button" class="btn btn-primary answer">Concave</button>
-      <button id="non-convex" type="button" class="btn btn-primary answer">Non-DCP</button>
+    <div class="answers">
+      Choose One: &nbsp
+      <div class="btn-group">
+        <button id="affine" type="button" class="btn btn-primary answer">Affine</button>
+        <button id="convex" type="button" class="btn btn-primary answer">Convex</button>
+        <button id="concave" type="button" class="btn btn-primary answer">Concave</button>
+        <button id="non-convex" type="button" class="btn btn-primary answer">Non-DCP</button>
+      </div>
     </div>
   </div>
 </div>
+{% endblock %}
+
+{% block menu %}
+<nav>
+  <ul class="nav nav-pills nav-stacked span1">
+    <li><a href="/intro">Home</a></li>
+    <li><a href="/rules">Rules</a></li>
+    <li><a href="/analyzer">Analyzer</a></li>
+    <li class="active"><a href="/quiz">Quiz</a></li>
+    <li><a href="/credits">Credits</a></li>
+  </ul>
+</nav>
 {% endblock %}

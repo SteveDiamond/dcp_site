@@ -52,7 +52,7 @@ TreeConstants.PROMPT_CONSTANT = 200;
 TreeConstants.DEMO = "log(square(z)) - log_sum_exp(2*x*z, -square(y), z) + (norm(x,3) + log(y))";
 
 // Map of help active/inactive to help button text.
-TreeConstants.HELP_BUTTON_TEXT = {true: "Hide Help", false: "Show Help"}
+TreeConstants.HELP_BUTTON_TEXT = {true: "Hide Legends", false: "Show Legends"}
 
 // Legend constants
 // Space for legends on the left and right.

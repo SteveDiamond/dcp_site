@@ -1,0 +1,8 @@
+<xmp style="display:none;">
+
+Credits
+--------
+This website was created by Steven Diamond in 2013 with help from Eric Chu and Stephen Boyd.
+
+</xmp>
+<script src="http://strapdownjs.com/v/0.2/strapdown.js"></script>
