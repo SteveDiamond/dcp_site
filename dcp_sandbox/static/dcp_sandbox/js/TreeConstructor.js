@@ -75,6 +75,9 @@ TreeConstructor.processParseTree = function(root) {
     var numNodes = TreeConstructor.augmentTree(root, 0);
     // Save node info as attribute of TreeConstructor
     TreeConstructor.storeNodeMap(root);
+    // Update the record of used variables and parameters.
+    TreeConstructor.resetLeaves();
+    TreeConstructor.updateLeaves();
     // Map distance from root to list of nodes in left to right order.
     var levels = [];
     TreeConstructor.generateLevels(root, levels, 0);
@@ -151,6 +154,57 @@ TreeConstructor.addLeftRight = function(levels) {
         }
     }
 }
+
+/**
+ * Constructs a map of leaf names to their
+ * type, sign, and whether they are used in
+ * the objective.
+ */
+TreeConstructor.resetLeaves = function() {
+    var leaves = {};
+    for (type in TreeConstants.LEAVES) {
+        for (sign in TreeConstants.LEAVES[type]) {
+            var names = TreeConstants.LEAVES[type][sign];
+            for (var i=0; i < names.length; i++) {
+                var name = names[i];
+                leaves[name] = {"type": type,
+                                "sign": sign,
+                                "used": false,
+                               };
+            }
+        }
+    }
+    TreeConstructor.leaves = leaves;
+}
+
+/**
+ * Returns an array of leaf names from the leaves
+ * stored in tagToNode.
+ */
+TreeConstructor.getLeafNames = function() {
+    var names = [];
+    for (key in TreeConstructor.tagToNode) {
+        node = TreeConstructor.tagToNode[key];
+        if (node.childTags == undefined) {
+            names.push(node.name);
+        }
+    }
+    return names;
+}
+
+/**
+ * Updates TreeConstructor.leaves to record
+ * which leaf names are used in the objective.
+ */
+ TreeConstructor.updateLeaves = function() {
+    var names = TreeConstructor.getLeafNames();
+    for (var i=0; i < names.length; i++) {
+        var name = names[i];
+        if (name in TreeConstructor.leaves) {
+            TreeConstructor.leaves[name].used = true;
+        }
+    }
+ }
 
 /**
  * Stores a map of node tag to minimized node object as an attribute of TreeConstructor.
@@ -268,7 +322,6 @@ TreeConstructor.getSurroundingParens = function(name) {
     }
     return surroundingParens;
 }
-
 
 /**
  * Utility function for initializing arrays so all cells

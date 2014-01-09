@@ -40,6 +40,15 @@ TreeConstants.TAG_TO_NODE = "tagToNode";
 // Constants for reconstructing objective/constraint
 TreeConstants.OPERATORS = ["+","-","*","/","<=",">=","=="];
 TreeConstants.ELLIPSIS = "...";
+// Constants for listing the variables and parameters used.
+TreeConstants.LEAVES = {
+    "variables": {"unknown": ["x", "y", "z"],
+                  "positive": ["u", "v", "w"],
+                 },
+    "parameters": {"unknown": ["a", "b", "c"],
+                   "positive": ["d", "e", "f"],
+                  },
+}
 // Editable and fixed text classes.
 TreeConstants.EDITABLE_TEXT = "editable-text";
 TreeConstants.FIXED_TEXT = "fixed-text";

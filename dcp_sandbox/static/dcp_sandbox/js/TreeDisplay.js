@@ -256,7 +256,9 @@ TreeDisplay.drawSymbols = function(svg, nodes, widths) {
             .attr("width", TreeConstants.BOX_CONSTANT/2 - 2*TreeConstants.SYMBOL_MARGIN)
             .attr("height", TreeConstants.BOX_HEIGHT - 2*TreeConstants.SYMBOL_MARGIN)
             .attr("xlink:href", function(d) { 
-                return TreeConstants.IMAGE_PREFIX + TreeDisplay.getConstraintSymbol(d) + TreeConstants.SVG_IMAGE_SUFFIX;   
+                return TreeConstants.IMAGE_PREFIX + 
+                       TreeDisplay.getConstraintSymbol(d) + 
+                       TreeConstants.SVG_IMAGE_SUFFIX;   
             })
 }
 
@@ -275,7 +277,8 @@ TreeDisplay.getConstraintSymbol = function(node) {
  * Gets the y-coordinate of nodes at the given level.
  */
 TreeDisplay.getLevelY = function(level) {
-    return level*(TreeConstants.BOX_HEIGHT + TreeConstants.VERT_SEP) + TreeConstants.EDGE_VERT_SEP;
+    return level*(TreeConstants.BOX_HEIGHT + TreeConstants.VERT_SEP) +
+           TreeConstants.EDGE_VERT_SEP;
 }
 
 /**
