@@ -26,6 +26,7 @@ TreeDisplay.drawTree = function(location, root, numNodes, levels, widths, center
                                                     "," + TreeDisplay.getLevelY(i) + ")"; })
 
         nodeEnter.append("svg:rect")
+            .attr("class", "tree")
             .attr("width", function(d) { return widths[d.tag]; })
             .attr("height", TreeConstants.BOX_HEIGHT)
 
@@ -311,6 +312,7 @@ TreeDisplay.drawLeavesBox = function(svg, treeWidth) {
                        .attr("transform", "translate(" + dx + "," + TreeConstants.EDGE_VERT_SEP + ")")
 
     legendSVG.append("svg:rect")
+        .attr("class", "legend")
         .attr("width", legendWidth)
         .attr("height", legendHeight)
 
@@ -378,6 +380,7 @@ TreeDisplay.drawLegendBox = function(svg, legend, treeWidth) {
                         .attr("transform", "translate(" + dx + "," + dy + ")")
 
     legendSVG.append("svg:rect")
+        .attr("class", "legend")
         .attr("width", legendWidth)
         .attr("height", legendHeight)
 

@@ -1,12 +1,17 @@
-.node rect {
+.node rect.tree {
     fill: #c6dbef;
     fill-opacity: .5;
     stroke: #3182bd;
     stroke-width: 1.5px;
 }
 
+.node rect.legend {
+    fill: #dff0d8;
+}
+
 .node text, #inputBox {
     font: 14px sans-serif;
+    stroke: none;
 }
 
 .node text {
