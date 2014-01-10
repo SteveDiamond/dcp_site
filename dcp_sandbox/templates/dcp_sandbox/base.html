@@ -111,8 +111,8 @@
   <!-- Feedback Modal -->
   <div id="feedback" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="feedbackLabel" aria-hidden="true">
     <div class="modal-header">
-      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-      <h3 id="feedbackLabel">Let us know how to improve the site!</h3>
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h4 id="feedbackLabel">Let us know how to improve the site!</h4>
     </div>
     <div class="modal-body">
       <textarea class="feedback" rows="10"></textarea>
@@ -122,4 +122,6 @@
       <button class="btn btn-primary feedback" data-dismiss="modal">Send Feedback</button>
     </div>
   </div>
+
+  {% block modals %}{% endblock %}
 </body>

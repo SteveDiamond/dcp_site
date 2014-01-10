@@ -119,7 +119,8 @@ TreeLayout.getLegendHeight = function(legend) {
  */
 TreeLayout.getLeavesLegendHeight = function() {
     if (TreeConstructor.helpActive && !TreeConstructor.promptActive) {
-        return 2*TreeConstants.LEAVES_TEXT_HEIGHT;
+        return TreeConstants.LEAVES_BOX_HEIGHT +
+               TreeConstants.LEAVES_ARROW_HEIGHT;
     } else {
         return 0;
     }

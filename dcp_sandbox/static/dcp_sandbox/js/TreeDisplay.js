@@ -288,6 +288,7 @@ TreeDisplay.getLevelY = function(level) {
 TreeDisplay.drawLeavesLegend = function(treeWidth) {
     var svg = d3.select("svg");
     TreeDisplay.drawLeavesBox(svg, treeWidth);
+    TreeDisplay.drawLeavesArrow(svg, treeWidth);
 }
 
 /**
@@ -301,13 +302,13 @@ TreeDisplay.drawLeavesBox = function(svg, treeWidth) {
     }
     var legendWidth = Math.max.apply(null, textWidths);
     legendWidth += TreeConstants.SHORT_NAME_CONSTANT;
-    var legendHeight = text.length*TreeConstants.LEAVES_TEXT_HEIGHT;
+    var legendHeight = TreeConstants.LEAVES_BOX_HEIGHT;
     var dx = (treeWidth - legendWidth)/2;
 
     var legendSVG = svg.append("svg:g")
-                        .attr("class", "node")
-                        .attr("id", "leavesLegend")
-                        .attr("transform", "translate(" + dx + "," + TreeConstants.EDGE_VERT_SEP + ")")
+                       .attr("class", "node")
+                       .attr("id", "leavesLegend")
+                       .attr("transform", "translate(" + dx + "," + TreeConstants.EDGE_VERT_SEP + ")")
 
     legendSVG.append("svg:rect")
         .attr("width", legendWidth)
@@ -321,6 +322,30 @@ TreeDisplay.drawLeavesBox = function(svg, treeWidth) {
             .attr("dx", TreeConstants.SHORT_NAME_CONSTANT/2)
             .text(text[i])
     }
+}
+
+/**
+ * Draws an arrow from the leaves legend box to the root node.
+ */
+TreeDisplay.drawLeavesArrow = function(svg, treeWidth) {
+    var x = treeWidth/2;
+    var y1 = TreeConstants.EDGE_VERT_SEP + 
+             TreeConstants.LEAVES_BOX_HEIGHT;
+    var y2 = y1 + TreeConstants.LEAVES_ARROW_HEIGHT;
+
+    svg.append("svg:line")
+       .attr("class", "arrow")
+       .attr("x1", x)
+       .attr("y1", y1)
+       .attr("x2", x)
+       .attr("y2", y2)
+
+    svg.append("svg:path")
+          .attr("class", "arrow")
+          .attr("d", "M " + x + " " + y2 +
+                     " l " + TreeConstants.LEGEND_ARROW_HEIGHT/2 + 
+                     " " + -TreeConstants.LEGEND_ARROW_WIDTH +
+                     " l " + -TreeConstants.LEGEND_ARROW_HEIGHT + " 0 z")
 }
 
 /**

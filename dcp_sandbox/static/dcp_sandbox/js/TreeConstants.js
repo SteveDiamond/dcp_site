@@ -40,8 +40,10 @@ TreeConstants.TAG_TO_NODE = "tagToNode";
 // Constants for reconstructing objective/constraint
 TreeConstants.OPERATORS = ["+","-","*","/","<=",">=","=="];
 TreeConstants.ELLIPSIS = "...";
-// Constants for listing the variables and parameters used.
+// Constants for the legend listing the variables and parameters used.
 TreeConstants.LEAVES_TEXT_HEIGHT = 22;
+TreeConstants.LEAVES_BOX_HEIGHT = 2*TreeConstants.LEAVES_TEXT_HEIGHT;
+TreeConstants.LEAVES_ARROW_HEIGHT = 22;
 TreeConstants.LEAVES = {
     "Variables": {"unknown": ["x", "y", "z"],
                   "positive": ["u", "v", "w"],
