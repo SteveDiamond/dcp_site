@@ -114,6 +114,18 @@ TreeLayout.getLegendHeight = function(legend) {
 }
 
 /**
+ * Determine the height of the legend (box and arrow)
+ * that shows which variables and parameters are used.
+ */
+TreeLayout.getLeavesLegendHeight = function() {
+    if (TreeConstructor.helpActive && !TreeConstructor.promptActive) {
+        return 2*TreeConstants.LEAVES_TEXT_HEIGHT;
+    } else {
+        return 0;
+    }
+}
+
+/**
  * Determine children's centers from widths, child spacing, padding, and root's center.
  */
 TreeLayout.getCenters = function(root, widths, centers) {

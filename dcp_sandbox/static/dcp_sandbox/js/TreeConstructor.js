@@ -75,9 +75,6 @@ TreeConstructor.processParseTree = function(root) {
     var numNodes = TreeConstructor.augmentTree(root, 0);
     // Save node info as attribute of TreeConstructor
     TreeConstructor.storeNodeMap(root);
-    // Update the record of used variables and parameters.
-    TreeConstructor.resetLeaves();
-    TreeConstructor.updateLeaves();
     // Map distance from root to list of nodes in left to right order.
     var levels = [];
     TreeConstructor.generateLevels(root, levels, 0);
@@ -91,7 +88,8 @@ TreeConstructor.processParseTree = function(root) {
     // Get tree width and height.
     var widthVals = TreeLayout.getTreeWidth(root, widths);
     var treeWidth = widthVals[0];
-    var treeHeight = TreeLayout.getTreeHeight(levels);
+    var treeHeight = TreeLayout.getTreeHeight(levels) + 
+                     TreeLayout.getLeavesLegendHeight();
     // Get the centers of the nodes.
     var centers = [];
     centers[root.tag] = widthVals[1];
@@ -101,6 +99,7 @@ TreeConstructor.processParseTree = function(root) {
     TreeDisplay.drawTree(TreeConstants.TREE_DIV, root, numNodes, levels, widths, centers, treeWidth, treeHeight);
     // If help is active, draw the legends.
     if (TreeConstructor.helpActive && !TreeConstructor.promptActive) {
+        TreeDisplay.drawLeavesLegend(treeWidth);
         TreeDisplay.drawLegend(TreeConstants.CURVATURE_LEGEND, root, widths, centers, treeWidth);
         TreeDisplay.drawLegend(TreeConstants.SIGN_LEGEND, root, widths, centers, treeWidth);
     }
@@ -156,28 +155,6 @@ TreeConstructor.addLeftRight = function(levels) {
 }
 
 /**
- * Constructs a map of leaf names to their
- * type, sign, and whether they are used in
- * the objective.
- */
-TreeConstructor.resetLeaves = function() {
-    var leaves = {};
-    for (type in TreeConstants.LEAVES) {
-        for (sign in TreeConstants.LEAVES[type]) {
-            var names = TreeConstants.LEAVES[type][sign];
-            for (var i=0; i < names.length; i++) {
-                var name = names[i];
-                leaves[name] = {"type": type,
-                                "sign": sign,
-                                "used": false,
-                               };
-            }
-        }
-    }
-    TreeConstructor.leaves = leaves;
-}
-
-/**
  * Returns an array of leaf names from the leaves
  * stored in tagToNode.
  */
@@ -193,18 +170,46 @@ TreeConstructor.getLeafNames = function() {
 }
 
 /**
- * Updates TreeConstructor.leaves to record
- * which leaf names are used in the objective.
+ * Produces legend text showing which variables
+ * and parameters were used.
  */
- TreeConstructor.updateLeaves = function() {
-    var names = TreeConstructor.getLeafNames();
-    for (var i=0; i < names.length; i++) {
-        var name = names[i];
-        if (name in TreeConstructor.leaves) {
-            TreeConstructor.leaves[name].used = true;
+ TreeConstructor.getLeafLegendText = function() {
+    var used = TreeConstructor.getLeafNames();
+    var textArr = [];
+    for (type in TreeConstants.LEAVES) {
+        // Find which names were used.
+        var usedNames = {};
+        for (sign in TreeConstants.LEAVES[type]) {
+            var names = TreeConstants.LEAVES[type][sign];
+            usedNames[sign] = [];
+            for (var i=0; i < names.length; i++) {
+                if (used.indexOf(names[i]) != -1) {
+                    usedNames[sign].push(names[i]);
+                }
+            }
         }
+        // Construct the text for Variables/Parameters.
+        var prefix = type + ": "
+        var suffix = "";
+        if (usedNames["unknown"].length != 0) {
+            prefix += usedNames["unknown"].join();
+        } 
+        if (usedNames["positive"].length != 0) {
+            suffix += usedNames["positive"].join();
+            suffix += " [positive]";
+        }
+        if (usedNames["unknown"].length != 0 && 
+            usedNames["positive"].length != 0) {
+            prefix += "; ";
+        }
+        if (usedNames["unknown"].length == 0 && 
+            usedNames["positive"].length == 0) {
+            prefix += "None";
+        }
+        textArr.push(prefix + suffix);
     }
- }
+    return textArr;
+}
 
 /**
  * Stores a map of node tag to minimized node object as an attribute of TreeConstructor.

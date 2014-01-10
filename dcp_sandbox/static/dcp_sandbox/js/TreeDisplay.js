@@ -278,7 +278,49 @@ TreeDisplay.getConstraintSymbol = function(node) {
  */
 TreeDisplay.getLevelY = function(level) {
     return level*(TreeConstants.BOX_HEIGHT + TreeConstants.VERT_SEP) +
-           TreeConstants.EDGE_VERT_SEP;
+           TreeConstants.EDGE_VERT_SEP +
+           TreeLayout.getLeavesLegendHeight();
+}
+
+/**
+ * Draws a legend showing which variables and parameters are used.
+ */
+TreeDisplay.drawLeavesLegend = function(treeWidth) {
+    var svg = d3.select("svg");
+    TreeDisplay.drawLeavesBox(svg, treeWidth);
+}
+
+/**
+ * Draws a legend box showing which variables and parameters are used.
+ */
+TreeDisplay.drawLeavesBox = function(svg, treeWidth) {
+    var text = TreeConstructor.getLeafLegendText();
+    textWidths = [];
+    for (var i=0; i < text.length; i++) {
+        textWidths.push(text[i].width(TreeConstants.FONT));
+    }
+    var legendWidth = Math.max.apply(null, textWidths);
+    legendWidth += TreeConstants.SHORT_NAME_CONSTANT;
+    var legendHeight = text.length*TreeConstants.LEAVES_TEXT_HEIGHT;
+    var dx = (treeWidth - legendWidth)/2;
+
+    var legendSVG = svg.append("svg:g")
+                        .attr("class", "node")
+                        .attr("id", "leavesLegend")
+                        .attr("transform", "translate(" + dx + "," + TreeConstants.EDGE_VERT_SEP + ")")
+
+    legendSVG.append("svg:rect")
+        .attr("width", legendWidth)
+        .attr("height", legendHeight)
+
+    // Draw title text.
+    for (var i=0; i < text.length; i++) {
+        var baseOffset = TreeConstants.LEAVES_TEXT_HEIGHT*i;
+        legendSVG.append("svg:text")
+            .attr("dy", TreeConstants.LEAVES_TEXT_HEIGHT/2 + baseOffset)
+            .attr("dx", TreeConstants.SHORT_NAME_CONSTANT/2)
+            .text(text[i])
+    }
 }
 
 /**
@@ -302,11 +344,13 @@ TreeDisplay.drawLegendBox = function(svg, legend, treeWidth) {
     } else {
         var dx = treeWidth - edgePadding - legendWidth;
     }
+    var dy = TreeConstants.EDGE_VERT_SEP + 
+             TreeLayout.getLeavesLegendHeight();
 
     var legendSVG = svg.append("svg:g")
                         .attr("class", "node")
                         .attr("id", legend.title + "Legend")
-                        .attr("transform", "translate(" + dx + "," + TreeConstants.EDGE_VERT_SEP + ")")
+                        .attr("transform", "translate(" + dx + "," + dy + ")")
 
     legendSVG.append("svg:rect")
         .attr("width", legendWidth)
@@ -348,7 +392,9 @@ TreeDisplay.drawLegendArrow = function(svg, legend, root, widths, centers, treeW
     }
     var posMultiplier = legend.left ? -1 : 1;
     var x2 = centers[root.tag] + posMultiplier*widths[root.tag]/2;
-    var y = TreeConstants.EDGE_VERT_SEP + TreeConstants.LEGEND_TEXT_HEIGHT/2;
+    var y = TreeConstants.EDGE_VERT_SEP + 
+            TreeConstants.LEGEND_TEXT_HEIGHT/2 +
+            TreeLayout.getLeavesLegendHeight();
 
     svg.append("svg:line")
        .attr("class", "arrow")

@@ -41,11 +41,12 @@ TreeConstants.TAG_TO_NODE = "tagToNode";
 TreeConstants.OPERATORS = ["+","-","*","/","<=",">=","=="];
 TreeConstants.ELLIPSIS = "...";
 // Constants for listing the variables and parameters used.
+TreeConstants.LEAVES_TEXT_HEIGHT = 22;
 TreeConstants.LEAVES = {
-    "variables": {"unknown": ["x", "y", "z"],
+    "Variables": {"unknown": ["x", "y", "z"],
                   "positive": ["u", "v", "w"],
                  },
-    "parameters": {"unknown": ["a", "b", "c"],
+    "Parameters": {"unknown": ["a", "b", "c"],
                    "positive": ["d", "e", "f"],
                   },
 }
