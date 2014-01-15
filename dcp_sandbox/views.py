@@ -29,9 +29,13 @@ def intro(request):
 def rules(request):
     return base_page('dcp_sandbox/rules.html', request)
 
-# Credits page.
-def credits(request):
-    return base_page('dcp_sandbox/credits.html', request)
+# About page.
+def about(request):
+    return base_page('dcp_sandbox/about.html', request)
+
+# Functions page.
+def functions(request):
+    return base_page('dcp_sandbox/functions.html', request)
 
 # Load the analyzer.
 def analyzer(request):

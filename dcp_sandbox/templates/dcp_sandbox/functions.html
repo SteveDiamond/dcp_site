@@ -1,0 +1,49 @@
+{% extends "dcp_sandbox/base.html" %}
+{% load staticfiles %}
+
+{% block title %}Functions{% endblock %}
+
+{% block page_content %}
+
+<div class="span10">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <td>Name</td>
+        <td>Arguments</td>
+        <td>Mathematical Definition</td>
+        <td>Curvature</td>
+        <td>Sign</td>
+        <td>Monotonicity</td>
+        <td>Example Usage</td>
+        <td>CVX Equivalent</td>
+      </tr>
+    </thead>
+    <tbody>
+      {% for function in functions %}
+        <tr>
+          <td>{{ function.name }}</td>
+          <td>{{ function.arguments }}</td>
+          <td>
+            <p class="latex">{{ function.mathematical_definition }}</p>
+          </td>
+          <td>{{ function.curvature }}</td>
+          <td>{{ function.sign }}</td>
+          <td>{{ function.monotonicity }}</td>
+          <td>
+            <p class="function-example" >{{ function.example }}</p>
+          </td>
+          <td>
+            {% if function.cvx_equivalent %}
+              <p>{{ function.cvx_equivalent }}</p>
+            {% else %}
+              <p>{{ function.name }}</p>
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  <table>
+</div>
+
+{% endblock %}

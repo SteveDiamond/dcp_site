@@ -75,6 +75,16 @@
 
 <div class="container-fluid below-nav">
   <div class="row-fluid">
+    <nav>
+      <ul class="nav nav-pills nav-stacked span1">
+        <li{% if request.path == "/intro" %} class="active"{% endif %}><a href="/intro">Home</a></li>
+        <li{% if request.path == "/rules" %} class="active"{% endif %}><a href="/rules">Rules</a></li>
+        <li{% if request.path == "/functions" %} class="active"{% endif %}><a href="/functions">Functions</a></li>
+        <li{% if request.path == "/analyzer" %} class="active"{% endif %}><a href="/analyzer">Analyzer</a></li>
+        <li{% if request.path == "/quiz" %} class="active"{% endif %}><a href="/quiz">Quiz</a></li>
+        <li{% if request.path == "/about" %} class="active"{% endif %}><a href="/about">About</a></li>
+      </ul>
+    </nav>
   {% block page_content %}{% endblock %}
   </div>
 </div>

@@ -12,5 +12,6 @@ urlpatterns = patterns('',
     url(r'^new_expr$', views.new_expr, name='new_expr'),
     url(r'^intro$', views.intro, name='intro'),
     url(r'^rules$', views.rules, name='rules'),
-    url(r'^credits$', views.credits, name='credits'),
+    url(r'^about$', views.about, name='about'),
+    url(r'^functions$', views.functions, name='functions'),
 )
