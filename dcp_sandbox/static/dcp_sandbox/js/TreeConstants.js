@@ -55,6 +55,7 @@ TreeConstants.LEAVES = {
 TreeConstants.PROMPT_LEAF_LEGEND = [
     "Available Variables: x,y,z; u,v,w [positive]",
     "Available Parameters: a,b,c; d,e,f [positive]",
+    "Available Constants: Any",
     "Available Functions: See Functions tab",
 ]
 // Editable and fixed text classes.
