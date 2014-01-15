@@ -53,10 +53,10 @@ TreeConstants.LEAVES = {
 }
 // The text in the leaf legend at the analyzer prompt.
 TreeConstants.PROMPT_LEAF_LEGEND = [
-    "Available Variables: x,y,z; u,v,w [positive]",
-    "Available Parameters: a,b,c; d,e,f [positive]",
-    "Available Constants: Any",
-    "Available Functions: See Functions tab",
+    "Allowed Variables: x,y,z; u,v,w [positive]",
+    "Allowed Parameters: a,b,c; d,e,f [positive]",
+    "Allowed Constants: Any",
+    "Allowed Functions: See Functions tab",
 ]
 // Editable and fixed text classes.
 TreeConstants.EDITABLE_TEXT = "editable-text";
