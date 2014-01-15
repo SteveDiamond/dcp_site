@@ -76,14 +76,19 @@
                 dcp: EXPRESSION_TYPES[choice].dcp,
             },
             success: function(response) {
-                $(".alert").alert('close');
-                // Don't show help for the box with the expression.
-                TreeConstructor.promptActive = true;
-                var expression = {name: response};
-                TreeConstructor.processParseTree(expression);
-                // Hide the new expression button until the user selects an answer.
-                $(".new-expression").hide();
-                $(".answers").show();
+                function fn(root) {
+                    TreeConstructor.setLeafLegendText(root);
+                    $(".alert").alert('close');
+                    // Don't show help for the box with the expression.
+                    TreeConstructor.promptActive = true;
+                    var expression = {name: response};
+                    TreeConstructor.processParseTree(expression);
+                    // Hide the new expression button until the user selects an answer.
+                    $(".new-expression").hide();
+                    $(".answers").show();
+                }
+                // After receiving parse tree, calls fn.
+                TreeConstructor.parseObjective(response, fn);
             }
         });
     }
@@ -122,7 +127,6 @@
 
     /**
      * Show the full parse tree for the current expression.
-     * answerBtn - the answer button clicked.
      */
     function showParseTree() {
         // Hide the answers until the user generates a new expression.
@@ -132,7 +136,7 @@
         // Show help if active.
         TreeConstructor.promptActive = false;
         var fn = partial(feedbackForAnswer, this.id);
-        TreeConstructor.parseObjective(expression, TreeConstants.ROOT_TAG, fn);
+        TreeConstructor.createParseTree(expression, TreeConstants.ROOT_TAG, fn);
     }
 
     /**

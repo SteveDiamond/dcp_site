@@ -11,6 +11,7 @@
                          name: TreeConstants.PROMPT,
                          isPrompt: true,
                         };
+        TreeConstructor.leafLegendText = TreeConstants.PROMPT_LEAF_LEGEND;
         TreeConstructor.processParseTree(promptTree);
     });
 }(jQuery));

@@ -113,14 +113,24 @@ TreeLayout.getLegendHeight = function(legend) {
     return (1 + legend.text.length)*TreeConstants.LEGEND_TEXT_HEIGHT;
 }
 
+
+/**
+ * Determine the height of the legend box
+ * that shows which variables and parameters are used.
+ */
+TreeLayout.getLeavesLegendBoxHeight = function() {
+    var text = TreeConstructor.leafLegendText;
+    return text.length*TreeConstants.LEAVES_TEXT_HEIGHT;
+}
+
 /**
  * Determine the height of the legend (box and arrow)
  * that shows which variables and parameters are used.
  */
 TreeLayout.getLeavesLegendHeight = function() {
-    if (TreeConstructor.helpActive && !TreeConstructor.promptActive) {
-        return TreeConstants.LEAVES_BOX_HEIGHT +
-               TreeConstants.LEAVES_ARROW_HEIGHT;
+    if (TreeConstructor.helpActive) {
+        var boxHeight = TreeLayout.getLeavesLegendBoxHeight();
+        return boxHeight + TreeConstants.LEAVES_ARROW_HEIGHT;
     } else {
         return 0;
     }

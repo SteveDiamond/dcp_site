@@ -11,12 +11,12 @@ TreeConstructor.promptActive = true;
 TreeConstructor.helpActive = true;
 
 /**
- * Parses the given objective/constraint and creates a parse tree visualization.
+ * Parses the given objective/constraint and returns a tree object.
  * objective - the objective/constraint to parse.
- * id - the id of the node the user edited.
- * func - an optional function to execute after success.
+ * success_func - an optional function to execute after success.
+ * error_func - an optional function to execute after an error.
  */
-TreeConstructor.parseObjective = function(objective, id, success_function) {
+TreeConstructor.parseObjective = function(objective, success_func, error_func) {
     $.ajax({ // create an AJAX call...
         crossDomain: false,
                     beforeSend: function(xhr, settings) {
@@ -26,27 +26,46 @@ TreeConstructor.parseObjective = function(objective, id, success_function) {
         type: 'POST',
         data: {text: objective},
         success: function(response) {
-            TreeDisplay.errorState = false;
-            // Clean up alerts and input boxes.
-            $('#inputDiv').remove();
-            $('.alert').alert('close');
             // Load parse tree
             var root = JSON.parse(response);
-            TreeConstructor.deactivatePrompt();
-            TreeConstructor.processParseTree(root);
-            if (success_function) success_function();
+            if (success_func) success_func(root);
         },
         error: function(jqXHR, textStatus, errorThrown) {
-            TreeConstructor.showParseError(jqXHR.responseText);
-            // Note error state and the erroneous text.
-            TreeDisplay.errorState = true;
-            TreeDisplay.errorText = $('#inputBox').val();
-            // Force user to fix the erroneous text.
-            TreeDisplay.positionInputBox(id);
-            $('#'+id).attr("class", "node " + TreeConstants.ERROR_NODE);
-            $('#inputBox').focus();
+            if (error_func) error_func(jqXHR, textStatus, errorThrown);
         }
     });
+}
+
+/**
+ * Parses the given objective/constraint and creates a parse tree visualization.
+ * objective - the objective/constraint to parse.
+ * id - the id of the node the user edited.
+ * success_func - an optional function to execute after success.
+ */
+TreeConstructor.createParseTree = function(objective, id, success_func) {
+    function drawTree(root) {
+        TreeDisplay.errorState = false;
+        // Clean up alerts and input boxes.
+        $('#inputDiv').remove();
+        $('.alert').alert('close');
+        TreeConstructor.deactivatePrompt();
+        TreeConstructor.setLeafLegendText(root);
+        TreeConstructor.processParseTree(root);
+        if (success_func) success_func();
+    }
+
+    function handleError(jqXHR, textStatus, errorThrown) {
+        TreeConstructor.showParseError(jqXHR.responseText);
+        // Note error state and the erroneous text.
+        TreeDisplay.errorState = true;
+        TreeDisplay.errorText = $('#inputBox').val();
+        // Force user to fix the erroneous text.
+        TreeDisplay.positionInputBox(id);
+        $('#'+id).attr("class", "node " + TreeConstants.ERROR_NODE);
+        $('#inputBox').focus();
+    }
+
+    TreeConstructor.parseObjective(objective, drawTree, handleError);
 }
 
 /**
@@ -98,10 +117,13 @@ TreeConstructor.processParseTree = function(root) {
     $(TreeConstants.TREE_DIV).html(''); // Clear old tree
     TreeDisplay.drawTree(TreeConstants.TREE_DIV, root, numNodes, levels, widths, centers, treeWidth, treeHeight);
     // If help is active, draw the legends.
-    if (TreeConstructor.helpActive && !TreeConstructor.promptActive) {
+    if (TreeConstructor.helpActive) {
+        // Show the variables/params info even when prompting.
         TreeDisplay.drawLeavesLegend(treeWidth);
-        TreeDisplay.drawLegend(TreeConstants.CURVATURE_LEGEND, root, widths, centers, treeWidth);
-        TreeDisplay.drawLegend(TreeConstants.SIGN_LEGEND, root, widths, centers, treeWidth);
+        if (!TreeConstructor.promptActive) {
+            TreeDisplay.drawLegend(TreeConstants.CURVATURE_LEGEND, root, widths, centers, treeWidth);
+            TreeDisplay.drawLegend(TreeConstants.SIGN_LEGEND, root, widths, centers, treeWidth);
+        }
     }
 }
 
@@ -157,14 +179,17 @@ TreeConstructor.addLeftRight = function(levels) {
 /**
  * Returns an array of leaf names from the leaves
  * stored in tagToNode.
+ *
+ * root - The root of the parse tree. TODO
  */
-TreeConstructor.getLeafNames = function() {
+TreeConstructor.getLeafNames = function(root) {
+    if (root.children == undefined) {
+        return [root.name];
+    }
     var names = [];
-    for (key in TreeConstructor.tagToNode) {
-        node = TreeConstructor.tagToNode[key];
-        if (node.childTags == undefined) {
-            names.push(node.name);
-        }
+    for (var i=0; i < root.children.length; i++) {
+        var childNames = TreeConstructor.getLeafNames(root.children[i]);
+        names = names.concat(childNames);
     }
     return names;
 }
@@ -172,9 +197,11 @@ TreeConstructor.getLeafNames = function() {
 /**
  * Produces legend text showing which variables
  * and parameters were used.
+ *
+ * root - The root of the parse tree.
  */
- TreeConstructor.getLeafLegendText = function() {
-    var used = TreeConstructor.getLeafNames();
+ TreeConstructor.setLeafLegendText = function(root) {
+    var used = TreeConstructor.getLeafNames(root);
     var textArr = [];
     for (type in TreeConstants.LEAVES) {
         // Find which names were used.
@@ -208,7 +235,8 @@ TreeConstructor.getLeafNames = function() {
         }
         textArr.push(prefix + suffix);
     }
-    return textArr;
+    
+    TreeConstructor.leafLegendText = textArr;
 }
 
 /**

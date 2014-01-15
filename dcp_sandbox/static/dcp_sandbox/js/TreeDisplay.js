@@ -120,7 +120,7 @@ TreeDisplay.resetTree = function(id, textElement, text) {
     var modifiedText = $('#inputBox').val();
     var objective = TreeConstructor.loadObjective(id, modifiedText);
     // textElement.textContent = text;
-    TreeConstructor.parseObjective(objective, id);
+    TreeConstructor.createParseTree(objective, id);
 }
 
 /**
@@ -296,14 +296,14 @@ TreeDisplay.drawLeavesLegend = function(treeWidth) {
  * Draws a legend box showing which variables and parameters are used.
  */
 TreeDisplay.drawLeavesBox = function(svg, treeWidth) {
-    var text = TreeConstructor.getLeafLegendText();
+    var text = TreeConstructor.leafLegendText;
     textWidths = [];
     for (var i=0; i < text.length; i++) {
         textWidths.push(text[i].width(TreeConstants.FONT));
     }
     var legendWidth = Math.max.apply(null, textWidths);
     legendWidth += TreeConstants.SHORT_NAME_CONSTANT;
-    var legendHeight = TreeConstants.LEAVES_BOX_HEIGHT;
+    var legendHeight = TreeLayout.getLeavesLegendBoxHeight();
     var dx = (treeWidth - legendWidth)/2;
 
     var legendSVG = svg.append("svg:g")
@@ -332,7 +332,7 @@ TreeDisplay.drawLeavesBox = function(svg, treeWidth) {
 TreeDisplay.drawLeavesArrow = function(svg, treeWidth) {
     var x = treeWidth/2;
     var y1 = TreeConstants.EDGE_VERT_SEP + 
-             TreeConstants.LEAVES_BOX_HEIGHT;
+             TreeLayout.getLeavesLegendBoxHeight();
     var y2 = y1 + TreeConstants.LEAVES_ARROW_HEIGHT;
 
     svg.append("svg:line")

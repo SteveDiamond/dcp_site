@@ -42,7 +42,6 @@ TreeConstants.OPERATORS = ["+","-","*","/","<=",">=","=="];
 TreeConstants.ELLIPSIS = "...";
 // Constants for the legend listing the variables and parameters used.
 TreeConstants.LEAVES_TEXT_HEIGHT = 22;
-TreeConstants.LEAVES_BOX_HEIGHT = 2*TreeConstants.LEAVES_TEXT_HEIGHT;
 TreeConstants.LEAVES_ARROW_HEIGHT = 22;
 TreeConstants.LEAVES = {
     "Variables": {"unknown": ["x", "y", "z"],
@@ -52,6 +51,12 @@ TreeConstants.LEAVES = {
                    "positive": ["d", "e", "f"],
                   },
 }
+// The text in the leaf legend at the analyzer prompt.
+TreeConstants.PROMPT_LEAF_LEGEND = [
+    "Available Variables: x,y,z; u,v,w [positive]",
+    "Available Parameters: a,b,c; d,e,f [positive]",
+    "Available Functions: See Functions",
+]
 // Editable and fixed text classes.
 TreeConstants.EDITABLE_TEXT = "editable-text";
 TreeConstants.FIXED_TEXT = "fixed-text";

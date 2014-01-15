@@ -1,7 +1,7 @@
 {% extends "dcp_sandbox/base.html" %}
 {% load staticfiles %}
 
-{% block title %}Credits{% endblock %}
+{% block title %}About{% endblock %}
 
 {% block page_content %}
 
@@ -11,13 +11,22 @@
     <li><a href="/rules">Rules</a></li>
     <li><a href="/analyzer">Analyzer</a></li>
     <li><a href="/quiz">Quiz</a></li>
-    <li class="active"><a href="/credits">Credits</a></li>
+    <li class="active"><a href="/credits">About</a></li>
   </ul>
 </nav>
 <div class="span10">
   <h3>Credits</h3>
 
   <p>This website was created by Steven Diamond in 2013 with help from Eric Chu and Stephen Boyd.</p>
+
+  <h3>Source Code</h3>
+
+  <p>The source code for the website can be viewed at the links below:</p>
+
+  <ul>
+  <li><p><a href="https://github.com/SteveDiamond/dcp_site">DCP Site</a></p></li>
+  <li><p><a href="https://github.com/SteveDiamond/parser">DCP Parser</p></li>
+  </ul>
 </div>
 
 {% endblock %}
