@@ -17,7 +17,7 @@ ATOM_DEFINITIONS = [
   {"name":"abs",
    "usage": "abs(x)",
    "meaning": "$ |x| $",
-   "domain": "$ x \in \mathbb{R} $",
+   "domain": ["$ x \in \mathbf{R} $"],
    "curvature": "Convex",
    "sign": "Positive",
    "monotonicity": ["Increasing for $ x \geq 0 $",
@@ -30,7 +30,7 @@ ATOM_DEFINITIONS = [
   #  "meaning": 
   #       ("\operatorname{berhu}(x,M) = \\begin{cases} |x| &\mbox{if } |x| \le M \\\\ "
   #        "\left(|x|^{2} + M^{2} \\right)/2M & \mbox{if } |x| > M \end{cases} \\\\"
-  #        " \mbox{ where } x \in \mathbb{R}."),
+  #        " \mbox{ where } x \in \mathbf{R}."),
   #  "curvature": "Convex",
   #  "sign": "Positive",
   #  "monotonicity": ["Increasing for $ x \geq 0 $",
@@ -44,7 +44,7 @@ ATOM_DEFINITIONS = [
         ("$ \\begin{cases} -x \log (x) & x > 0 \\\\ "
          "0 & x = 0 \end{cases} \\\\ $"),
 
-   "domain": "$ x \geq 0 $",
+   "domain": ["$ x \geq 0 $"],
    "curvature": "Concave",
    "sign": "Unknown",
    "monotonicity": ["None"],
@@ -54,7 +54,7 @@ ATOM_DEFINITIONS = [
    "usage": "exp(x)",
    "arguments": "Takes a single expression as an argument.",
    "meaning": "$ e^{x} $",
-   "domain": "$ x \in \mathbb{R} $",
+   "domain": ["$ x \in \mathbf{R} $"],
    "curvature": "Convex",
    "sign": "Positive",
    "monotonicity": ["Increasing"],
@@ -65,7 +65,7 @@ ATOM_DEFINITIONS = [
    "arguments": ("Takes a variable number of expressions as arguments. "
                  "These are interpreted as a vector."),
    "meaning": "$ (x_{1} \cdots x_{k})^{1/k} $",
-   "domain": "$ x_{i} \geq 0 $",
+   "domain": ["$ x_{i} \geq 0 $"],
    "curvature": "Concave",
    "sign": "Positive",
    "monotonicity": ["Increasing"],
@@ -79,7 +79,7 @@ ATOM_DEFINITIONS = [
    "meaning": 
         ("$ \\begin{cases} 2|x|-1 & |x| \ge 1 \\\\ "
          " |x|^{2} & |x| < 1 \end{cases} \\\\ $"),
-   "domain": "$ x \in \mathbb{R} $",
+   "domain": ["$ x \in \mathbf{R} $"],
    "curvature": "Convex",
    "sign": "Positive",
    "monotonicity": ["Increasing for $ x \geq 0 $",
@@ -90,7 +90,7 @@ ATOM_DEFINITIONS = [
    "usage": "inv_pos(x)",
    "arguments": "Takes a single expression as an argument.",
    "meaning": "$ 1/x $",
-   "domain": "$ x > 0 $",
+   "domain": ["$ x > 0 $"],
    "curvature": "Convex",
    "sign": "Positive",
    "monotonicity": ["Decreasing"],
@@ -100,7 +100,7 @@ ATOM_DEFINITIONS = [
    "usage": "kl_div(x,y)",
    "arguments": "Takes two expressions as arguments.",
    "meaning": "$ x \log (x/y)-x+y $",
-   "domain": "$ x,y > 0 $",
+   "domain": ["$ x,y > 0 $"],
    "curvature": "Convex",
    "sign": "Unknown",
    "monotonicity": ["None"],
@@ -110,7 +110,7 @@ ATOM_DEFINITIONS = [
    "usage": "log(x)",
    "arguments": "Takes a single expression as an argument.",
    "meaning": "$ \log(x) $",
-   "domain": "$ x > 0 $",
+   "domain": ["$ x > 0 $"],
    "curvature": "Concave",
    "sign": "Unknown",
    "monotonicity": ["Increasing"],
@@ -121,7 +121,7 @@ ATOM_DEFINITIONS = [
    "arguments": ("Takes a variable number of expressions as arguments. "
                  "These are interpreted as a vector."),
    "meaning": "$ \log \left(e^{x_{1}} + \cdots + e^{x_{k}} \\right) $",
-   "domain": "$ x \in \mathbb{R}^{k} $",
+   "domain": ["$ x \in \mathbf{R}^{k} $"],
    "curvature": "Convex",
    "sign": "Unknown",
    "monotonicity": ["Increasing"],
@@ -132,9 +132,9 @@ ATOM_DEFINITIONS = [
    "arguments": ("Takes a variable number of expressions as arguments. "
                  "These are interpreted as a vector."),
    "meaning": "$ \max \left\{ x_{1}, \ldots , x_{k} \\right\} $",   
-   "domain": "$ x \in \mathbb{R}^{k} $",
+   "domain": ["$ x \in \mathbf{R}^{k} $"],
    "curvature": "Convex",
-   "sign": "Max argument sign",
+   "sign": "max(sign(arguments))",
    "monotonicity": ["Increasing"],
    "example": "max(x, y)",
   },
@@ -143,9 +143,9 @@ ATOM_DEFINITIONS = [
    "arguments": ("Takes a variable number of expressions as arguments. "
                  "These are interpreted as a vector."),
    "meaning": "$ \min \left\{ x_{1}, \ldots , x_{k} \\right\} $",   
-   "domain": "$ x \in \mathbb{R}^{k} $",
+   "domain": ["$ x \in \mathbf{R}^{k} $"],
    "curvature": "Concave",
-   "sign": "Min argument sign",
+   "sign": "min(sign(arguments))",
    "monotonicity": ["Increasing"],
    "example": "min(x, y)",
   },
@@ -157,7 +157,7 @@ ATOM_DEFINITIONS = [
   #  "mathematical_definition": ("\\begin{aligned} "
   #                              " \operatorname{norm}(x,p) &= \left( \sum_{k=1}^{n} |x_{k}|^{p}} \\right)^{1/p} \\\\"
   #                              " \operatorname{norm}(x,\mbox{Inf}) &= \max \left\{ \left| x_{k} \\right| | k \in \{1,...,n \} \\right\} \\\\"
-  #                              " \mbox{ where } x \in \mathbb{R}^{n}."
+  #                              " \mbox{ where } x \in \mathbf{R}^{n}."
   #                              " \end{aligned} "),
   #  "curvature": "Convex",
   #  "sign": "Positive",
@@ -171,8 +171,8 @@ ATOM_DEFINITIONS = [
                  "The expressions are interpreted as a vector. "
                  "The parameter must either be a number p with p >= 1 or be Inf. "
                  "The default parameter is 2."),
-   "meaning": ("$ \sqrt{x_{1}^{2} + \ldots + x_{k}^{2}} $"),
-   "domain": "$ x \in \mathbb{R}^{k} $",
+   "meaning": ("$ \sqrt{x_{1}^{2} + \cdots + x_{k}^{2}} $"),
+   "domain": ["$ x \in \mathbf{R}^{k} $"],
    "curvature": "Convex",
    "sign": "Positive",
    "monotonicity": ["Increasing for $ x \geq 0 $",
@@ -186,7 +186,7 @@ ATOM_DEFINITIONS = [
                  "The parameter must either be a number p with p >= 1 or be Inf. "
                  "The default parameter is 2."),
    "meaning": ("$ |x_{1}| + \cdots + |x_{k}| $"),
-   "domain": "$ x \in \mathbb{R}^{k} $",
+   "domain": ["$ x \in \mathbf{R}^{k} $"],
    "curvature": "Convex",
    "sign": "Positive",
    "monotonicity": ["Increasing for $ x \geq 0 $",
@@ -200,7 +200,7 @@ ATOM_DEFINITIONS = [
                  "The parameter must either be a number p with p >= 1 or be Inf. "
                  "The default parameter is 2."),
    "meaning": ("$ \max \left\{ |x_{1}|, \ldots, |x_{k}| \\right\} $"),
-   "domain": "$ x \in \mathbb{R}^{k} $",
+   "domain": ["$ x \in \mathbf{R}^{k} $"],
    "curvature": "Convex",
    "sign": "Positive",
    "monotonicity": ["Increasing for $ x \geq 0 $",
@@ -211,7 +211,7 @@ ATOM_DEFINITIONS = [
    "usage": "pos(x)",
    "arguments": "Takes a single expression as an argument.",
    "meaning": "$ \max \{x,0\} $",
-   "domain": "$ x \in \mathbb{R}$",
+   "domain": ["$ x \in \mathbf{R}$"],
    "curvature": "Convex",
    "sign": "Positive",
    "monotonicity": ["Increasing"],
@@ -221,7 +221,7 @@ ATOM_DEFINITIONS = [
    "usage": "quad_over_lin(x,y)",
    "arguments": "Takes two expressions as arguments.",
    "meaning": "$ x^{2}/y $",
-   "domain": "y > 0",
+   "domain": ["$x \in \mathbf{R}$", "y > 0"],
    "curvature": "Convex",
    "sign": "Positive",
    "monotonicity": ["Increasing for $ x \geq 0 $",
@@ -233,7 +233,7 @@ ATOM_DEFINITIONS = [
    "usage": "sqrt(x)",
    "arguments": "Takes a single expression as an argument.",
    "meaning": "$ \sqrt{x} $",
-   "domain": "$ x \geq 0 $",
+   "domain": ["$ x \geq 0 $"],
    "curvature": "Concave",
    "sign": "Positive",
    "monotonicity": ["Increasing"],
@@ -243,7 +243,7 @@ ATOM_DEFINITIONS = [
    "usage": "square(x)",
    "arguments": "Takes a single expression as an argument.",
    "meaning": "$ x^{2} $",
-   "domain": "$ x \in \mathbb{R} $",
+   "domain": ["$ x \in \mathbf{R} $"],
    "curvature": "Convex",
    "sign": "Positive",
    "monotonicity": ["Increasing for $ x \geq 0 $",
@@ -264,7 +264,7 @@ ATOM_DEFINITIONS = [
   #       " p &\ge 1: \operatorname{pow}(x,p) &= "
   #       "\\begin{cases} x^{p} &\mbox{if } x \ge 0 \\\\"
   #       " +\infty &\mbox{if } x < 0 \end{cases}\\\\"
-  #       " \mbox{ where } x \in \mathbb{R}^{n}."
+  #       " \mbox{ where } x \in \mathbf{R}^{n}."
   #       " \end{aligned} "),
   #  "curvature": "Concave for 0 < p < 1. Otherwise convex.",
   #  "sign": "The argument's sign for 0 < p < 1. Otherwise positive.",
@@ -274,11 +274,11 @@ ATOM_DEFINITIONS = [
   #  "cvx_equivalent": "pow_p",
   # },
   {"name":"pow",
-   "usage": "pow(x,p), $ p \geq 1 $",
+   "usage": "pow(x,p), $\\text{ } p \geq 1 $",
    "arguments": ("Takes a single expression followed by a parameter as arguments. "
                  "The parameter must be a number. "),
    "meaning": "$ x^{p} $",
-   "domain": "$ x \geq 0 $",
+   "domain": ["$ x \geq 0 $"],
    "curvature": "Convex",
    "sign": "Positive",
    "monotonicity": ["Increasing"],
@@ -286,11 +286,11 @@ ATOM_DEFINITIONS = [
    "cvx_equivalent": "pow_p",
   },
   {"name":"pow",
-   "usage": "pow(x,p), $ 0 < p < 1 $",
+   "usage": "pow(x,p), $\\text{ } 0 < p < 1 $",
    "arguments": ("Takes a single expression followed by a parameter as arguments. "
                  "The parameter must be a number. "),
    "meaning": "$ x^{p} $",
-   "domain": "$ x \geq 0 $",
+   "domain": ["$ x \geq 0 $"],
    "curvature": "Concave",
    "sign": "Positive",
    "monotonicity": ["Increasing"],
@@ -298,11 +298,11 @@ ATOM_DEFINITIONS = [
    "cvx_equivalent": "pow_p",
   },
   {"name":"pow",
-   "usage": "pow(x,p), $ p \leq 0 $",
+   "usage": "pow(x,p), $\\text{ } p \leq 0 $",
    "arguments": ("Takes a single expression followed by a parameter as arguments. "
                  "The parameter must be a number. "),
    "meaning": "$ x^{p} $",
-   "domain": "$ x > 0 $",
+   "domain": ["$ x > 0 $"],
    "curvature": "Convex",
    "sign": "Positive",
    "monotonicity": ["Decreasing"],
