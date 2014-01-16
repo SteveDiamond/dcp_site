@@ -145,6 +145,7 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
     'dcp_sandbox',
+    'south',
 )
 
 # A sample logging configuration. The only tangible logging

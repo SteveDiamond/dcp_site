@@ -124,21 +124,21 @@ Argument.objects.create(operator=op, position=0,
                         positive=False, negative=False,
                         convex=True, concave=True)
 
-# berhu and arguments
-op = Operator.objects.create(prefix="berhu(", infix=", ", suffix=", 2)",
-                             terminal=False, num_args=1,
-                             weight=0.25*DEFAULT_WEIGHT,
-                             positive=True, negative=False,
-                             convex=True, concave=False)
-Argument.objects.create(operator=op, position=0,
-                        positive=True, negative=False,
-                        convex=True, concave=False)
-Argument.objects.create(operator=op, position=0,
-                        positive=False, negative=True,
-                        convex=False, concave=True)
-Argument.objects.create(operator=op, position=0,
-                        positive=False, negative=False,
-                        convex=True, concave=True)
+# # berhu and arguments
+# op = Operator.objects.create(prefix="berhu(", infix=", ", suffix=", 2)",
+#                              terminal=False, num_args=1,
+#                              weight=0.25*DEFAULT_WEIGHT,
+#                              positive=True, negative=False,
+#                              convex=True, concave=False)
+# Argument.objects.create(operator=op, position=0,
+#                         positive=True, negative=False,
+#                         convex=True, concave=False)
+# Argument.objects.create(operator=op, position=0,
+#                         positive=False, negative=True,
+#                         convex=False, concave=True)
+# Argument.objects.create(operator=op, position=0,
+#                         positive=False, negative=False,
+#                         convex=True, concave=True)
 
 # entr and arguments
 op = Operator.objects.create(prefix="entr(", infix=", ", suffix=")",
@@ -172,7 +172,7 @@ for i in range(op.num_args):
                             convex=False, concave=True)
 
 # huber and arguments
-op = Operator.objects.create(prefix="huber(", infix=", ", suffix=", 1)",
+op = Operator.objects.create(prefix="huber(", infix=", ", suffix=")",
                              terminal=False, num_args=1,
                              weight=DEFAULT_WEIGHT,
                              positive=True, negative=False,
@@ -219,10 +219,44 @@ for i in range(op.num_args):
                             positive=False, negative=False,
                             convex=True, concave=False)
 
-# norm and arguments
-op = Operator.objects.create(prefix="norm(", infix=", ", suffix=", 2)",
+# norm2 and arguments
+op = Operator.objects.create(prefix="norm2(", infix=", ", suffix=")",
                              terminal=False, num_args=2,
-                             weight=DEFAULT_WEIGHT,
+                             weight=0.33*DEFAULT_WEIGHT,
+                             positive=True, negative=False,
+                             convex=True, concave=False)
+for i in range(op.num_args):
+    Argument.objects.create(operator=op, position=i,
+                            positive=True, negative=False,
+                            convex=True, concave=False)
+    Argument.objects.create(operator=op, position=i,
+                            positive=False, negative=True,
+                            convex=False, concave=True)
+    Argument.objects.create(operator=op, position=i,
+                            positive=False, negative=False,
+                            convex=True, concave=True)
+
+# norm1 and arguments
+op = Operator.objects.create(prefix="norm1(", infix=", ", suffix=")",
+                             terminal=False, num_args=2,
+                             weight=0.33*DEFAULT_WEIGHT,
+                             positive=True, negative=False,
+                             convex=True, concave=False)
+for i in range(op.num_args):
+    Argument.objects.create(operator=op, position=i,
+                            positive=True, negative=False,
+                            convex=True, concave=False)
+    Argument.objects.create(operator=op, position=i,
+                            positive=False, negative=True,
+                            convex=False, concave=True)
+    Argument.objects.create(operator=op, position=i,
+                            positive=False, negative=False,
+                            convex=True, concave=True)
+
+# norm_inf and arguments
+op = Operator.objects.create(prefix="norm_inf(", infix=", ", suffix=")",
+                             terminal=False, num_args=2,
+                             weight=0.33*DEFAULT_WEIGHT,
                              positive=True, negative=False,
                              convex=True, concave=False)
 for i in range(op.num_args):

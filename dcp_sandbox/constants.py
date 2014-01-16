@@ -5,221 +5,307 @@ Constants used by views.py.
 PREAMBLE = ['variable x y z', 'variable positive u v w',
             'parameter a b c', 'parameter positive d e f']
 
+# A list of all possible signs.
+SIGN_LIST = ["positive", "negative", "unknown", "zero"]
+
+# A list of all possible curvatures.
+CURVATURE_LIST = ["constant", "affine", "convex", "concave", "unknown"]
+
 # All the atoms shown to the user and their definitions.
 #TODO move to parser and automate.
 ATOM_DEFINITIONS = [
   {"name":"abs",
-   "arguments": "Takes a single expression as an argument.",
-   "mathematical_definition": "\operatorname{abs}(x) = |x| \mbox{ where } x \in \mathbb{R}.",
+   "usage": "abs(x)",
+   "meaning": "$ |x| $",
+   "domain": "$ x \in \mathbb{R} $",
    "curvature": "Convex",
    "sign": "Positive",
-   "monotonicity": "Increasing for positive arguments. Decreasing for negative arguments.",
-   "example": "abs(x)",
+   "monotonicity": ["Increasing for $ x \geq 0 $",
+                    "Decreasing for $ x \leq 0 $"],
   },
-  {"name":"berhu",
-   "arguments": ("Takes a single expression followed by a parameter as arguments. "
-                 "The parameter must be a positive number. "
-                 "The default value for the parameter is 1."),
-   "mathematical_definition": 
-        ("\operatorname{berhu}(x,M) = \\begin{cases} |x| &\mbox{if } |x| \le M \\\\ "
-         "\left(|x|^{2} + M^{2} \\right)/2M & \mbox{if } |x| > M \end{cases} \\\\"
-         " \mbox{ where } x \in \mathbb{R}."),
-   "curvature": "Convex",
-   "sign": "Positive",
-   "monotonicity": "Increasing for positive arguments. Decreasing for negative arguments.",
-   "example": "berhu(x, 1)",
-  },
+  # {"name":"berhu",
+  #  "arguments": ("Takes a single expression followed by a parameter as arguments. "
+  #                "The parameter must be a positive number. "
+  #                "The default value for the parameter is 1."),
+  #  "meaning": 
+  #       ("\operatorname{berhu}(x,M) = \\begin{cases} |x| &\mbox{if } |x| \le M \\\\ "
+  #        "\left(|x|^{2} + M^{2} \\right)/2M & \mbox{if } |x| > M \end{cases} \\\\"
+  #        " \mbox{ where } x \in \mathbb{R}."),
+  #  "curvature": "Convex",
+  #  "sign": "Positive",
+  #  "monotonicity": ["Increasing for $ x \geq 0 $",
+  #                   "Decreasing for $ x \leq 0 $"],
+  #  "example": "berhu(x, 1)",
+  # },
   {"name":"entr",
+   "usage": "entr(x)",
    "arguments": "Takes a single expression as an argument.",
-   "mathematical_definition": 
-        ("\operatorname{entr}(x) = \\begin{cases} -x \log (x) &\mbox{if } x > 0 \\\\ "
-         "0 & \mbox{if } x = 0 \\\\ "
-         "-\infty & \mbox{if } x < 0 \end{cases} \\\\"
-         "\mbox{ where } x \in \mathbb{R}."),
+   "meaning": 
+        ("$ \\begin{cases} -x \log (x) & x > 0 \\\\ "
+         "0 & x = 0 \end{cases} \\\\ $"),
+
+   "domain": "$ x \geq 0 $",
    "curvature": "Concave",
    "sign": "Unknown",
-   "monotonicity": "Non-monotonic",
+   "monotonicity": ["None"],
    "example": "entr(x)",
   },
   {"name":"exp",
+   "usage": "exp(x)",
    "arguments": "Takes a single expression as an argument.",
-   "mathematical_definition": 
-        ("\operatorname{exp}(x) = e^{x} \mbox{ where } x \in \mathbb{R}."),
+   "meaning": "$ e^{x} $",
+   "domain": "$ x \in \mathbb{R} $",
    "curvature": "Convex",
    "sign": "Positive",
-   "monotonicity": "Increasing",
+   "monotonicity": ["Increasing"],
    "example": "exp(x)",
   },
   {"name":"geo_mean",
+   "usage": "geo_mean(x1,...,xk)",
    "arguments": ("Takes a variable number of expressions as arguments. "
                  "These are interpreted as a vector."),
-   "mathematical_definition": 
-        ("\operatorname{geo\_mean}(x) = \\begin{cases} "
-         "\left( \prod_{k=1}^{n} x_{k} \\right)^{1/n} &\mbox{if } x \succeq 0 \\\\ "
-         "-\infty & \mbox{otherwise } \end{cases} \\\\"
-         "\mbox{ where } x \in \mathbb{R}^{n}."),
+   "meaning": "$ (x_{1} \cdots x_{k})^{1/k} $",
+   "domain": "$ x_{i} \geq 0 $",
    "curvature": "Concave",
-   "sign": "The smallest argument sign under the ordering negative < unknown < positive.",
-   "monotonicity": "Non-decreasing for all arguments.",
+   "sign": "Positive",
+   "monotonicity": ["Increasing"],
    "example": "geo_mean(x, y)",
   },
   {"name":"huber",
+   "usage": "huber(x)",
    "arguments": ("Takes a single expression followed by a parameter as arguments. "
                  "The parameter must be a positive number. "
                  "The default value for the parameter is 1."),
-   "mathematical_definition": 
-        ("\operatorname{huber}(x,M) = \\begin{cases} 2M|x|-M^{2} &\mbox{if } |x| \ge M \\\\ "
-         " |x|^{2} & \mbox{if } |x| < M \end{cases} \\\\"
-         " \mbox{ where } x \in \mathbb{R}."),
+   "meaning": 
+        ("$ \\begin{cases} 2|x|-1 & |x| \ge 1 \\\\ "
+         " |x|^{2} & |x| < 1 \end{cases} \\\\ $"),
+   "domain": "$ x \in \mathbb{R} $",
    "curvature": "Convex",
    "sign": "Positive",
-   "monotonicity": "Increasing for positive arguments. Decreasing for negative arguments.",
-   "example": "huber(x, 1)",
+   "monotonicity": ["Increasing for $ x \geq 0 $",
+                    "Decreasing for $ x \leq 0 $"],
    "cvx_equivalent": "huber, huber_pos, huber_circ",
   },
   {"name":"inv_pos",
+   "usage": "inv_pos(x)",
    "arguments": "Takes a single expression as an argument.",
-   "mathematical_definition": 
-        ("\operatorname{inv\_pos}(x) = \\begin{cases} 1/x &\mbox{if } x > 0 \\\\ "
-         "+\infty & \mbox{if } x \le 0 \end{cases} \\\\"
-         "\mbox{ where } x \in \mathbb{R}."),
+   "meaning": "$ 1/x $",
+   "domain": "$ x > 0 $",
    "curvature": "Convex",
    "sign": "Positive",
-   "monotonicity": "Non-increasing",
+   "monotonicity": ["Decreasing"],
    "example": "inv_pos(x)",
   },
   {"name":"kl_div",
+   "usage": "kl_div(x,y)",
    "arguments": "Takes two expressions as arguments.",
-   "mathematical_definition": 
-        ("\operatorname{kl\_div}(x,y) = \\begin{cases} x \log (x/y)-x+y &\mbox{if } x,y > 0 \\\\ "
-         "0 & \mbox{if } x = 0 \mbox{ and } y=0 \\\\"
-         "+\infty & \mbox{otherwise } \end{cases} \\\\"
-         "\mbox{ where } x,y \in \mathbb{R}."),
+   "meaning": "$ x \log (x/y)-x+y $",
+   "domain": "$ x,y > 0 $",
    "curvature": "Convex",
    "sign": "Unknown",
-   "monotonicity": "Non-monotonic in all arguments.",
+   "monotonicity": ["None"],
    "example": "kl_div(x, y)",
   },
   {"name":"log",
+   "usage": "log(x)",
    "arguments": "Takes a single expression as an argument.",
-   "mathematical_definition": 
-        ("\operatorname{log}(x) = \\begin{cases} \log (x) &\mbox{if } x > 0 \\\\ "
-         "-\infty & \mbox{if } x \le 0 \end{cases} \\\\"
-         "\mbox{ where } x \in \mathbb{R}."),
+   "meaning": "$ \log(x) $",
+   "domain": "$ x > 0 $",
    "curvature": "Concave",
    "sign": "Unknown",
-   "monotonicity": "Non-decreasing",
+   "monotonicity": ["Increasing"],
    "example": "log(x)",
   },
   {"name":"log_sum_exp",
+   "usage": "log_sum_exp(x1,...,xk)",
    "arguments": ("Takes a variable number of expressions as arguments. "
                  "These are interpreted as a vector."),
-   "mathematical_definition": ("\operatorname{log\_sum\_exp}(x) = \log \left( \sum_{k=1}^{n} e^{x_{k}} \\right)"
-                               " \mbox{ where } x \in \mathbb{R}^{n}."),
+   "meaning": "$ \log \left(e^{x_{1}} + \cdots + e^{x_{k}} \\right) $",
+   "domain": "$ x \in \mathbb{R}^{k} $",
    "curvature": "Convex",
    "sign": "Unknown",
-   "monotonicity": "Increasing in all arguments.",
+   "monotonicity": ["Increasing"],
    "example": "log_sum_exp(x, y)",
   },
   {"name":"max",
+   "usage": "max(x1,...,xk)",
    "arguments": ("Takes a variable number of expressions as arguments. "
                  "These are interpreted as a vector."),
-   "mathematical_definition": ("\operatorname{max}(x) = \max \left\{ x_{k} | k \in \{1,...,n \} \\right\}"
-                         " \mbox{ where } x \in \mathbb{R}^{n}."),   
+   "meaning": "$ \max \left\{ x_{1}, \ldots , x_{k} \\right\} $",   
+   "domain": "$ x \in \mathbb{R}^{k} $",
    "curvature": "Convex",
-   "sign": "The largest argument sign under the ordering negative < unknown < positive.",
-   "monotonicity": "Non-decreasing in all arguments.",
+   "sign": "Max argument sign",
+   "monotonicity": ["Increasing"],
    "example": "max(x, y)",
   },
   {"name":"min",
+   "usage": "min(x1,...,xk)",
    "arguments": ("Takes a variable number of expressions as arguments. "
                  "These are interpreted as a vector."),
-   "mathematical_definition": ("\operatorname{min}(x) = \min \left\{ x_{k} | k \in \{1,...,n \} \\right\}"
-                         " \mbox{ where } x \in \mathbb{R}^{n}."),   
+   "meaning": "$ \min \left\{ x_{1}, \ldots , x_{k} \\right\} $",   
+   "domain": "$ x \in \mathbb{R}^{k} $",
    "curvature": "Concave",
-   "sign": "The smallest argument sign under the ordering negative < unknown < positive.",
-   "monotonicity": "Non-decreasing in all arguments.",
+   "sign": "Min argument sign",
+   "monotonicity": ["Increasing"],
    "example": "min(x, y)",
   },
-  {"name":"norm",
+  # {"name":"norm",
+  #  "arguments": ("Takes a variable number of expressions followed by a parameter as arguments. "
+  #                "The expressions are interpreted as a vector. "
+  #                "The parameter must either be a number p with p >= 1 or be Inf. "
+  #                "The default parameter is 2."),
+  #  "mathematical_definition": ("\\begin{aligned} "
+  #                              " \operatorname{norm}(x,p) &= \left( \sum_{k=1}^{n} |x_{k}|^{p}} \\right)^{1/p} \\\\"
+  #                              " \operatorname{norm}(x,\mbox{Inf}) &= \max \left\{ \left| x_{k} \\right| | k \in \{1,...,n \} \\right\} \\\\"
+  #                              " \mbox{ where } x \in \mathbb{R}^{n}."
+  #                              " \end{aligned} "),
+  #  "curvature": "Convex",
+  #  "sign": "Positive",
+  #  "monotonicity": [("For all arguments], non-decreasing if the argument is positive"
+  #                   " and non-increasing if the argument is negative.")],
+  #  "example": "norm(x, y, 1)",
+  # },
+  {"name":"norm2",
+   "usage": "norm2(x1,...,xk)",
    "arguments": ("Takes a variable number of expressions followed by a parameter as arguments. "
                  "The expressions are interpreted as a vector. "
                  "The parameter must either be a number p with p >= 1 or be Inf. "
                  "The default parameter is 2."),
-   "mathematical_definition": ("\\begin{aligned} "
-                               " \operatorname{norm}(x,p) &= \left( \sum_{k=1}^{n} |x_{k}|^{p}} \\right)^{1/p} \\\\"
-                               " \operatorname{norm}(x,\mbox{Inf}) &= \max \left\{ \left| x_{k} \\right| | k \in \{1,...,n \} \\right\} \\\\"
-                               " \mbox{ where } x \in \mathbb{R}^{n}."
-                               " \end{aligned} "),
+   "meaning": ("$ \sqrt{x_{1}^{2} + \ldots + x_{k}^{2}} $"),
+   "domain": "$ x \in \mathbb{R}^{k} $",
    "curvature": "Convex",
    "sign": "Positive",
-   "monotonicity": ("For all arguments, non-decreasing if the argument is positive"
-                    " and non-increasing if the argument is negative."),
+   "monotonicity": ["Increasing for $ x \geq 0 $",
+                    "Decreasing for $ x \leq 0 $"],
+   "example": "norm(x, y, 1)",
+  },
+  {"name":"norm1",
+   "usage": "norm1(x1,...,xk)",
+   "arguments": ("Takes a variable number of expressions followed by a parameter as arguments. "
+                 "The expressions are interpreted as a vector. "
+                 "The parameter must either be a number p with p >= 1 or be Inf. "
+                 "The default parameter is 2."),
+   "meaning": ("$ |x_{1}| + \cdots + |x_{k}| $"),
+   "domain": "$ x \in \mathbb{R}^{k} $",
+   "curvature": "Convex",
+   "sign": "Positive",
+   "monotonicity": ["Increasing for $ x \geq 0 $",
+                    "Decreasing for $ x \leq 0 $"],
+   "example": "norm(x, y, 1)",
+  },
+  {"name":"norm_inf",
+   "usage": "norm_inf(x1,...,xk)",
+   "arguments": ("Takes a variable number of expressions followed by a parameter as arguments. "
+                 "The expressions are interpreted as a vector. "
+                 "The parameter must either be a number p with p >= 1 or be Inf. "
+                 "The default parameter is 2."),
+   "meaning": ("$ \max \left\{ |x_{1}|, \ldots, |x_{k}| \\right\} $"),
+   "domain": "$ x \in \mathbb{R}^{k} $",
+   "curvature": "Convex",
+   "sign": "Positive",
+   "monotonicity": ["Increasing for $ x \geq 0 $",
+                    "Decreasing for $ x \leq 0 $"],
    "example": "norm(x, y, 1)",
   },
   {"name":"pos",
+   "usage": "pos(x)",
    "arguments": "Takes a single expression as an argument.",
-   "mathematical_definition": 
-        ("\operatorname{pos}(x) = \max \{x,0\}"
-         "\mbox{ where } x \in \mathbb{R}."),
+   "meaning": "$ \max \{x,0\} $",
+   "domain": "$ x \in \mathbb{R}$",
    "curvature": "Convex",
    "sign": "Positive",
-   "monotonicity": "Non-decreasing",
+   "monotonicity": ["Increasing"],
    "example": "pos(x)",
   },
   {"name":"quad_over_lin",
+   "usage": "quad_over_lin(x,y)",
    "arguments": "Takes two expressions as arguments.",
-   "mathematical_definition": 
-        ("\operatorname{quad\_over\_lin}(x,y) = \\begin{cases} x^{2}/y &\mbox{if } y > 0 \\\\ "
-         "+\infty & \mbox{if } y <= 0 \end{cases} \\\\"
-         "\mbox{ where } x,y \in \mathbb{R}."),
+   "meaning": "$ x^{2}/y $",
+   "domain": "y > 0",
    "curvature": "Convex",
    "sign": "Positive",
-   "monotonicity": ("Increasing in the first argument if the argument is positive. "
-                    "Decreasing if the argument is negative. "
-                    "Non-increasing in the second argument."),
+   "monotonicity": ["Increasing for $ x \geq 0 $",
+                    "Decreasing for $ x \leq 0 $",
+                    "Decreasing in y"],
    "example": "quad_over_lin(x, y)",
   },
   {"name":"sqrt",
+   "usage": "sqrt(x)",
    "arguments": "Takes a single expression as an argument.",
-   "mathematical_definition": 
-        ("\operatorname{sqrt}(x) = \\begin{cases} \sqrt{x} &\mbox{if } x \ge 0 \\\\ "
-         "-\infty & \mbox{if } x < 0 \end{cases} \\\\"
-         "\mbox{ where } x \in \mathbb{R}."),
+   "meaning": "$ \sqrt{x} $",
+   "domain": "$ x \geq 0 $",
    "curvature": "Concave",
-   "sign": "The sign of the argument.",
-   "monotonicity": "Non-decreasing",
+   "sign": "Positive",
+   "monotonicity": ["Increasing"],
    "example": "sqrt(x)",
   },
   {"name":"square",
+   "usage": "square(x)",
    "arguments": "Takes a single expression as an argument.",
-   "mathematical_definition": "\operatorname{square}(x) = x^{2} \mbox{ where } x \in \mathbb{R}.",
+   "meaning": "$ x^{2} $",
+   "domain": "$ x \in \mathbb{R} $",
    "curvature": "Convex",
    "sign": "Positive",
-   "monotonicity": "Increasing for positive arguments. Decreasing for negative arguments.",
-   "example": "square(x)",
+   "monotonicity": ["Increasing for $ x \geq 0 $",
+                    "Decreasing for $ x \leq 0 $"],
    "cvx_equivalent": "square, square_pos, square_abs",
   },
+  # {"name":"pow",
+  #  "arguments": ("Takes a single expression followed by a parameter as arguments. "
+  #                "The parameter must be a number. "),
+  #  "mathematical_definition":
+  #       ("\\begin{aligned} "
+  #       " p &\le 0: \operatorname{pow}(x,p) &= "
+  #       "\\begin{cases} x^{p} &\mbox{if } x > 0 \\\\"
+  #       " +\infty &\mbox{if } x \le 0 \end{cases} \\\\"
+  #       " 0 < p &< 1: \operatorname{pow}(x,p) &= "
+  #       "\\begin{cases} x^{p} &\mbox{if } x \ge 0 \\\\"
+  #       " -\infty &\mbox{if } x < 0 \end{cases}\\\\"
+  #       " p &\ge 1: \operatorname{pow}(x,p) &= "
+  #       "\\begin{cases} x^{p} &\mbox{if } x \ge 0 \\\\"
+  #       " +\infty &\mbox{if } x < 0 \end{cases}\\\\"
+  #       " \mbox{ where } x \in \mathbb{R}^{n}."
+  #       " \end{aligned} "),
+  #  "curvature": "Concave for 0 < p < 1. Otherwise convex.",
+  #  "sign": "The argument's sign for 0 < p < 1. Otherwise positive.",
+  #  "monotonicity": [("Non-increasing for p <= 0. Non-decreasing for 0 < p < 1. "
+  #                   "If p >= 1, increasing for positive arguments and non-increasing for negative arguments.")],
+  #  "example": "pow(x, 3)",
+  #  "cvx_equivalent": "pow_p",
+  # },
   {"name":"pow",
+   "usage": "pow(x,p), $ p \geq 1 $",
    "arguments": ("Takes a single expression followed by a parameter as arguments. "
                  "The parameter must be a number. "),
-   "mathematical_definition":
-        ("\\begin{aligned} "
-        " p &\le 0: \operatorname{pow}(x,p) &= "
-        "\\begin{cases} x^{p} &\mbox{if } x > 0 \\\\"
-        " +\infty &\mbox{if } x \le 0 \end{cases} \\\\"
-        " 0 < p &< 1: \operatorname{pow}(x,p) &= "
-        "\\begin{cases} x^{p} &\mbox{if } x \ge 0 \\\\"
-        " -\infty &\mbox{if } x < 0 \end{cases}\\\\"
-        " p &\ge 1: \operatorname{pow}(x,p) &= "
-        "\\begin{cases} x^{p} &\mbox{if } x \ge 0 \\\\"
-        " +\infty &\mbox{if } x < 0 \end{cases}\\\\"
-        " \mbox{ where } x \in \mathbb{R}^{n}."
-        " \end{aligned} "),
-   "curvature": "Concave for 0 < p < 1. Otherwise convex.",
-   "sign": "The argument's sign for 0 < p < 1. Otherwise positive.",
-   "monotonicity": ("Non-increasing for p <= 0. Non-decreasing for 0 < p < 1. "
-                    "If p >= 1, increasing for positive arguments and non-increasing for negative arguments."),
+   "meaning": "$ x^{p} $",
+   "domain": "$ x \geq 0 $",
+   "curvature": "Convex",
+   "sign": "Positive",
+   "monotonicity": ["Increasing"],
+   "example": "pow(x, 3)",
+   "cvx_equivalent": "pow_p",
+  },
+  {"name":"pow",
+   "usage": "pow(x,p), $ 0 < p < 1 $",
+   "arguments": ("Takes a single expression followed by a parameter as arguments. "
+                 "The parameter must be a number. "),
+   "meaning": "$ x^{p} $",
+   "domain": "$ x \geq 0 $",
+   "curvature": "Concave",
+   "sign": "Positive",
+   "monotonicity": ["Increasing"],
+   "example": "pow(x, 3)",
+   "cvx_equivalent": "pow_p",
+  },
+  {"name":"pow",
+   "usage": "pow(x,p), $ p \leq 0 $",
+   "arguments": ("Takes a single expression followed by a parameter as arguments. "
+                 "The parameter must be a number. "),
+   "meaning": "$ x^{p} $",
+   "domain": "$ x > 0 $",
+   "curvature": "Convex",
+   "sign": "Positive",
+   "monotonicity": ["Decreasing"],
    "example": "pow(x, 3)",
    "cvx_equivalent": "pow_p",
   },

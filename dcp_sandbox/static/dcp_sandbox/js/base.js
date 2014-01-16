@@ -1,8 +1,6 @@
 // Base module for all pages.
 (function($) {
     $().ready(function(){
-        // Transform mathematical definitions in LateX to images.
-        $(".latex").latex();
         // Feedback button sends email.
         $("button.feedback").click(function() {
             var message = $("textarea.feedback").val();

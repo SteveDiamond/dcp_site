@@ -19,7 +19,9 @@ log = logging.getLogger(__name__)
 def base_page(target, request):
     sorted_atoms = sorted(constants.ATOM_DEFINITIONS, key=lambda atom: atom["name"])
     return render(request, target, 
-                 {'functions': sorted_atoms})
+                 {'functions': sorted_atoms,
+                  'sign_list': constants.SIGN_LIST,
+                  'curvature_list': constants.CURVATURE_LIST})
 
 # Intro page.
 def home(request):

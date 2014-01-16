@@ -9,36 +9,52 @@
   <table class="table table-striped">
     <thead>
       <tr>
-        <td>Name</td>
-        <td>Arguments</td>
-        <td>Mathematical Definition</td>
-        <td>Curvature</td>
+        <td>Function</td>
+        <td>Meaning</td>
+        <td>Domain</td>
         <td>Sign</td>
+        <td>Curvature</td>
         <td>Monotonicity</td>
-        <td>Example Usage</td>
-        <td>CVX Equivalent</td>
       </tr>
     </thead>
     <tbody>
       {% for function in functions %}
         <tr>
-          <td>{{ function.name }}</td>
-          <td>{{ function.arguments }}</td>
+          <td>{{ function.usage }}</td>
+          <td>{{ function.meaning }}</td>
+          <td>{{ function.domain }}</td>
           <td>
-            <p class="latex">{{ function.mathematical_definition }}</p>
-          </td>
-          <td>{{ function.curvature }}</td>
-          <td>{{ function.sign }}</td>
-          <td>{{ function.monotonicity }}</td>
-          <td>
-            <p class="function-example" >{{ function.example }}</p>
-          </td>
-          <td>
-            {% if function.cvx_equivalent %}
-              <p>{{ function.cvx_equivalent }}</p>
+            {% if function.sign|lower in sign_list %}
+              <img src={% static 'dcp_sandbox/images/'|add:function.sign|lower|add:'.svg' %} width="15">
+              &nbsp;{{ function.sign|lower }}
             {% else %}
-              <p>{{ function.name }}</p>
+              {{ function.sign }}
             {% endif %}
+          </td>
+          <td>
+            {% if function.curvature|lower in curvature_list %}
+              <img src={% static 'dcp_sandbox/images/'|add:function.curvature|lower|add:'.svg' %} width="15">
+              &nbsp;{{ function.curvature|lower }}
+            {% else %}
+              {{ function.curvature }}
+            {% endif %}
+          </td>
+          <td>
+            {% for text in function.monotonicity %}
+              <p>
+                {% for word in text.split %}
+                  {% if word|lower == "increasing" %}
+                    <img src={% static 'dcp_sandbox/images/increasing.svg' %} width="20">
+                    &nbsp;incr.
+                  {% elif word|lower == "decreasing" %}
+                    <img src={% static 'dcp_sandbox/images/decreasing.svg' %} width="20">
+                    &nbsp;decr.
+                  {% else %}
+                    {{ word }}
+                  {% endif %}
+                {% endfor %}
+              </p>
+            {% endfor %}
           </td>
         </tr>
       {% endfor %}
