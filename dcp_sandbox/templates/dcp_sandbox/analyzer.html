@@ -7,29 +7,6 @@
 <script src="{% static "dcp_sandbox/js/analyzer.js" %}"></script>
 {% endblock %}
 
-{% block pre_functions_nav %}
-<li class="dropdown">
-    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-      Variables
-      <b class="caret"></b>
-    </a>
-    <ul class="dropdown-menu">
-      <li><a href="#">x,y,z unknown sign</a></li>
-      <li><a href="#">u,v,w positive</a></li>
-    </ul>
-</li>
-<li class="dropdown">
-    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-      Parameters
-      <b class="caret"></b>
-    </a>
-    <ul class="dropdown-menu">
-      <li><a href="#">a,b,c unknown sign</a></li>
-      <li><a href="#">d,e,f positive</a></li>
-    </ul>
-</li>
-{% endblock %}
-
 {% block instructions %}
 Follow the prompt in the box to see DCP analysis visualized as a tree. To modify the tree, click on any box containing an expression and edit the text.
 {% endblock %}

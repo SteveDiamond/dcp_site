@@ -22,8 +22,8 @@ def base_page(target, request):
                  {'functions': sorted_atoms})
 
 # Intro page.
-def intro(request):
-    return base_page('dcp_sandbox/intro.html', request)
+def home(request):
+    return base_page('dcp_sandbox/home.html', request)
 
 # Rules page.
 def rules(request):

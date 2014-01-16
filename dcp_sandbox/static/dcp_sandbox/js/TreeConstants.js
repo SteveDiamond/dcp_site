@@ -56,7 +56,7 @@ TreeConstants.PROMPT_LEAF_LEGEND = [
     "Allowed Variables: x,y,z; u,v,w [positive]",
     "Allowed Parameters: a,b,c; d,e,f [positive]",
     "Allowed Constants: Any",
-    "Allowed Functions: See Functions tab",
+    "Allowed Functions: See Functions page",
 ]
 // Editable and fixed text classes.
 TreeConstants.EDITABLE_TEXT = "editable-text";
