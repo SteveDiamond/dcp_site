@@ -22,11 +22,7 @@
         <tr>
           <td>{{ function.usage }}</td>
           <td>{{ function.meaning }}</td>
-          <td>
-            {% for entry in function.domain %}
-              <p>{{ entry }}</p>
-            {% endfor %}
-          </td>
+          <td>{{ function.domain }}</td>
           <td>
             {% if function.sign|lower in sign_list %}
               <img src={% static 'dcp_sandbox/images/'|add:function.sign|lower|add:'.svg' %} width="15">
