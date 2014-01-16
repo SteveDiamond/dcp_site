@@ -1,0 +1,17 @@
+<xmp style="display:none;">
+
+Stanford Disciplined Convex Programming Website
+==========================================
+This website is designed to teach disciplined convex programming (DCP). DCP is a system for constructing mathematical expressions with known curvature from a given library of base functions. DCP is used by the [convex optimization](http://www.stanford.edu/~boyd/cvxbook/) modeling languages [CVX](http://cvxr.com/cvx/) and [CVXPY](https://github.com/cvxgrp/cvxpy) to ensure that the specified optimization problems are convex.
+
+Visit the [DCP Quiz](/quiz) to practice applying the [DCP rules](/rules#rules) to mathematical expressions. Alternatively, visit the [DCP Analyzer](/analyzer) to type in expressions, equalities, and inequalities and see a visualization of the DCP analysis.
+
+Related Links
+-------------
+The following links offer more information on convex optimization and DCP:
+*[Convex Optimization](http://www.stanford.edu/~boyd/cvxbook/), a textbook by Stephen Boyd and Lieven Vandenberghe.
+*[EE364a](http://www.stanford.edu/class/ee364a/), a Stanford course on convex optimization.
+*[Disciplined Convex Programming](http://www.stanford.edu/~boyd/papers/disc_cvx_prog.html), a paper by Michael Grant.
+
+</xmp>
+<script src="http://strapdownjs.com/v/0.2/strapdown.js"></script>
