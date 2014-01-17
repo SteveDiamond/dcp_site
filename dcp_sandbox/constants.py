@@ -2,8 +2,9 @@
 Constants used by views.py.
 """
 # Pre-declared variables and parameters
-PREAMBLE = ['variable x y z', 'variable positive u v w',
-            'parameter a b c', 'parameter positive d e f']
+PREAMBLE = ['variable x y z u v w', 
+            'parameter a b c', 
+            'parameter positive d e f']
 
 # A list of all possible signs.
 SIGN_LIST = ["positive", "negative", "unknown", "zero"]

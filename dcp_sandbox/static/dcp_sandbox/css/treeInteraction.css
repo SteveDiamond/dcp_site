@@ -96,3 +96,7 @@ textarea.feedback {
     margin-left: auto;
     margin-right: auto;
 }
+
+#feedback {
+    margin-left: 15;
+}

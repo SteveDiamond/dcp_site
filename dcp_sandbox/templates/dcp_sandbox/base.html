@@ -44,16 +44,11 @@
   <div class="navbar navbar-inverse navbar-fixed-top">
     <div class="navbar-inner">
       <ul class="nav">
+        <!-- Button to trigger feedback modal -->
         <li>
-          <a class="navbar-brand" href="/home">Learn DCP</a>
+          <div><a href="#feedback" role="button" id="feedback" class="btn btn-primary" data-toggle="modal">Feedback</a></div>
         </li>
-        {% block pre_feedback_nav %}{% endblock %}
-        <!-- Button to trigger modal -->
-        <li class="divider-vertical"></li>
-        <li>
-          <div><a href="#feedback" role="button" class="btn btn-primary" data-toggle="modal">Feedback</a></div>
-        </li>
-        <li class="divider-vertical"></li>
+        {% block post_feedback_nav %}{% endblock %}
       </ul>
     </div>
   </div>

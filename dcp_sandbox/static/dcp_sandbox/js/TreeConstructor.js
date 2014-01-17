@@ -205,35 +205,22 @@ TreeConstructor.getLeafNames = function(root) {
     var textArr = [];
     for (type in TreeConstants.LEAVES) {
         // Find which names were used.
-        var usedNames = {};
-        for (sign in TreeConstants.LEAVES[type]) {
-            var names = TreeConstants.LEAVES[type][sign];
-            usedNames[sign] = [];
-            for (var i=0; i < names.length; i++) {
-                if (used.indexOf(names[i]) != -1) {
-                    usedNames[sign].push(names[i]);
-                }
+        var usedNames = [];
+        var names = TreeConstants.LEAVES[type];
+        for (var i=0; i < names.length; i++) {
+            if (used.indexOf(names[i]) != -1) {
+                usedNames.push(names[i]);
             }
         }
         // Construct the text for Variables/Parameters.
-        var prefix = type + ": "
+        var text = type + ": "
         var suffix = "";
-        if (usedNames["unknown"].length != 0) {
-            prefix += usedNames["unknown"].join();
-        } 
-        if (usedNames["positive"].length != 0) {
-            suffix += usedNames["positive"].join();
-            suffix += " [positive]";
+        if (usedNames.length != 0) {
+            text += usedNames.join();
+        } else {
+            text += "None";
         }
-        if (usedNames["unknown"].length != 0 && 
-            usedNames["positive"].length != 0) {
-            prefix += "; ";
-        }
-        if (usedNames["unknown"].length == 0 && 
-            usedNames["positive"].length == 0) {
-            prefix += "None";
-        }
-        textArr.push(prefix + suffix);
+        textArr.push(text);
     }
     
     TreeConstructor.leafLegendText = textArr;

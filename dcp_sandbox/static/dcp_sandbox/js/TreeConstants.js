@@ -44,19 +44,17 @@ TreeConstants.ELLIPSIS = "...";
 TreeConstants.LEAVES_TEXT_HEIGHT = 22;
 TreeConstants.LEAVES_ARROW_HEIGHT = 22;
 TreeConstants.LEAVES = {
-    "Variables": {"unknown": ["x", "y", "z"],
-                  "positive": ["u", "v", "w"],
-                 },
-    "Parameters": {"unknown": ["a", "b", "c"],
-                   "positive": ["d", "e", "f"],
-                  },
+    "Variables": ["x", "y", "z", "u", "v", "w"],
+    "Parameters": ["a", "b", "c"],
+    "Positive Parameters": ["d", "e", "f"],
 }
 // The text in the leaf legend at the analyzer prompt.
 TreeConstants.PROMPT_LEAF_LEGEND = [
-    "Allowed Variables: x,y,z; u,v,w [positive]",
-    "Allowed Parameters: a,b,c; d,e,f [positive]",
-    "Allowed Constants: Any",
-    "Allowed Functions: See Functions page",
+    "Variables: x,y,z,u,v,w",
+    "Parameters: a,b,c",
+    "Positive Parameters: d,e,f",
+    "Constants: Any",
+    "Functions: See Functions page",
 ]
 // Editable and fixed text classes.
 TreeConstants.EDITABLE_TEXT = "editable-text";

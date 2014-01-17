@@ -29,7 +29,7 @@ max(2.66 - sqrt(u), square(x + 2*y))</code></pre>
 <li>Unknown if either expression has unknown sign.</li>
 </ul>
 
-<p>The sign given to an expression is always correct. But DCP sign analysis may flag an expression as unknown sign when the sign could be figured out through more complex analysis. For instance, <code>x*x</code> has unknown sign by the rules above.</p>
+<p>The sign given to an expression is always correct. But DCP sign analysis may flag an expression as unknown sign when the sign could be figured out through more complex analysis. For instance, <code>x*x</code> is positive but has unknown sign by the rules above.</p>
 
 <h2>Curvature</h2>
 
@@ -46,7 +46,7 @@ max(2.66 - sqrt(u), square(x + 2*y))</code></pre>
     </tr>
     <tr>
       <td>affine</td>
-      <td>$ f(\theta x + (1-\theta)y) = \theta f(x) + (1-\theta)f(y) $ </td>
+      <td>$ f(\theta x + (1-\theta)y) = \theta f(x) + (1-\theta)f(y), \text{  } \forall \theta \in [0,1] $ </td>
     </tr>
     <tr>
       <td>convex</td>
@@ -62,53 +62,53 @@ max(2.66 - sqrt(u), square(x + 2*y))</code></pre>
     </tr>
   </table>
 
-<p>using the curvature rules. As with sign analysis, the conclusion is always correct, but the simple analysis may miss expressions with known curvature.</p>
+<p>using the curvature rules given below. As with sign analysis, the conclusion is always correct, but the simple analysis can flag expressions as unknown even when they are convex or concave. Note that any constant expression is also affine, and any affine expression is convex and concave.</p>
 
 <h2>Curvature Rules</h2>
+
+<p>DCP analysis is based on applying a general composition theorem from convex analysis to each (sub)expression.</p>
 
 <p>$f(expr_1, expr_2, ..., expr_n)$ is convex if $\text{ } f$ is a convex function and for each $expr_{i}$ one of the following conditions holds:</p>
 
 <ul>
-<li>$f$ is increasing in argument i and $expr_{i}$ is convex.</li>
-<li>$f$ is decreasing in argument i and $expr_{i}$ is concave.</li>
-<li>$expr_{i}$ is affine or constant.</li>
+<li>$f$ is increasing in argument $i$ and $expr_{i}$ is convex.</li>
+<li>$f$ is decreasing in argument $i$ and $expr_{i}$ is concave.</li>
+<li>$expr_{i}$ is affine.</li>
 </ul>
 
 <p>$f(expr_1, expr_2, ..., expr_n)$ is concave if $\text{ } f$ is a concave function and for each $expr_{i}$ one of the following conditions holds:</p>
 
 <ul>
-<li>$f$ is increasing in argument i and $expr_{i}$ is concave.</li>
-<li>$f$ is decreasing in argument i and $expr_{i}$ is convex.</li>
-<li>$expr_{i}$ is affine or constant.</li>
+<li>$f$ is increasing in argument $i$ and $expr_{i}$ is concave.</li>
+<li>$f$ is decreasing in argument $i$ and $expr_{i}$ is convex.</li>
+<li>$expr_{i}$ is affine.</li>
 </ul>
 
-<p>If one of the $\text{ } expr_{i}$ does not satisfy any of the conditions, the curvature of $\text{ } f(expr_1, expr_2, ..., expr_n)$ is unknown.</p>
+<p>$f(expr_1, expr_2, ..., expr_n)$ is affine if $\text{ } f$ is an affine function and each $expr_{i}$ is affine.</p>
 
-<p>Whether a function is increasing or decreasing may depend on the sign of the arguments. For instance, <code>square</code> is increasing for positive arguments and decreasing for negative arguments.</p>
+<p>If none of the three rules apply, the expression $\text{ } f(expr_1, expr_2, ..., expr_n)$ is marked as having unknown curvature.</p>
 
-<h2>Arithmetic Rules</h2>
+<p>Whether a function is increasing or decreasing in an argument may depend on the sign of the argument. For instance, <code>square</code> is increasing for positive arguments and decreasing for negative arguments.</p>
 
-<p>Arithmetic operators are affine functions, so both the rule for convex functions and the rule for concave functions apply.</p>
+<h2>Infix Operators</h2>
 
-<p>DCP also imposes the following restrictions:</p>
+<p>The infix operators <code>+, -, *, /</code> are treated exactly like functions. The infix operators <code>+</code> and <code>-</code> are affine, so the rules above are used to flag the curvature. For example, <code>expr1 + expr2</code> is flagged as convex if <code>expr1</code> and <code>expr2</code> are convex.</p>
 
-<ul>
-<li>You cannot multiply two non-constants. For example, <code>x*x</code> violates DCP.</li>
-<li>You cannot divide by a non-constant. For example, <code>1/x</code> violates DCP.</li>
-</ul>
+<p><code>expr1*expr2</code> is allowed only when one of the expressions is constant. <code>expr1/expr2</code> is allowed only when <code>expr2</code> is constant. The curvature rules above apply. For example, <code>expr1/expr2</code> is convex when <code>expr1</code> is concave and <code>expr2</code> is negative and constant.</p>
 
-<h2>Examples</h2>
-<p>DCP analysis breaks expressions down into subexpressions. The tree visualization below shows how this works for the expression <code>2*square(x) + 3</code>:</p>
+<h2>Example 1</h2>
+<p>DCP analysis breaks expressions down into subexpressions. The tree visualization below shows how this works for the expression <code>2*square(x) + 3</code>. Each subexpression is shown in a blue box. We mark its curvature on the left and its sign on the right.</p>
 
 <p><img class="dcp-example" src="/static/dcp_sandbox/images/arith_expr.png" alt="2*square(x) + 3" title="" /></p>
 
+<h2>Example 2</h2>
 <p>We'll walk through the application of the DCP rules to the expression <code>sqrt(1 + square(x))</code>.</p>
 
 <p>The variable <code>x</code> has affine curvature and unknown sign. The <code>square</code> function is convex and non-monotone for arguments of unknown sign. It can take the affine expression <code>x</code> as an argument; the result <code>square(x)</code> is convex.</p>
 
 <p>The arithmetic operator <code>+</code> is affine and increasing, so the composition <code>1 + square(x)</code> is convex by the curvature rule for convex functions. The atom <code>sqrt</code> is concave and increasing, which means it can only take a concave argument. Since <code>1 + square(x)</code> is convex, <code>sqrt(1 + square(x))</code> violates the DCP rules and cannot be verified as convex.</p>
 
-<p>In fact, <code>sqrt(1 + square(x))</code> is convex. But to comply with the DCP rules we must rewrite the expression as <code>norm2(1, x)</code>, the L2 norm of the vector [1, x].</p>
+<p>In fact, <code>sqrt(1 + square(x))</code> is convex. But to comply with the DCP rules we must rewrite the expression as <code>norm2(1, x)</code>, the L2 norm of the vector $ [1, x] $.</p>
 
 <p>Here's the tree visualization for <code>sqrt(1 + square(x))</code>:</p>
 

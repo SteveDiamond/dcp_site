@@ -13,16 +13,16 @@
 {% block tree_page_js %}{% endblock %}
 {% endblock %}
   
-{% block pre_feedback_nav %}
-{% block pre_toggle_legends %}{% endblock %}
-<li class="divider-vertical"></li>
-<li>
-  <button type="button" id="help" class="btn btn-primary">Hide Legends</button>
-</li>
+{% block post_feedback_nav %}
 <li class="divider-vertical"></li>
 <li>
   <div><a href="#instructions" role="button" class="btn btn-primary" data-toggle="modal">Help</a></div>
 </li>
+<li class="divider-vertical"></li>
+<li>
+  <button type="button" id="help" class="btn btn-primary">Hide Legends</button>
+</li>
+{% block post_toggle_legends %}{% endblock %}
 {% endblock %}
 
 {% block page_content %}
