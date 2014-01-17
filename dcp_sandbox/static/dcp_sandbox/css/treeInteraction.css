@@ -89,3 +89,10 @@ textarea.feedback {
     float: none !important;
     margin: 0 auto !important;
 }
+
+.dcp-example {
+    height: 400;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}

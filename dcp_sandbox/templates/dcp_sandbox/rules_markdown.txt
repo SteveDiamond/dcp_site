@@ -13,7 +13,7 @@ V. summary.  the results of a DCP analysis are always correct; for example, if a
 
 Expressions
 ------------------------
-Expressions in the DCP [analyzer](/analyzer) and [quiz](/quiz) are formed from the variables `x, y, z, u, v, w`, the parameters `a, b, c, d, e, f`, numerical constants such as `3` and `-2.44`, the standard arithmetic operators `+, -, *, /`, and a library of [functions](/functions). For simplicity, all expressions are scalar. Some examples are
+Expressions in the [DCP analyzer](/analyzer) and [quiz](/quiz) are formed from the variables `x, y, z, u, v, w`, the parameters `a, b, c, d, e, f`, numerical constants such as `3` and `-2.44`, the standard arithmetic operators `+, -, *, /`, and a library of [functions](/functions). For simplicity, all expressions are scalar. Some examples are
 
 3.69 + b/3
 x-4*u
@@ -69,15 +69,15 @@ Curvature Rules
 ------------------------
 $f(expr\_1, expr\_2, ..., expr\_n)$ is convex if $\\text{ } f$ is a convex function and for each $expr\_{i}$ one of the following conditions holds:
 
-* $f$ is non-decreasing in argument i and $expr\_{i}$ is convex.
-* $f$ is non-increasing in argument i and $expr\_{i}$ is concave.
-* $expr\_{i}$ is affine.
+* $f$ is increasing in argument i and $expr\_{i}$ is convex.
+* $f$ is decreasing in argument i and $expr\_{i}$ is concave.
+* $expr\_{i}$ is affine or constant.
 
 $f(expr\_1, expr\_2, ..., expr\_n)$ is concave if $\\text{ } f$ is a concave function and for each $expr\_{i}$ one of the following conditions holds:
 
-* $f$ is non-decreasing in argument i and $expr\_{i}$ is concave.
-* $f$ is non-increasing in argument i and $expr\_{i}$ is convex.
-* $expr\_{i}$ is affine.
+* $f$ is increasing in argument i and $expr\_{i}$ is concave.
+* $f$ is decreasing in argument i and $expr\_{i}$ is convex.
+* $expr\_{i}$ is affine or constant.
 
 If one of the $\\text{ } expr\_{i}$ does not satisfy any of the conditions, the curvature of $\\text{ } f(expr\_1, expr\_2, ..., expr\_n)$ is unknown.
 
@@ -95,7 +95,19 @@ DCP also imposes the following restrictions:
 Examples
 ------------------------
 
+DCP analysis breaks expressions down into subexpressions. The tree visualization below shows how this works for the expression `2*square(x) + 3`:
+
 ![2*square(x) + 3](/static/dcp_sandbox/images/arith_expr.png)
+
+We'll walk through the application of the DCP rules to the expression `sqrt(1 + square(x))`.
+
+The variable `x` has affine curvature and unknown sign. The `square` function is convex and non-monotone for arguments of unknown sign. It can take the affine expression `x` as an argument; the result `square(x)` is convex.
+
+The arithmetic operator `+` is affine and increasing, so the composition `1 + square(x)` is convex by the curvature rule for convex functions. The atom `sqrt` is concave and increasing, which means it can only take a concave argument. Since `1 + square(x)` is convex, `sqrt(1 + square(x))` violates the DCP rules and cannot be verified as convex.
+
+In fact, `sqrt(1 + square(x))` is convex. But to comply with the DCP rules we must rewrite the expression as `norm2(1, x)`, the L2 norm of the vector [1, x].
+
+Here's the tree visualization for `sqrt(1 + square(x))`:
 
 ![sqrt(1 + square(x))](/static/dcp_sandbox/images/invalid_expr.png)
 
