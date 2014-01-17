@@ -1,5 +1,118 @@
 <xmp style="display:none;">
 
+I. Expressions.   expressions in the DCP analyzer and quiz are formed from variables … , parameters …, numerical constants, some standard arithmetic operators such +,-, …, and a library of functions. (link to full list.)  then we give examples, but don’t say anything yet about convexity, etc.  do we have to say that some parameters are positive?
+
+II.  Sign.   we explain that the sign of each (sub)expression is propagated using simple sign arithmetic based on the functions in the library and give some examples.   we mention that an expression can actually always be nonnegative, for example, x*x, but the simple sign analysis will not catch this.
+
+|||. Curvature.  curvature of each subexpression is determined in the same way, using the basic curvature rules from convex analysis.  here we may also use the sign knowledge of subexpressions, as in square(square(x)).
+
+IV example.
+
+V. summary.  the results of a DCP analysis are always correct; for example, if an expression is marked as convex, then it is convex.  but some expressions can be convex, affine, or concave, but the DCP rules will not mark it as unknown.    if you are using a DCP-based system (such as CVX or CVXPY), you can usually re-write your expression in such a way that it is DCP compliant.
+
+
+Expressions
+------------------------
+Expressions in the DCP [analyzer](/analyzer) and [quiz](/quiz) are formed from the variables `x, y, z, u, v, w`, the parameters `a, b, c, d, e, f`, numerical constants such as `3` and `-2.44`, the standard arithmetic operators `+, -, *, /`, and a library of [functions](/functions). For simplicity, all expressions are scalar. Some examples are
+
+3.69 + b/3
+x-4*u
+sqrt(x) - min(u, v-a)
+max(2.66-sqrt(u), square(x+2*y))
+
+
+Sign
+------------------------
+Each (sub)expression is flagged as *positive* (non-negative), *negative* (non-positive), or *unknown*. 
+
+The signs of larger expressions are determined from the signs of their subexpressions. For example, the sign of the expression `expr1 * expr2` is
+
+* Positive if `expr1` and `expr2` have the same (known) sign.
+* Negative if `expr1` and `expr2` have opposite (known) signs.
+* Unknown if either expression has unknown sign.
+
+The sign given to an expression is always correct. But DCP sign analysis may flag an expression as unknown sign when the sign could be figured out through more complex analysis. For instance, `x*x` has unknown sign by the rules above.
+
+Curvature
+------------------------
+Each (sub)expression is flagged as one of
+
+<table>
+<th>
+ <td></td>
+ <td>Meaning</td>
+</th>
+<tr>
+  <td>constant</td>
+  <td>$ f(x) $ independent of $ x $ </td>
+</tr>
+<tr>
+  <td>affine</td>
+  <td>$ f(\theta x + (1-\theta)y) = theta f(x) + (1-\theta)f(y) $ </td>
+</tr>
+<tr>
+  <td>convex</td>
+  <td>$ f(\theta x + (1-\theta)y) \leq theta f(x) + (1-\theta)f(y) $ </td>
+</tr>
+<tr>
+  <td>concave</td>
+  <td>$ f(\theta x + (1-\theta)y) \geq theta f(x) + (1-\theta)f(y) $ </td>
+</tr>
+<tr>
+  <td>unknown</td>
+  <td>DCP analysis cannot determine the curvature</td>
+</tr>
+</table>
+using the curvature rules. As with sign analysis, the conclusion is always correct, but the simple analysis may miss expressions with known curvature.
+
+Curvature Rules
+------------------------
+$f(expr\_1, expr\_2, ..., expr\_n)$ is convex if $\\text{ } f$ is a convex function and for each $expr\_{i}$ one of the following conditions holds:
+
+* $f$ is non-decreasing in argument i and $expr\_{i}$ is convex.
+* $f$ is non-increasing in argument i and $expr\_{i}$ is concave.
+* $expr\_{i}$ is affine.
+
+$f(expr\_1, expr\_2, ..., expr\_n)$ is concave if $\\text{ } f$ is a concave function and for each $expr\_{i}$ one of the following conditions holds:
+
+* $f$ is non-decreasing in argument i and $expr\_{i}$ is concave.
+* $f$ is non-increasing in argument i and $expr\_{i}$ is convex.
+* $expr\_{i}$ is affine.
+
+If one of the $\\text{ } expr\_{i}$ does not satisfy any of the conditions, the curvature of $\\text{ } f(expr\_1, expr\_2, ..., expr\_n)$ is unknown.
+
+Whether a function is increasing or decreasing may depend on the sign of the arguments. For instance, `square(x)` is increasing for positive arguments and decreasing for negative arguments.
+
+Arithmetic Rules
+------------------------
+Arithmetic operators are affine functions, so both the rule for convex functions and the rule for concave functions apply.
+
+DCP also imposes the following restrictions:
+
+* You cannot multiply two non-constants. For example, `x * x` violates DCP.
+* You cannot divide by a non-constant. For example, `1 / x` violates DCP.
+
+Examples
+------------------------
+
+![2*square(x) + 3](/static/dcp_sandbox/images/arith_expr.png)
+
+![sqrt(1 + square(x))](/static/dcp_sandbox/images/invalid_expr.png)
+
+### Analyzing Expressions
+
+Consider the expression `2*square(x) + 3`. The tree visualization below shows how the full expression is constructed from smaller sub-expressions.
+
+![2*square(x) + 3](/static/dcp_sandbox/images/arith_expr.png)
+
+Each node in the tree is marked with a curvature and sign. The leaf nodes of an expression tree are variables, parameters, and constants. These have the following properties:
+
+* Variables have affine curvature and unknown sign.
+* Parameters have constant curvature with (possibly) known sign and unknown value.
+* Constants have constant curvature and known value. The sign of a constant is determined by its value.
+
+The curvature and sign of each parent node is determined from the curvatures and signs of its children using the [DCP rules](#rules).
+
 Curvature and Sign
 ------------
 
@@ -18,33 +131,6 @@ If an expression violates the DCP rules, its curvature is marked as unknown.
 See [Convex Optimization](http://www.stanford.edu/~boyd/cvxbook/), Section 3, for a fuller discussion of function curvature.
 
 The sign of an expression can be *positive* (i.e., non-negative), *negative* (i.e., non-positive), or *unknown*. An expression has unknown sign if it can be positive or negative depending on the value of the expression's variables and parameters.
-
-Expressions
-------------------------
-Expressions are formed from variables, which have names `x, y, z, u, v, w`, parameters, which have names `a, b, c, d, e, f`, numerical constants such as `3` or `-2.44`, standard arithmetic operators such as `+, -, *, /`, and a library of functions such as `max, square, sqrt`, and others. For simplicity, all expressions in the DCP analyzer are scalar. Some examples are
-
-	expr1 = 3.69 + b/3
-	expr2 = x-4*u
-	expr3 = sqrt(x) - min(u, v-a)
-	max(2.66-sqrt(u), square(x+2*y))
-	square(x) + sqrt(square(u)+1)
-	max(x, 1) - exp(u)
-
-The first expression is constant and the second expression is an affine function of the variables. The third is a concave function of the variables, and the fourth and fifth expressions are convex functions of the variables. The sixth expression is neither convex nor concave.
-
-### Analyzing Expressions
-
-Consider the expression `2*square(x) + 3`. The tree visualization below shows how the full expression is constructed from smaller sub-expressions.
-
-![2*square(x) + 3](/static/dcp_sandbox/images/arith_expr.png)
-
-Each node in the tree is marked with a curvature and sign. The leaf nodes of an expression tree are variables, parameters, and constants. These have the following properties:
-
-* Variables have affine curvature and unknown sign.
-* Parameters have constant curvature with (possibly) known sign and unknown value.
-* Constants have constant curvature and known value. The sign of a constant is determined by its value.
-
-The curvature and sign of each parent node is determined from the curvatures and signs of its children using the [DCP rules](#rules).
 
 <a name="rules"></a>
 The DCP Rules
@@ -102,6 +188,10 @@ and cannot be verified as convex.
 
 In fact, `sqrt(1 + square(x))` is convex. But to comply with the DCP rules
 we must rewrite the expression as `norm(1, x, 2)`, the L2 norm of the vector [1, x].
+
+Here's the tree visualization for sqrt(1 + square(x)):
+
+![sqrt(1 + square(x))](/static/dcp_sandbox/images/invalid_expr.png)
 
 </xmp>
 <script src="http://strapdownjs.com/v/0.2/strapdown.js"></script>
