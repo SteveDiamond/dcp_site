@@ -12,10 +12,10 @@ Argument.objects.all().delete()
 
 # Terminals
 # Unknown sign variables.
-for name in ["x","y","z"]:
+for name in ["x","y","z","u","v","w"]:
     Operator.objects.create(prefix=name, infix="", suffix="", 
                             terminal=True, num_args=0,
-                            weight=0.1*DEFAULT_WEIGHT/3,
+                            weight=0.1*DEFAULT_WEIGHT/6,
                             positive=False, negative=False,
                             convex=True, concave=True)
 
@@ -88,15 +88,15 @@ for i in range(2):
                             positive=False, negative=False,
                             convex=False, concave=True)
 
-# min(x,0) and arguments
-op = Operator.objects.create(prefix="min(", infix=", ", suffix=", 0)",
-                             terminal=False, num_args=1,
-                             weight=DEFAULT_WEIGHT,
-                             positive=False, negative=True,
-                             convex=False, concave=True)
-Argument.objects.create(operator=op, position=0,
-                        positive=False, negative=False,
-                        convex=False, concave=True)
+# # min(x,0) and arguments
+# op = Operator.objects.create(prefix="min(", infix=", ", suffix=", 0)",
+#                              terminal=False, num_args=1,
+#                              weight=DEFAULT_WEIGHT,
+#                              positive=False, negative=True,
+#                              convex=False, concave=True)
+# Argument.objects.create(operator=op, position=0,
+#                         positive=False, negative=False,
+#                         convex=False, concave=True)
 
 # log and arguments
 op = Operator.objects.create(prefix="log(", infix=", ", suffix=")",
@@ -164,7 +164,7 @@ Argument.objects.create(operator=op, position=0,
 op = Operator.objects.create(prefix="geo_mean(", infix=", ", suffix=")",
                              terminal=False, num_args=2,
                              weight=DEFAULT_WEIGHT,
-                             positive=False, negative=False,
+                             positive=True, negative=False,
                              convex=False, concave=True)
 for i in range(op.num_args):
     Argument.objects.create(operator=op, position=i,
@@ -274,7 +274,7 @@ for i in range(op.num_args):
 op = Operator.objects.create(prefix="sqrt(", infix=", ", suffix=")",
                              terminal=False, num_args=1,
                              weight=DEFAULT_WEIGHT,
-                             positive=False, negative=False,
+                             positive=True, negative=False,
                              convex=False, concave=True)
 Argument.objects.create(operator=op, position=0,
                         positive=False, negative=False,
