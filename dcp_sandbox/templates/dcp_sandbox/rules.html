@@ -37,7 +37,7 @@ max(2.66 - sqrt(u), square(x + 2*y))</code></pre>
 
   <table class="table table-striped" style="font-size: 14;">
     <tr>
-     <th></th>
+     <th>Curvature</th>
      <th>Meaning</th>
     </tr>
     <tr>
@@ -46,15 +46,15 @@ max(2.66 - sqrt(u), square(x + 2*y))</code></pre>
     </tr>
     <tr>
       <td>affine</td>
-      <td>$ f(\theta x + (1-\theta)y) = \theta f(x) + (1-\theta)f(y), \text{  } \forall \theta \in [0,1] $ </td>
+      <td>$ f(\theta x + (1-\theta)y) = \theta f(x) + (1-\theta)f(y), \; \forall x, \; y,\; \theta \in [0,1] $ </td>
     </tr>
     <tr>
       <td>convex</td>
-      <td>$ f(\theta x + (1-\theta)y) \leq \theta f(x) + (1-\theta)f(y), \text{  } \forall \theta \in [0,1] $ </td>
+      <td>$ f(\theta x + (1-\theta)y) \leq \theta f(x) + (1-\theta)f(y), \; \forall x, \; y,\; \theta \in [0,1] $ </td>
     </tr>
     <tr>
       <td>concave</td>
-      <td>$ f(\theta x + (1-\theta)y) \geq \theta f(x) + (1-\theta)f(y), \text{  } \forall \theta \in [0,1] $ </td>
+      <td>$ f(\theta x + (1-\theta)y) \geq \theta f(x) + (1-\theta)f(y), \; \forall x, \; y,\; \theta \in [0,1] $ </td>
     </tr>
     <tr>
       <td>unknown</td>
@@ -104,15 +104,13 @@ max(2.66 - sqrt(u), square(x + 2*y))</code></pre>
 <h2>Example 2</h2>
 <p>We'll walk through the application of the DCP rules to the expression <code>sqrt(1 + square(x))</code>.</p>
 
+<p><img class="dcp-example" src="/static/dcp_sandbox/images/example2.png" alt="sqrt(1 + square(x))" title="" /></p>
+
 <p>The variable <code>x</code> has affine curvature and unknown sign. The <code>square</code> function is convex and non-monotone for arguments of unknown sign. It can take the affine expression <code>x</code> as an argument; the result <code>square(x)</code> is convex.</p>
 
 <p>The arithmetic operator <code>+</code> is affine and increasing, so the composition <code>1 + square(x)</code> is convex by the curvature rule for convex functions. The atom <code>sqrt</code> is concave and increasing, which means it can only take a concave argument. Since <code>1 + square(x)</code> is convex, <code>sqrt(1 + square(x))</code> violates the DCP rules and cannot be verified as convex.</p>
 
 <p>In fact, <code>sqrt(1 + square(x))</code> is convex. But to comply with the DCP rules we must rewrite the expression as <code>norm2(1, x)</code>, the L2 norm of the vector $ [1, x] $.</p>
-
-<p>Here's the tree visualization for <code>sqrt(1 + square(x))</code>:</p>
-
-<p><img class="dcp-example" src="/static/dcp_sandbox/images/example2.png" alt="sqrt(1 + square(x))" title="" /></p>
 
 </div>
 
