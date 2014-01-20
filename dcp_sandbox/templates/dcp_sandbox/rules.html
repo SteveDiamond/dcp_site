@@ -110,7 +110,8 @@ max(2.66 - sqrt(u), square(x + 2*y))</code></pre>
 
 <p>The arithmetic operator <code>+</code> is affine and increasing, so the composition <code>1 + square(x)</code> is convex by the curvature rule for convex functions. The atom <code>sqrt</code> is concave and increasing, which means it can only take a concave argument. Since <code>1 + square(x)</code> is convex, <code>sqrt(1 + square(x))</code> violates the DCP rules and cannot be verified as convex.</p>
 
-<p>In fact, <code>sqrt(1 + square(x))</code> is convex. But to comply with the DCP rules we must rewrite the expression as <code>norm2(1, x)</code>, the L2 norm of the vector $ [1, x] $.</p>
+
+<p>In fact, <code>sqrt(1 + square(x))</code> is a convex function of <code>x</code>, but the DCP rules are not able to verify convexity.   If the expression is written as <code>norm2(1, x)</code>, the L2 norm of the vector $[1,x]$,  which has the same value as <code>sqrt(1 + square(x))</code>, then it will be certified as convex using the DCP rules.</p>
 
 </div>
 
