@@ -3,10 +3,10 @@
   <title>{% block title %}{% endblock %}</title>
   <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
   <!-- Bootstrap and jQuery + plugins -->
-  <link href="{% static "dcp_sandbox/bootstrap/css/bootstrap.min.css" %}" rel="stylesheet" media="screen">
   <script src="{% static "dcp_sandbox/jquery-1.9.1.min.js" %}"></script>
   <script src="{% static "dcp_sandbox/jquery.cookie.js" %}"></script>
   <script src="{% static "dcp_sandbox/bootstrap/js/bootstrap.min.js" %}"></script>
+  <link href="{% static "dcp_sandbox/bootstrap/css/bootstrap.min.css" %}" rel="stylesheet" media="screen">
 
   <!-- D3.js -->
   <script type="text/javascript" src="{% static "dcp_sandbox/d3.v3/d3.v3.min.js" %}"></script>
@@ -46,30 +46,32 @@
       <ul class="nav">
         <!-- Button to trigger feedback modal -->
         <li>
-          <div><a href="#feedback" role="button" id="feedback" class="btn btn-primary" data-toggle="modal">Feedback</a></div>
+          <div>
+            <a role="button" class="btn btn-primary nav-leftmost" data-toggle="modal" data-target="#feedback">Feedback</a>
+          </div>
         </li>
         {% block post_feedback_nav %}{% endblock %}
       </ul>
     </div>
   </div>
 
-<div class="container-fluid below-nav">
-  <div class="row-fluid">
-    <nav>
-      <ul class="nav nav-pills nav-stacked span1">
-        <li
-        {% if request.path == "/home" or request.path == "/" %}
-        class="active"{% endif %}><a href="/home">Home</a></li>
-        <li{% if request.path == "/rules" %} class="active"{% endif %}><a href="/rules">Rules</a></li>
-        <li{% if request.path == "/functions" %} class="active"{% endif %}><a href="/functions">Functions</a></li>
-        <li{% if request.path == "/analyzer" %} class="active"{% endif %}><a href="/analyzer">Analyzer</a></li>
-        <li{% if request.path == "/quiz" %} class="active"{% endif %}><a href="/quiz">Quiz</a></li>
-        <li{% if request.path == "/about" %} class="active"{% endif %}><a href="/about">About</a></li>
-      </ul>
-    </nav>
-  {% block page_content %}{% endblock %}
+  <div class="container-fluid below-nav">
+    <div class="row-fluid">
+      <nav>
+        <ul class="nav nav-pills nav-stacked span1">
+          <li
+          {% if request.path == "/home" or request.path == "/" %}
+          class="active"{% endif %}><a href="/home">Home</a></li>
+          <li{% if request.path == "/rules" %} class="active"{% endif %}><a href="/rules">Rules</a></li>
+          <li{% if request.path == "/functions" %} class="active"{% endif %}><a href="/functions">Functions</a></li>
+          <li{% if request.path == "/analyzer" %} class="active"{% endif %}><a href="/analyzer">Analyzer</a></li>
+          <li{% if request.path == "/quiz" %} class="active"{% endif %}><a href="/quiz">Quiz</a></li>
+          <li{% if request.path == "/about" %} class="active"{% endif %}><a href="/about">About</a></li>
+        </ul>
+      </nav>
+    {% block page_content %}{% endblock %}
+    </div>
   </div>
-</div>
 
   <!-- Feedback Modal -->
   <div id="feedback" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="feedbackLabel" aria-hidden="true">
