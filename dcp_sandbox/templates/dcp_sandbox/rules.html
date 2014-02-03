@@ -88,7 +88,9 @@ max(2.66 - sqrt(u), square(x + 2*y))</code></pre>
 
 <p>If none of the three rules apply, the expression $\text{ } f(expr_1, expr_2, ..., expr_n)$ is marked as having unknown curvature.</p>
 
-<p>Whether a function is increasing or decreasing in an argument may depend on the sign of the argument. For instance, <code>square</code> is increasing for positive arguments and decreasing for negative arguments.</p>
+<p>Whether a function is increasing or decreasing in an argument may depend on the sign of the argument. For instance, <code>square</code> is increasing for positive arguments and decreasing for negative arguments. </p>
+
+<p>Be aware that <a href="http://cvxr.com/cvx/">CVX</a> does not use the signs of arguments to determine monotonicity, but <a href="https://github.com/cvxgrp/cvxpy">CVXPY</a> does.</p>
 
 <h2>Infix Operators</h2>
 
