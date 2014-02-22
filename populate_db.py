@@ -1,5 +1,5 @@
 """
-Use to populate the quiz tables with atoms, arguments, etc. 
+Use to populate the quiz tables with atoms, arguments, etc.
 """
 from dcp_site import settings
 from django.core.management import setup_environ
@@ -13,7 +13,7 @@ Argument.objects.all().delete()
 # Terminals
 # Unknown sign variables.
 for name in ["x","y","z","u","v","w"]:
-    Operator.objects.create(prefix=name, infix="", suffix="", 
+    Operator.objects.create(prefix=name, infix="", suffix="",
                             terminal=True, num_args=0,
                             weight=0.1*DEFAULT_WEIGHT/6,
                             positive=False, negative=False,
@@ -22,7 +22,7 @@ for name in ["x","y","z","u","v","w"]:
 
 # Affine expressions.
 for name in ["x / 2","y - 42","364 * z"]:
-    Operator.objects.create(prefix=name, infix="", suffix="", 
+    Operator.objects.create(prefix=name, infix="", suffix="",
                             terminal=True, num_args=0,
                             weight=0.1*DEFAULT_WEIGHT/3,
                             positive=False, negative=False,
@@ -201,7 +201,7 @@ Argument.objects.create(operator=op, position=0,
 op = Operator.objects.create(prefix="kl_div(", infix=", ", suffix=")",
                              terminal=False, num_args=2,
                              weight=0.25*DEFAULT_WEIGHT,
-                             positive=False, negative=False,
+                             positive=True, negative=False,
                              convex=True, concave=False)
 for i in range(op.num_args):
     Argument.objects.create(operator=op, position=i,

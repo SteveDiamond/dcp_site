@@ -2,8 +2,8 @@
 Constants used by views.py.
 """
 # Pre-declared variables and parameters
-PREAMBLE = ['variable x y z u v w', 
-            'parameter a b c', 
+PREAMBLE = ['variable x y z u v w',
+            'parameter a b c',
             'parameter positive d e f']
 
 # A list of all possible signs.
@@ -28,7 +28,7 @@ ATOM_DEFINITIONS = [
   #  "arguments": ("Takes a single expression followed by a parameter as arguments. "
   #                "The parameter must be a positive number. "
   #                "The default value for the parameter is 1."),
-  #  "meaning": 
+  #  "meaning":
   #       ("\operatorname{berhu}(x,M) = \\begin{cases} |x| &\mbox{if } |x| \le M \\\\ "
   #        "\left(|x|^{2} + M^{2} \\right)/2M & \mbox{if } |x| > M \end{cases} \\\\"
   #        " \mbox{ where } x \in \mathbf{R}."),
@@ -41,7 +41,7 @@ ATOM_DEFINITIONS = [
   {"name":"entr",
    "usage": "entr(x)",
    "arguments": "Takes a single expression as an argument.",
-   "meaning": 
+   "meaning":
         ("$ \\begin{cases} -x \log (x) & x > 0 \\\\ "
          "0 & x = 0 \end{cases} \\\\ $"),
 
@@ -77,7 +77,7 @@ ATOM_DEFINITIONS = [
    "arguments": ("Takes a single expression followed by a parameter as arguments. "
                  "The parameter must be a positive number. "
                  "The default value for the parameter is 1."),
-   "meaning": 
+   "meaning":
         ("$ \\begin{cases} 2|x|-1 & |x| \ge 1 \\\\ "
          " |x|^{2} & |x| < 1 \end{cases} \\\\ $"),
    "domain": "$ x \in \mathbf{R} $",
@@ -103,7 +103,7 @@ ATOM_DEFINITIONS = [
    "meaning": "$ x \log (x/y)-x+y $",
    "domain": "$ x,y > 0 $",
    "curvature": "Convex",
-   "sign": "Unknown",
+   "sign": "Positive",
    "monotonicity": ["None"],
    "example": "kl_div(x, y)",
   },
@@ -132,7 +132,7 @@ ATOM_DEFINITIONS = [
    "usage": "max(x1,...,xk)",
    "arguments": ("Takes a variable number of expressions as arguments. "
                  "These are interpreted as a vector."),
-   "meaning": "$ \max \left\{ x_{1}, \ldots , x_{k} \\right\} $",   
+   "meaning": "$ \max \left\{ x_{1}, \ldots , x_{k} \\right\} $",
    "domain": "$ x \in \mathbf{R}^{k} $",
    "curvature": "Convex",
    "sign": "max(sign(arguments))",
@@ -143,7 +143,7 @@ ATOM_DEFINITIONS = [
    "usage": "min(x1,...,xk)",
    "arguments": ("Takes a variable number of expressions as arguments. "
                  "These are interpreted as a vector."),
-   "meaning": "$ \min \left\{ x_{1}, \ldots , x_{k} \\right\} $",   
+   "meaning": "$ \min \left\{ x_{1}, \ldots , x_{k} \\right\} $",
    "domain": "$ x \in \mathbf{R}^{k} $",
    "curvature": "Concave",
    "sign": "min(sign(arguments))",
