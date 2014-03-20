@@ -1,9 +1,10 @@
 """
 Use to populate the quiz tables with atoms, arguments, etc.
 """
-from dcp_site import settings
-from django.core.management import setup_environ
-setup_environ(settings)
+import os
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dcp_site.settings")
+from django.conf import settings
 
 from dcp_sandbox.models import *
 
