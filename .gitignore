@@ -2,3 +2,4 @@
 *.pyc
 *.log
 logfile*
+set_env_vars.bash

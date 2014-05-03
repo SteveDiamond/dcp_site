@@ -7,10 +7,10 @@ TEMPLATE_DEBUG = DEBUG
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
 )
-
+# TODO use environment variables to set these.
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'dcp.stanford.edu@gmail.com'
-EMAIL_HOST_PASSWORD = '1khfiHFD(F8f'
+EMAIL_HOST_PASSWORD = os.environ.get("DCP_EMAIL_HOST_PASSWORD", '')
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
@@ -18,13 +18,16 @@ MANAGERS = ADMINS
 
 SITE_ROOT = os.getcwd()
 
+
+DCP_DB_USER = os.environ.get("DCP_DB_USER", '')
+DCP_DB_PASSWORD = os.environ.get("DCP_DB_PASSWORD", '')
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'dcp_site',                      # Or path to database file if using sqlite3.
         # The following settings are not used with sqlite3:
-        'USER': 'dcp',
-        'PASSWORD': 'dcp.stanford.edu',
+        'USER': DCP_DB_USER,
+        'PASSWORD': DCP_DB_PASSWORD,
         'HOST': '',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
         'PORT': '',                      # Set to empty string for default.
     }
