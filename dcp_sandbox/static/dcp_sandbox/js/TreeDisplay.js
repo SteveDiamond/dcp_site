@@ -73,17 +73,17 @@ TreeDisplay.createInputBox = function() {
     if (!TreeConstructor.promptActive) $('#inputBox').val(text);
     $('#inputBox').focus();
 
-    // Trigger reset if click away.
-    $('#inputBox').blur(function() {
-        // If the user didn't change the text, click again instead of
-        // parsing the objective again.
-        if (TreeDisplay.errorState && 
-            TreeDisplay.errorText == $('#inputBox').val()) {
-            setTimeout(function(){ $('#inputBox').focus(); }, 100);
-        } else { // User changed the text, so try to parse.
-            TreeDisplay.resetTree(id, textElement, text);
-        }
-    });
+    // // Trigger reset if click away.
+    // $('#inputBox').blur(function() {
+    //     // If the user didn't change the text, click again instead of
+    //     // parsing the objective again.
+    //     if (TreeDisplay.errorState && 
+    //         TreeDisplay.errorText == $('#inputBox').val()) {
+    //         setTimeout(function(){ $('#inputBox').focus(); }, 100);
+    //     } else { // User changed the text, so try to parse.
+    //         TreeDisplay.resetTree(id, textElement, text);
+    //     }
+    // });
 
     // Trigger reset if click enter.
     $('#inputBox').keypress(function(e) {
@@ -120,6 +120,8 @@ TreeDisplay.resetTree = function(id, textElement, text) {
     var modifiedText = $('#inputBox').val();
     var objective = TreeConstructor.loadObjective(id, modifiedText);
     // textElement.textContent = text;
+    var href = TreeConstants.URL_QUERY_PREFIX + encodeURIComponent(objective);
+    history.pushState(null, null, href);
     TreeConstructor.createParseTree(objective, id);
 }
 

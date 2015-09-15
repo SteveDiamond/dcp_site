@@ -96,3 +96,6 @@ TreeConstants.SIGN_LEGEND = {"title": "Sign",
 
 // Alert div location.
 TreeConstants.ERROR_DIV = "#errorPlaceholder";
+
+// Query prefix for passing expressions in URL
+TreeConstants.URL_QUERY_PREFIX = "?expr=";
