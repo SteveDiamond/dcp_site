@@ -1,7 +1,7 @@
 Disciplined Convex Programming at Stanford
 ==========================================
 
-This website is designed to teach disciplined convex programming (DCP). DCP is a system for constructing convex optimization problems. The DCP rules guarantee that any problem constructed using DCP can be solved with convex optimization. DCP is used by [CVX](http://cvxr.com/cvx/), [Convex.jl](https://github.com/JuliaOpt/Convex.jl) and [CVXPY](https://github.com/cvxgrp/cvxpy). 
+This website is designed to teach disciplined convex programming (DCP). DCP is a system for constructing convex optimization problems. The DCP rules guarantee that any problem constructed using DCP can be solved with convex optimization. DCP is used by [CVX](http://cvxr.com/cvx/), [Convex.jl](https://github.com/JuliaOpt/Convex.jl), and [CVXPY](https://github.com/cvxgrp/cvxpy). 
 
 This introduction covers the rules of DCP. After reading the introduction, visit the [DCP Quiz](http://dcp.stanford.edu/quiz) to practice applying the DCP rules to mathematical expressions. A [DCP Analyzer](http://dcp.stanford.edu/analyzer) is also available where you can enter expressions, equalities, and inequalities and see a visualization of the DCP analysis.
 
