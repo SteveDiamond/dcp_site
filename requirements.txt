@@ -1,4 +1,4 @@
-Django==1.5.1
+Django==2.2.24
 nose==1.2.1
 ply==3.4
 yolk==0.4.3
