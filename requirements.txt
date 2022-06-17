@@ -2,5 +2,5 @@ Django==1.5.1
 nose==1.2.1
 ply==3.4
 yolk==0.4.3
-numpy==1.7.0
+numpy==1.21.0
 cvxopt==1.2.7
